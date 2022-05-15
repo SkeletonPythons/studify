@@ -100,3 +100,7 @@ This is where we will store any custom widgets that can be used globally or is o
 - TextFields
 - Dialogs
 - Popups
+
+
+## ALso...
+- Be sure to comment your code. Be as descriptive as possible, but keep it brief. 
