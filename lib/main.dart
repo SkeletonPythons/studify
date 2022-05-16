@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
 import 'package:studify/views/pages/demo/demo.dart';
 import './consts/strings.dart';
+import './routes/routes.dart';
 
 void main() async {
   await Firebase.initializeApp(
@@ -18,10 +20,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: kTitle,
       theme: ThemeData.dark().copyWith(),
-      home: const DemoPage(title: kTitle),
+      initialRoute: Routes.SPLASH,
+      getPages: AppPages.routes,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
