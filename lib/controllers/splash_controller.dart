@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:math' as math;
+import 'package:studify/routes/routes.dart';
 
 class SplashController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -14,13 +14,17 @@ class SplashController extends GetxController
   @override
   void onInit() {
     animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 10));
-    animation = Tween(begin: 3.0, end: 4.0).animate(animationController)
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    animation = Tween(begin: 0.01, end: 1.0).animate(animationController)
       ..addListener(() {
         animationValue.value = animation.value;
         debugPrint(animationValue.value.toString());
       });
-    animationController.forward();
+    animationController.forward().then((_) {
+      Future.delayed(const Duration(seconds: 1), () {
+        Get.offAllNamed(Routes.LOGIN);
+      });
+    });
     super.onInit();
   }
 
