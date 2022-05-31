@@ -1,3 +1,1 @@
-// ignore_for_file: constant_identifier_names
-
-const String TITLE = 'Studify';
+const String kTitle = 'Studify';
