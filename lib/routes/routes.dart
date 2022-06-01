@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 
 import '../../../views/pages/splash_page/splash_page.dart';
+import '../../../views/pages/login_page/login_page.dart';
 
 abstract class Routes {
   static const String LOGIN = '/login';
@@ -20,10 +21,10 @@ class AppPages {
       name: Routes.SPLASH,
       page: () => SplashPage(),
     ),
-    //     GetPage(
-    //   name: Routes.HOME,
-    //   page: () => SplashPage(),
-    // ),
+    GetPage(
+      name: Routes.LOGIN,
+      page: () => LoginPage(),
+    ),
     //     GetPage(
     //   name: Routes.LOGIN,
     //   page: () => SplashPage(),

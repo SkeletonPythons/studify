@@ -8,12 +8,12 @@ class AppUser {
     this.isVerified,
   }) : db = 'users/$uid';
 
-  int uid;
+  String uid;
   String name;
   String email;
   String? photoUrl;
   String? phoneNumber;
-  String? db;
+  String db;
   bool? isVerified = false;
   Map<String, dynamic> settings = {
     // TODO: Add settings that will be synced to the database.

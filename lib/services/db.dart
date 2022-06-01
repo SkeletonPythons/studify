@@ -1,25 +1,25 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:get/get.dart';
 
 import '../models/user_model.dart';
 
-class DB {
-  static final FirebaseDatabase _database = FirebaseDatabase.instance;
+class DB extends GetxController {
+  static final DB instance = Get.find();
+  FirebaseDatabase db = FirebaseDatabase.instance;
+  RxBool isInit = false.obs;
 
-  static Future<bool> checkIfExists(AppUser user) async {
-    return await _database.ref().child(user.db!).once().then((snapshot) {
-      return snapshot.snapshot.exists;
-    });
-  }
+  late DatabaseReference? userRef;
+  late DatabaseReference? notesRef;
+  late DatabaseReference? tasksRef;
+  late DatabaseReference? eventsRef;
 
-  static Future<void> createUser(AppUser user) async {
-    await _database.ref().child(user.db!).set(user.toJson());
-  }
-
-  static Future<void> updateUser(AppUser user) async {
-    await _database.ref().child(user.db!).update(user.toJson());
-  }
-
-  static Future<void> deleteUser(AppUser user) async {
-    await _database.ref().child(user.db!).remove();
+  void init(AppUser user) {
+    if (user.uid.isEmpty) return;
+    if (isInit.value) return;
+    userRef = db.ref(user.db);
+    notesRef = db.ref(user.db).child('notes');
+    tasksRef = db.ref(user.db).child('tasks');
+    eventsRef = db.ref(user.db).child('events');
+    isInit.value = true;
   }
 }

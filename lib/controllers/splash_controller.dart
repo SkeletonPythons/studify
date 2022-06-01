@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:studify/routes/routes.dart';
+
+import '../services/auth.dart';
 
 class SplashController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -22,7 +23,7 @@ class SplashController extends GetxController
       });
     animationController.forward().then((_) {
       Future.delayed(const Duration(seconds: 1), () {
-        Get.offAllNamed(Routes.LOGIN);
+        Get.offAllNamed(Auth.instance.initialRoute.value);
       });
     });
     super.onInit();
