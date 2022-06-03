@@ -32,6 +32,7 @@ class Auth extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    debugPrint('Auth onReady');
     _user = Rx<User?>(auth.currentUser);
     _user.bindStream(auth.userChanges());
     ever(_user, _gateKeeper);
@@ -42,6 +43,8 @@ class Auth extends GetxController {
   _gateKeeper(User? user) {
     if (user != null) {
       debugPrint('User is logged in');
+      populateUser(null, user);
+
       initialRoute.value = Routes.HOME;
     } else {
       debugPrint('User is not logged in going to ');
@@ -67,10 +70,12 @@ class Auth extends GetxController {
 
   void logInWithEmail(String email, String password) async {
     try {
-      populateUser(await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      ));
+      populateUser(
+          await auth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+          null);
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -96,7 +101,7 @@ class Auth extends GetxController {
         idToken: googleAuth.idToken,
       );
 
-      populateUser(await auth.signInWithCredential(credential));
+      populateUser(await auth.signInWithCredential(credential), null);
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -107,7 +112,7 @@ class Auth extends GetxController {
     }
   }
 
-  void populateUser(UserCredential? cred) {
+  void populateUser(UserCredential? cred, User? user) {
     debugPrint('populating user');
     if (cred != null) {
       USER = AppUser(

@@ -9,12 +9,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-      ),
-      body: TabBarView(
-        children: <Widget>[Container()],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Home Page'),
+        ),
+        body: SizedBox(
+          height: Get.height,
+          width: Get.width,
+          child: TabBarView(
+            controller: _homeController.tabController,
+            children: _homeController.tabs,
+          ),
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../services/auth.dart';
+import '../routes/routes.dart';
 
 class SplashController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -19,10 +20,10 @@ class SplashController extends GetxController
     animation = Tween(begin: 0.01, end: 1.0).animate(animationController)
       ..addListener(() {
         animationValue.value = animation.value;
-        debugPrint(animationValue.value.toString());
+        debugPrint('animation running');
       });
     animationController.forward().then((_) {
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 3), () {
         Get.offAllNamed(Auth.instance.initialRoute.value);
       });
     });

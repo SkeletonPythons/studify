@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:get/get.dart';
+import 'package:studify/views/pages/home_page/home_page.dart';
 
 import '../../../views/pages/splash_page/splash_page.dart';
 import '../../../views/pages/login_page/login_page.dart';
@@ -25,9 +26,9 @@ class AppPages {
       name: Routes.LOGIN,
       page: () => LoginPage(),
     ),
-    //     GetPage(
-    //   name: Routes.LOGIN,
-    //   page: () => SplashPage(),
-    // ),
+    GetPage(
+      name: Routes.HOME,
+      page: () => HomePage(),
+    ),
   ];
 }

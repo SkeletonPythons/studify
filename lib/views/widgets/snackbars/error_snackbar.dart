@@ -10,7 +10,7 @@ void showErrorSnackBar(
   Get.snackbar(
     title,
     message,
-    duration: const Duration(seconds: 3),
+    duration: const Duration(seconds: 5),
     snackPosition: SnackPosition.BOTTOM,
     backgroundColor: const Color(0xff414141),
     borderRadius: 10,
