@@ -7,14 +7,14 @@ import 'consts/app_settings.dart';
 import 'consts/app_colors.dart';
 import './routes/routes.dart';
 import './services/auth.dart';
+import 'views/themes/apptheme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ).then(
-    (value) => Get.put(Auth()),
   );
+  Get.put<Auth>(Auth());
   runApp(const MyApp());
 }
 
@@ -24,15 +24,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: kTitle,
-      theme: ThemeData.dark().copyWith(
-        primaryColor: kPrimary,
-        backgroundColor: kBackground,
+    return Obx(
+      () => GetMaterialApp(
+        title: kTitle,
+        theme: currentTheme.value,
+        initialRoute: Routes.SPLASH,
+        getPages: AppPages.routes,
+        debugShowCheckedModeBanner: false,
       ),
-      initialRoute: Routes.SPLASH,
-      getPages: AppPages.routes,
-      debugShowCheckedModeBanner: false,
     );
   }
 }

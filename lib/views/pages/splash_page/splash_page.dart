@@ -9,7 +9,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:math' as math;
 
 import '../../../../controllers/splash_controller.dart';
 

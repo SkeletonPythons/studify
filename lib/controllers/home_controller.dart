@@ -2,15 +2,38 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/user_model.dart';
+import '../services/auth.dart';
 
 class HomeController extends GetxController with GetTickerProviderStateMixin {
   late TabController tabController;
   late AppUser user;
 
+  RxInt selectedTab = 0.obs;
+
+  List<Widget> get tabs => [
+        Tab(
+          text: 'Dashboard',
+        ),
+        Tab(
+          text: 'Flashcards',
+        ),
+        Tab(
+          text: 'Calendar',
+        ),
+        Tab(
+          text: 'Timer',
+        ),
+      ];
+
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 0, vsync: this);
-    user = Get.arguments['AppUser'];
+
+    tabController = TabController(
+      length: tabs.length,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 500),
+      initialIndex: selectedTab.value,
+    );
   }
 }
