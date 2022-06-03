@@ -13,8 +13,7 @@ class MyWidget extends StatelessWidget {
     this.text,
     this.child,
     this.radius = 12,
-    Key? key}) 
-    : assert((text != null) child == null else child != null),
+    Key? key}) :
     super(key: key);
     
 
