@@ -3,12 +3,17 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
-import './consts/strings.dart';
+import 'consts/app_settings.dart';
+import 'consts/app_colors.dart';
 import './routes/routes.dart';
+import './services/auth.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  ).then(
+    (value) => Get.put(Auth()),
   );
   runApp(const MyApp());
 }
@@ -22,8 +27,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: kTitle,
       theme: ThemeData.dark().copyWith(
-        primaryColor: Colors.redAccent,
-        backgroundColor: const Color(0xFF313131),
+        primaryColor: kPrimary,
+        backgroundColor: kBackground,
       ),
       initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,
