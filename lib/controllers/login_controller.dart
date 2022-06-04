@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
 import '../views/widgets/snackbars/error_snackbar.dart';
-import '../.secrets.dart';
+
 
 class LoginController extends GetxController {
   // RxBool hidePW = true.obs;
@@ -64,7 +64,7 @@ class LoginController extends GetxController {
   final provideConfigs = [
     const EmailProviderConfiguration(),
     const GoogleProviderConfiguration(
-      clientId: clientID,
+      clientId: '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com',
     ),
   ];
 }

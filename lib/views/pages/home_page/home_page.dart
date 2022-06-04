@@ -3,26 +3,31 @@ import 'package:flutter/material.dart';
 
 import '../../../controllers/home_controller.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
-  final HomeController _homeController = Get.put(HomeController());
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+  @override
+  HomePageState createState() => HomePageState();
+}
 
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home Page'),
-        ),
-        body: SizedBox(
-          height: Get.height,
-          width: Get.width,
-          child: TabBarView(
-            controller: _homeController.tabController,
-            children: _homeController.tabs,
-          ),
-        ),
+    var size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Stack(
+          children: <Widget>[
+            Container(
+                height: size.height * .3,
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/dashboard_header.png'),
+                    )
+                )
+            )
+          ]
       ),
     );
   }
 }
+
+
