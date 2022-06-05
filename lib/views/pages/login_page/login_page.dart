@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import '../../../consts/app_colors.dart';
 import '../../../routes/routes.dart';
 import '../../../controllers/login_controller.dart';
-
+import'../../../services/auth.dart';
 class LoginPage extends StatelessWidget {
   /// This class extends [StatelessWidget] which is a base class for widgets that
   /// do not maintain state. As stateless widgets, they are immutable.
@@ -112,6 +112,7 @@ class LoginPage extends StatelessWidget {
       actions: [
         AuthStateChangeAction<SignedIn>(
           (context, state) {
+            Auth.instance.populateUser(null, state.user);
             Get.offAllNamed(Routes.HOME);
           },
         ),
