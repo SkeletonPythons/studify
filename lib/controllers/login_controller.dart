@@ -6,10 +6,12 @@ import 'package:studify/services/db.dart';
 
 import '../services/auth.dart';
 import '../views/widgets/snackbars/error_snackbar.dart';
+
 // import '../.secrets.dart';
 import '../routes/routes.dart';
 import '../models/user_model.dart';
 import '../../../consts/app_colors.dart';
+
 
 const String clientID =
     '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com';
@@ -160,7 +162,7 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   final provideConfigs = [
     const EmailProviderConfiguration(),
     const GoogleProviderConfiguration(
-      clientId: clientID,
+      clientId: '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com',
     ),
   ];
 }
