@@ -24,7 +24,7 @@ class SplashController extends GetxController
       });
     animationController.forward().then((_) {
       Future.delayed(const Duration(seconds: 3), () {
-        Get.offAllNamed(Auth.instance.initialRoute.value);
+        Get.offAllNamed(Routes.LOGIN);
       });
     });
     super.onInit();

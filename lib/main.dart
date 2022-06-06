@@ -4,7 +4,6 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 import 'consts/app_settings.dart';
-import 'consts/app_colors.dart';
 import './routes/routes.dart';
 import './services/auth.dart';
 import 'views/themes/apptheme.dart';
