@@ -22,6 +22,7 @@ class SplashController extends GetxController
         animationValue.value = animation.value;
         debugPrint('animation running');
       });
+      
     animationController.forward().then((_) {
       Future.delayed(const Duration(seconds: 3), () {
         Get.offAllNamed(Routes.LOGIN);
