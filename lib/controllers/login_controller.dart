@@ -21,6 +21,11 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   @override
   void onInit() {
     super.onInit();
+    Auth.instance.USER = AppUser(
+        email: 'test@test.com',
+        photoUrl: '',
+        name: 'Testy Tester',
+        uid: '00000');
     Auth.instance.auth.authStateChanges().listen((User? user) {
       if (Auth.instance.auth.currentUser != null) {
         Get.offAllNamed(Routes.HOME);
