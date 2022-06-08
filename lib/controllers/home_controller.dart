@@ -6,10 +6,9 @@ import '../services/auth.dart';
 
 class HomeController extends GetxController with GetTickerProviderStateMixin {
   late TabController tabController;
-  late AppUser user;
 
   RxInt selectedTab = 0.obs;
-
+  RxString? photoUrl = ''.obs;
   List<Widget> get tabs => [
         Tab(
           text: 'Dashboard',

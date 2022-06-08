@@ -1,17 +1,15 @@
 class AppUser {
   AppUser({
     required this.uid,
-    required this.first,
+    required this.name,
     required this.email,
-    this.last,
     this.phoneNumber,
     this.photoUrl,
     this.settings,
   });
 
   String uid;
-  String first;
-  String? last;
+  String name;
   String email;
   String? photoUrl;
   String? phoneNumber;
@@ -39,8 +37,7 @@ class AppUser {
 
   Map<String, dynamic> toJson() => {
         'uid': uid,
-        'first': first,
-        'last': last,
+        'first': name,
         'email': email,
         'photoUrl': photoUrl,
         'phoneNumber': phoneNumber,
@@ -50,8 +47,7 @@ class AppUser {
 
   AppUser.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
-        first = json['first'],
-        last = json['last'],
+        name = json['name'],
         email = json['email'],
         photoUrl = json['photoUrl'],
         phoneNumber = json['phoneNumber'],

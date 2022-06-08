@@ -12,7 +12,6 @@ import '../routes/routes.dart';
 import '../models/user_model.dart';
 import '../../../consts/app_colors.dart';
 
-
 const String clientID =
     '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com';
 
@@ -24,14 +23,6 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     super.onInit();
     Auth.instance.auth.authStateChanges().listen((User? user) {
       if (Auth.instance.auth.currentUser != null) {
-        Auth.instance.USER = AppUser(
-          uid: Auth.instance.auth.currentUser!.uid,
-          email: Auth.instance.auth.currentUser!.email!,
-          first: 'John',
-          last: 'Doe',
-          // name: Auth.instance.auth.currentUser!.displayName!,
-          // photoUrl: Auth.instance.auth.currentUser!.photoURL,
-        );
         Get.offAllNamed(Routes.HOME);
       }
     });
@@ -98,19 +89,25 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     });
   }
 
-  void register(String first, last, email, pass) {
+  void register(String first, last, email, pass) async {
     try {
       {
-        Auth.instance.auth
+        await Auth.instance.auth
             .createUserWithEmailAndPassword(email: email, password: pass)
             .then(
-          (user) {
+          (user) async {
+            await Auth.instance.auth.currentUser!.updateDisplayName(
+              '$first $last',
+            );
+
             Auth.instance.USER = AppUser(
               uid: user.user!.uid,
               email: user.user!.email!,
-              first: user.user!.displayName!,
-              photoUrl: user.user!.photoURL,
+              name: user.user!.displayName!,
+              photoUrl: user.user!.photoURL ??
+                  '', // <- this sets the photoUrl to an empty string if it's null.
             );
+            debugPrint(Auth.instance.USER.toJson().toString());
             Get.offAllNamed(Routes.HOME);
           },
         );
@@ -135,7 +132,7 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
             Auth.instance.USER = AppUser(
               uid: user.user!.uid,
               email: user.user!.email!,
-              first: user.user!.displayName!,
+              name: user.user!.displayName!,
               photoUrl: user.user!.photoURL,
             );
           },
@@ -162,7 +159,8 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   final provideConfigs = [
     const EmailProviderConfiguration(),
     const GoogleProviderConfiguration(
-      clientId: '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com',
+      clientId:
+          '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com',
     ),
   ];
 }

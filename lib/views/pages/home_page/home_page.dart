@@ -12,9 +12,17 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  late TabController controller = TabController(length: 4, vsync: this);
+  HomeController homeController = Get.put<HomeController>(HomeController());
+
   @override
   Widget build(BuildContext context) {
+    if (Auth.instance.USER.photoUrl == null ||
+        Auth.instance.USER.photoUrl == '') {
+      homeController.photoUrl?.value = '';
+    } else {
+      homeController.photoUrl?.value = Auth.instance.USER.photoUrl!;
+    }
+
     var size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: Container(
@@ -28,7 +36,7 @@ class HomePageState extends State<HomePage>
             Container(),
             Container()
           ],
-          controller: controller,
+          controller: homeController.tabController,
         ),
       ),
       body: SizedBox(
@@ -49,10 +57,16 @@ class HomePageState extends State<HomePage>
             Container(
                 height: 64,
                 child: Row(children: <Widget>[
-                  // CircleAvatar(
-                  //   onBackgroundImageError: (value, trace) {},
-                  //   backgroundImage: NetworkImage(Auth.instance.USER.photoUrl!),
-                  // )
+                  CircleAvatar(
+                    onBackgroundImageError: (value, trace) {},
+                    backgroundImage:
+                        NetworkImage(homeController.photoUrl!.value),
+                    radius: 32,
+                    child: homeController.photoUrl!.value == ''
+                        ? Text(
+                            '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
+                        : null,
+                  )
                 ]))
           ])
         ]),
