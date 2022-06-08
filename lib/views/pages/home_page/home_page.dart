@@ -42,34 +42,47 @@ class HomePageState extends State<HomePage>
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Stack(children: <Widget>[
-          Container(
-            height: size.height * .3,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                alignment: Alignment.topCenter,
-                image: AssetImage('assets/dashboard_header.png'),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              height: size.height * .3,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  alignment: Alignment.centerLeft,
+                  image: AssetImage('assets/dashboard_header.png'),
+                ),
               ),
             ),
-          ),
-          Column(children: <Widget>[
-            Container(
-                height: 64,
-                child: Row(children: <Widget>[
-                  CircleAvatar(
-                    onBackgroundImageError: (value, trace) {},
-                    backgroundImage:
-                        NetworkImage(homeController.photoUrl!.value),
-                    radius: 32,
-                    child: homeController.photoUrl!.value == ''
-                        ? Text(
-                            '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
-                        : null,
-                  )
-                ]))
-          ])
-        ]),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 64,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          CircleAvatar(
+                            onBackgroundImageError: (value, trace) {},
+                            backgroundImage:
+                                NetworkImage(homeController.photoUrl!.value),
+                            radius: 28,
+                            child: homeController.photoUrl!.value == ''
+                                ? Text(
+                                    '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
+                                : null,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
