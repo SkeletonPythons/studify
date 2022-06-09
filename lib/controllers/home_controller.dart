@@ -10,16 +10,16 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   RxInt selectedTab = 0.obs;
   RxString? photoUrl = ''.obs;
   List<Widget> get tabs => [
-        Tab(
+        const Tab(
           text: 'Dashboard',
         ),
-        Tab(
+        const Tab(
           text: 'Flashcards',
         ),
-        Tab(
+        const Tab(
           text: 'Calendar',
         ),
-        Tab(
+        const Tab(
           text: 'Timer',
         ),
       ];
@@ -34,5 +34,18 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       animationDuration: const Duration(milliseconds: 500),
       initialIndex: selectedTab.value,
     );
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    if (Auth.instance.auth.currentUser != null) {
+      Auth.instance.USER = AppUser(
+          email: Auth.instance.auth.currentUser!.email!,
+          uid: Auth.instance.auth.currentUser!.uid,
+          name: Auth.instance.auth.currentUser!.displayName!,
+          photoUrl: Auth.instance.auth.currentUser!.photoURL,
+          phoneNumber: Auth.instance.auth.currentUser!.phoneNumber);
+    }
   }
 }

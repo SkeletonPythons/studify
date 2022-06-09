@@ -24,42 +24,42 @@ class HomePageState extends State<HomePage>
     }
 
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      bottomNavigationBar: Container(
-        color: Color(0xff414141),
-        height: MediaQuery.of(context).size.height * .1,
-        width: MediaQuery.of(context).size.width,
-        child: TabBar(
-          tabs: <Widget>[
-            const Icon(Icons.home),
-            const Icon(Icons.flash_on),
-            Container(),
-            Container()
-          ],
-          controller: homeController.tabController,
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: Container(
+          color: Color(0xff414141),
+          height: MediaQuery.of(context).size.height * .1,
+          width: MediaQuery.of(context).size.width,
+          child: TabBar(
+            tabs: <Widget>[
+              const Icon(Icons.home),
+              const Icon(Icons.flash_on),
+              Container(),
+              Container()
+            ],
+            controller: homeController.tabController,
+          ),
         ),
-      ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              height: size.height * .3,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  alignment: Alignment.centerLeft,
-                  image: AssetImage('assets/dashboard_header.png'),
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: size.height * .3,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    alignment: Alignment.centerLeft,
+                    image: AssetImage('assets/dashboard_header.png'),
+                  ),
                 ),
               ),
-            ),
-            SafeArea(
-              child: Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: <Widget>[
-                    Container(
+                    SizedBox(
                       height: 64,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,8 +80,8 @@ class HomePageState extends State<HomePage>
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
