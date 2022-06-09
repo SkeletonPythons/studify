@@ -4,7 +4,6 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 import 'consts/app_settings.dart';
-import 'consts/app_colors.dart';
 import './routes/routes.dart';
 import './services/auth.dart';
 import 'views/themes/apptheme.dart';
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
       () => GetMaterialApp(
         title: kTitle,
         theme: currentTheme.value,
-        initialRoute: Routes.SPLASH,
+        initialRoute: Routes.TIMER,
         getPages: AppPages.routes,
         debugShowCheckedModeBanner: false,
       ),
