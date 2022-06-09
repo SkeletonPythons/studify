@@ -31,8 +31,8 @@ class HomePageState extends State<HomePage>
         width: MediaQuery.of(context).size.width,
         child: TabBar(
           tabs: <Widget>[
-            Container(child: Icon(Icons.home)),
-            Container(child: Icon(Icons.flash_on)),
+            const Icon(Icons.home),
+            const Icon(Icons.flash_on),
             Container(),
             Container()
           ],
@@ -54,7 +54,7 @@ class HomePageState extends State<HomePage>
             ),
           ),
           Column(children: <Widget>[
-            Container(
+            SizedBox(
                 height: 64,
                 child: Row(children: <Widget>[
                   CircleAvatar(
