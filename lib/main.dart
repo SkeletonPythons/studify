@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       () => GetMaterialApp(
         title: kTitle,
         theme: currentTheme.value,
-        initialRoute: Routes.SPLASH,
+        initialRoute: Routes.TIMER,
         getPages: AppPages.routes,
         debugShowCheckedModeBanner: false,
       ),
