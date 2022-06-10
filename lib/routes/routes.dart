@@ -5,12 +5,13 @@ import 'package:studify/views/pages/home_page/home_page.dart';
 import '../../../views/pages/splash_page/splash_page.dart';
 import '../../../views/pages/login_page/login_page.dart';
 import '../../../views/pages/timers_page/timer_homepage.dart';
-
+import '../../../views/pages/bottom_nav_page/bottom_nav_bar.dart';
 abstract class Routes {
   static const String LOGIN = '/login';
   static const String HOME = '/home';
   static const String SPLASH = '/splash';
   static const String TIMER = '/timer';
+  static const String NAVBAR = '/navbar';
 }
 
 class AppPages {
@@ -26,6 +27,10 @@ class AppPages {
     GetPage(
       name: Routes.LOGIN,
       page: () => LoginPage(),
+    ),
+    GetPage(
+      name: Routes.NAVBAR,
+      page: () => BottomNavBar(),
     ),
     GetPage(
       name: Routes.HOME,

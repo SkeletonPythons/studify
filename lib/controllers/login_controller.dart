@@ -28,7 +28,7 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
         uid: '00000');
     Auth.instance.auth.authStateChanges().listen((User? user) {
       if (Auth.instance.auth.currentUser != null) {
-        Get.offAllNamed(Routes.HOME);
+        Get.offAllNamed(Routes.NAVBAR);
       }
     });
   }
@@ -156,7 +156,7 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   AuthStateChangeAction<SignedIn> signedIn = AuthStateChangeAction<SignedIn>(
     (context, state) {
       if (state.user != null) {
-        Get.offAllNamed(Routes.HOME);
+        Get.offAllNamed(Routes.NAVBAR);
       }
     },
   );
