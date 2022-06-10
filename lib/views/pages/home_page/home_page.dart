@@ -9,6 +9,8 @@ class HomePage extends StatefulWidget {
 
   @override
   HomePageState createState() => HomePageState();
+
+
 }
 
 class HomePageState extends State<HomePage>
@@ -24,7 +26,12 @@ class HomePageState extends State<HomePage>
       homeController.photoUrl?.value = Auth.instance.USER.photoUrl!;
     }
     var sideMenuIcon = 'assets/icons/menu-burger.png';
+    var homeIcon = 'assets/icons/home-outlined64x.png';
+    var calendarIcon = 'assets/icons/calendar-outlined.png';
+    var timersIcon = 'assets/icons/timer.png';
+    var flashcardsIcon = 'assets/icons/flashcards.png';
     var size = MediaQuery.of(context).size;
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Color(0xff313131),
@@ -37,24 +44,27 @@ class HomePageState extends State<HomePage>
             title: Row(
               children: <Widget>[
                 SizedBox(
-                  height:37,
-                  width:37,
+                  height: 37,
+                  width: 37,
                   child: IconButton(
                     icon: Image.asset(sideMenuIcon),
                     onPressed: () => {},
                   ),
                 ),
-                SizedBox(height: 10,width: 10,),
+                SizedBox(
+                  height: 10,
+                  width: 10,
+                ),
                 Container(
                   margin: EdgeInsets.fromLTRB(0, 10, 10, 8),
                   child: CircleAvatar(
                     onBackgroundImageError: (value, trace) {},
                     backgroundImage:
-                    NetworkImage(homeController.photoUrl!.value),
+                        NetworkImage(homeController.photoUrl!.value),
                     radius: 25,
                     child: homeController.photoUrl!.value == ''
                         ? Text(
-                        '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
+                            '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
                         : null,
                   ),
                 ),
@@ -62,32 +72,25 @@ class HomePageState extends State<HomePage>
             ),
           ),
         ),
-        bottomNavigationBar: Container(
-          color: Color(0xff414141),
-          height: MediaQuery.of(context).size.height * .1,
-          width: MediaQuery.of(context).size.width,
-          child: TabBar(
-            tabs: <Widget>[
-              const Icon(Icons.home),
-              const Icon(Icons.flash_on),
-              Container(),
-              Container(),
-            ],
-            controller: homeController.tabController,
-          ),
-        ),
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                ),
-              ),
-            ],
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Color(0xff414141),
+          items: [
+            BottomNavigationBarItem(icon: Image.asset(homeIcon, width: 35, height: 35,), label: 'Home'),
+            BottomNavigationBarItem(icon: Image.asset(calendarIcon, width: 35, height: 35,), label: 'Calendar'),
+            BottomNavigationBarItem(icon: Image.asset(timersIcon, width: 35, height: 35,), label: 'Timers'),
+            BottomNavigationBarItem(icon: Image.asset(flashcardsIcon, width: 35, height: 35,), label: 'Flashcards'),
+          ],
+          //: MediaQuery.of(context).size.height * .1,
+          //width: MediaQuery.of(context).size.width,
+          //child: TabBar(
+          //tabs: <Widget>[
+          //const Icon(Icons.home),
+          //const Icon(Icons.flash_on),
+          //Container(),
+          //Container(),
+          //],
+          //controller: homeController.tabController,
         ),
       ),
     );
