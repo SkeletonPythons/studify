@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:studify/views/pages/demo_page/demo.dart';
 import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
 import 'package:studify/views/pages/home_page/home_page.dart';
+import 'package:studify/views/pages/test_page/dashboard_page.dart';
 import 'package:studify/views/pages/timers_page/timer_homepage.dart';
 import '../../../controllers/home_controller.dart';
 
@@ -17,7 +18,7 @@ class BottomNavBarState extends State<BottomNavBar> with SingleTickerProviderSta
   HomeController homeController = Get.put<HomeController>(HomeController());
   final PageController _bottomNavController = PageController();
   final List<Widget> _screens = [
-    HomePage(),
+    Dashboard(),
     DemoPage(title: 'Hello World'),
     TimerHomePage(),
     FlashcardPage(),
