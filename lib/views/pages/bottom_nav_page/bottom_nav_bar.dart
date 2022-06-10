@@ -53,6 +53,7 @@ class BottomNavBarState extends State<BottomNavBar> with SingleTickerProviderSta
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Color(0xff414141),
+        currentIndex: _selectedIndex,
         selectedItemColor: Colors.redAccent,
         onTap: _onItemTapped,
         items: [
