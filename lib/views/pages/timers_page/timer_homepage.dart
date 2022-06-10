@@ -27,12 +27,12 @@ class TimerHomePageState extends State<TimerHomePage>
     // ** we wanted to change them. That way all we would have to do is change the
     // ** logic and the UI would be updated automatically.
     final Size size = MediaQuery.of(context).size;
-    const String pomodoroIcon = 'assets/pomodoro_icon.svg';
-    const String stopwatchIcon = 'assets/stopwatch_icon.svg';
-    const String countdownIcon = 'assets/countdown_icon.svg';
-    const String presetTimers = 'assets/preset_timers.svg';
-    const String savedTimers = 'assets/saved_timers.svg';
-    const String timerStats = 'assets/timer_stats.svg';
+    const String pomodoroIcon = 'assets/images/pomodoro_icon.svg';
+    const String stopwatchIcon = 'assets/images/stopwatch_icon.svg';
+    const String countdownIcon = 'assets/images/countdown_icon.svg';
+    const String presetTimers = 'assets/images/preset_timers.svg';
+    const String savedTimers = 'assets/image/saved_timers.svg';
+    const String timerStats = 'assets/images/timer_stats.svg';
 
     return Scaffold(
       bottomNavigationBar: Container(

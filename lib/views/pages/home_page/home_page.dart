@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../services/auth.dart';
@@ -22,10 +23,45 @@ class HomePageState extends State<HomePage>
     } else {
       homeController.photoUrl?.value = Auth.instance.USER.photoUrl!;
     }
-
+    var sideMenuIcon = 'assets/icons/menu-burger.png';
     var size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Color(0xff313131),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0),
+          child: AppBar(
+            backgroundColor: Colors.red[900],
+            elevation: 4,
+            centerTitle: true,
+            title: Row(
+              children: <Widget>[
+                SizedBox(
+                  height:37,
+                  width:37,
+                  child: IconButton(
+                    icon: Image.asset(sideMenuIcon),
+                    onPressed: () => {},
+                  ),
+                ),
+                SizedBox(height: 10,width: 10,),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 10, 10, 8),
+                  child: CircleAvatar(
+                    onBackgroundImageError: (value, trace) {},
+                    backgroundImage:
+                    NetworkImage(homeController.photoUrl!.value),
+                    radius: 25,
+                    child: homeController.photoUrl!.value == ''
+                        ? Text(
+                        '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
+                        : null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         bottomNavigationBar: Container(
           color: Color(0xff414141),
           height: MediaQuery.of(context).size.height * .1,
@@ -35,7 +71,7 @@ class HomePageState extends State<HomePage>
               const Icon(Icons.home),
               const Icon(Icons.flash_on),
               Container(),
-              Container()
+              Container(),
             ],
             controller: homeController.tabController,
           ),
@@ -45,39 +81,9 @@ class HomePageState extends State<HomePage>
           width: MediaQuery.of(context).size.width,
           child: Stack(
             children: <Widget>[
-              Container(
-                height: size.height * .3,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    alignment: Alignment.centerLeft,
-                    image: AssetImage('assets/dashboard_header.png'),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 64,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          CircleAvatar(
-                            onBackgroundImageError: (value, trace) {},
-                            backgroundImage:
-                                NetworkImage(homeController.photoUrl!.value),
-                            radius: 28,
-                            child: homeController.photoUrl!.value == ''
-                                ? Text(
-                                    '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
-                                : null,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
                 ),
               ),
             ],
