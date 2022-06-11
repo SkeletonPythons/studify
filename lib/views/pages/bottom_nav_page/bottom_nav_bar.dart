@@ -32,7 +32,6 @@ class BottomNavBarState extends State<BottomNavBar> with SingleTickerProviderSta
   }
 
   void _onItemTapped(int selectedIndex) {
-    print(selectedIndex);
     _bottomNavController.jumpToPage(selectedIndex);
   }
 

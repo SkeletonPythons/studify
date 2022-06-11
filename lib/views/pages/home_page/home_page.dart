@@ -28,8 +28,7 @@ class HomePageState extends State<HomePage>
     var sideMenuIcon = 'assets/icons/menu-burger.png';
     var size = MediaQuery.of(context).size;
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Color(0xff313131),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0),
@@ -68,8 +67,8 @@ class HomePageState extends State<HomePage>
             ),
           ),
         ),
-      ),
-    );
+      );
+
   }
 
 }
