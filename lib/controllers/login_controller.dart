@@ -122,7 +122,7 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
 
     Future.delayed(const Duration(seconds: 2), () {
       LoadIndicator.OFF();
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.NAVBAR);
     });
   }
 

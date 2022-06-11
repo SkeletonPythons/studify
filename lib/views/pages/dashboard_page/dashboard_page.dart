@@ -1,19 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:studify/views/pages/demo_page/demo.dart';
-import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
-import 'package:studify/views/pages/timers_page/timer_homepage.dart';
 import '../../../services/auth.dart';
 import '../../../controllers/home_controller.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Dashboard extends StatefulWidget {
+  const Dashboard({Key? key}) : super(key: key);
   @override
-  HomePageState createState() => HomePageState();
+  DashboardState createState() => DashboardState();
 }
 
-class HomePageState extends State<HomePage> {
+class DashboardState extends State<Dashboard> {
   HomeController homeController = Get.put<HomeController>(HomeController());
 
   @override
@@ -51,6 +48,12 @@ class HomePageState extends State<HomePage> {
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(0, 10, 10, 8),
+                child: CircleAvatar(
+                  onBackgroundImageError: (value, trace) {},
+                  backgroundImage: AssetImage(
+                      'assets/images/user.png'), //Changed to this for now because, since it still can't grab the actual user name, when maneuvering away from the page the name would clear and crash the app
+                  radius: 25,
+                ),
               ),
             ],
           ),

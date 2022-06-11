@@ -45,7 +45,7 @@ class Auth extends GetxController {
         debugPrint('User is new');
         return;
       }
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.NAVBAR);
     } else {
       debugPrint('User is not logged in');
     }
