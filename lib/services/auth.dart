@@ -11,7 +11,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:studify/consts/app_colors.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
@@ -21,36 +21,35 @@ class Auth extends GetxController {
   /// This is the Firebase Auth controller.
   /// It is used to handle the login and registration.
   /// It also contains the `user` object.
-  /// Access this object by calling `Auth.instance.<WHAT YOU WANT TO ACCESS>
+  /// Access this object by calling `Auth.instance.USER to get the user object.
 
   static final Auth instance = Get.find();
-  // late Rx<User?> _user;
+  late Rx<User?> _user;
   FirebaseAuth auth = FirebaseAuth.instance;
-  // RxString initialRoute = Routes.LOGIN.obs;
   late AppUser USER;
+  RxBool newUser = false.obs;
 
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  //   debugPrint('Auth onReady');
-  //   _user = Rx<User?>(auth.currentUser);
-  //   _user.bindStream(auth.userChanges());
-  //   ever(_user, _gateKeeper);
-  // }
+  @override
+  void onReady() {
+    super.onReady();
+    debugPrint('Auth onReady');
+    _user = Rx<User?>(auth.currentUser);
+    _user.bindStream(auth.userChanges());
+    ever(_user, _gateKeeper);
+  }
 
-  /// Checks if user is persisted in the app. If so, it will route to the home page.
-  /// If not, it will route to the login page.
-  // _gateKeeper(User? user) {
-  //   if (user != null) {
-  //     debugPrint('User is logged in');
-  //     populateUser(null, user);
-
-  //     initialRoute.value = Routes.HOME;
-  //   } else {
-  //     debugPrint('User is not logged in going to ');
-  //     initialRoute.value = Routes.LOGIN;
-  //   }
-  // }
+  _gateKeeper(User? user) {
+    if (user != null) {
+      debugPrint('User is logged in');
+      if (newUser.value) {
+        debugPrint('User is new');
+        return;
+      }
+      Get.offAllNamed(Routes.HOME);
+    } else {
+      debugPrint('User is not logged in');
+    }
+  }
 
   void signUpWithEmail(String email, String password) async {
     try {
