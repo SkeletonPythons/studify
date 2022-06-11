@@ -186,39 +186,19 @@ class RegisterScreenUI extends StatelessWidget {
               const Divider(
                 color: kAccent,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: Get.width * 0.4,
-                    // First name field
-                    child: TextField(
-                      controller: _controller.firstNameController,
-                      onChanged: (value) => _controller.first.value = value,
-                      decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue[200]!),
-                          ),
-                          labelText: 'first name',
-                          labelStyle: GoogleFonts.neucha()),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    width: Get.width * 0.4,
-                    // Last name field
-                    child: TextField(
-                      onChanged: (value) => _controller.last.value = value,
-                      controller: _controller.lastNameController,
-                      decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue[200]!),
-                          ),
-                          labelText: 'last name',
-                          labelStyle: GoogleFonts.neucha()),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: Get.width * 0.8,
+                // Display name field
+                child: TextField(
+                  onChanged: (value) => _controller.email.value = value,
+                  controller: _controller.nameController,
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue[200]!),
+                      ),
+                      labelText: 'Name',
+                      labelStyle: GoogleFonts.neucha()),
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -280,7 +260,7 @@ class RegisterScreenUI extends StatelessWidget {
                     controller: _controller.confirmPasswordController,
                     obscureText: _controller.obscureConfirm.value,
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
+                      enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.blue[200]!,
                         ),
@@ -320,7 +300,7 @@ class RegisterScreenUI extends StatelessWidget {
                     );
                   },
                   child: Text(
-                    'Sign up',
+                    'Sign up!',
                     style: GoogleFonts.ubuntu().copyWith(
                       fontSize: 20,
                       color: Colors.white,

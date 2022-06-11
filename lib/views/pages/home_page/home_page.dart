@@ -63,18 +63,7 @@ class HomePageState extends State<HomePage>
                       height: 64,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          CircleAvatar(
-                            onBackgroundImageError: (value, trace) {},
-                            backgroundImage:
-                                NetworkImage(homeController.photoUrl!.value),
-                            radius: 28,
-                            child: homeController.photoUrl!.value == ''
-                                ? Text(
-                                    '${Auth.instance.USER.name.substring(0, 1).toUpperCase()}${Auth.instance.USER.name.split(' ')[1][0].toUpperCase()}') // <- this is the first letter of the first and last name
-                                : null,
-                          ),
-                        ],
+                        children: <Widget>[],
                       ),
                     )
                   ],

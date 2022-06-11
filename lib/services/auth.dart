@@ -11,7 +11,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:studify/consts/app_colors.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
@@ -26,7 +25,8 @@ class Auth extends GetxController {
   static final Auth instance = Get.find();
   late Rx<User?> _user;
   FirebaseAuth auth = FirebaseAuth.instance;
-  late AppUser USER;
+  AppUser USER =
+      AppUser(email: '', name: 'Default', photoUrl: '', uid: '00000');
   RxBool newUser = false.obs;
 
   @override

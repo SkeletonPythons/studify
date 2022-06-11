@@ -36,8 +36,6 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
     confirmPasswordController.dispose();
   }
 
@@ -51,8 +49,7 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   RxBool obscureConfirm = true.obs;
   RxBool signinScreen = true.obs;
 
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -121,8 +118,8 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     emailController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
-    firstNameController.clear();
-    lastNameController.clear();
+    nameController.clear();
+
     Future.delayed(const Duration(seconds: 2), () {
       LoadIndicator.OFF();
       Get.offAllNamed(Routes.HOME);
