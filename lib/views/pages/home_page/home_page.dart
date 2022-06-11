@@ -1,17 +1,19 @@
+// ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:studify/views/pages/demo_page/demo.dart';
+import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
+import 'package:studify/views/pages/timers_page/timer_homepage.dart';
 import '../../../services/auth.dart';
 import '../../../controllers/home_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
   @override
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class HomePageState extends State<HomePage> {
   HomeController homeController = Get.put<HomeController>(HomeController());
 
   @override
@@ -22,52 +24,33 @@ class HomePageState extends State<HomePage>
     } else {
       homeController.photoUrl?.value = Auth.instance.USER.photoUrl!;
     }
-
+    var sideMenuIcon = 'assets/icons/menu-burger.png';
     var size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: Container(
-          color: Color(0xff414141),
-          height: MediaQuery.of(context).size.height * .1,
-          width: MediaQuery.of(context).size.width,
-          child: TabBar(
-            tabs: <Widget>[
-              const Icon(Icons.home),
-              const Icon(Icons.flash_on),
-              Container(),
-              Container()
-            ],
-            controller: homeController.tabController,
-          ),
-        ),
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
+
+    return Scaffold(
+      backgroundColor: Color(0xff313131),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          backgroundColor: Colors.red[900],
+          elevation: 4,
+          centerTitle: true,
+          title: Row(
             children: <Widget>[
-              Container(
-                height: size.height * .3,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    alignment: Alignment.centerLeft,
-                    image: AssetImage('assets/dashboard_header.png'),
-                  ),
+              SizedBox(
+                height: 37,
+                width: 37,
+                child: IconButton(
+                  icon: Image.asset(sideMenuIcon),
+                  onPressed: () => {},
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 64,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[],
-                      ),
-                    )
-                  ],
-                ),
+              SizedBox(
+                height: 10,
+                width: 10,
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 10, 8),
               ),
             ],
           ),
