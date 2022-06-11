@@ -15,32 +15,29 @@ import '../views/widgets/loading_indicator.dart';
 const String clientID =
     '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com';
 
-class LoginController extends GetxController with GetTickerProviderStateMixin {
+class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Auth.instance.USER = AppUser(
-        email: 'test@test.com',
-        photoUrl: '',
-        name: 'Testy Tester',
-        uid: '00000');
-    Auth.instance.auth.authStateChanges().listen((User? user) {
-      if (Auth.instance.auth.currentUser != null) {
-        Get.offAllNamed(Routes.NAVBAR);
-      }
-    });
+
+    // Auth.instance.auth.authStateChanges().listen((User? user) {
+    //   if (Auth.instance.auth.currentUser != null) {
+    //     Get.offAllNamed(Routes.NAVBAR);
+    //   }
+    // }
+    // );
   }
 
   @override
   void dispose() {
     super.dispose();
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
   }
 
-  RxString first = ''.obs;
-  RxString last = ''.obs;
+  RxString name = ''.obs;
   RxString email = ''.obs;
   RxString password = ''.obs;
   RxString confirmPassword = ''.obs;
@@ -70,12 +67,17 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
   bool validatePassword(String pass, confirm) {
     if (isEmptyCheck(pass) || isEmptyCheck(confirm)) {
       showErrorSnackBar('Hey!', 'Fields cannot be blank!', Get.context);
+      debugPrint('error: code 111223');
       return true;
     } else if (pass.length <= 5) {
+      debugPrint('error: code 44556');
+
       showErrorSnackBar(
           'Hey!', 'Password must be at least 6 characters long!', Get.context);
       return true;
     } else if (pass != confirm) {
+      debugPrint('error: code 11345');
+
       showErrorSnackBar('Hey!', 'Passwords do not match!', Get.context);
       return true;
     }
@@ -99,22 +101,20 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
     }
   }
 
-  void register(String f, l, e, p, c) {
+  void register(String n, e, p, c) {
     Auth.instance.newUser.value = true;
     LoadIndicator.ON();
-    if (isEmptyCheck(f) ||
-        isEmptyCheck(l) ||
-        validateEmail(e) ||
-        validatePassword(p, c)) {
+    if (isEmptyCheck(n) || validateEmail(e) || validatePassword(p, c)) {
       LoadIndicator.OFF();
+      debugPrint(
+          'register validation error ${name.value} ${email.value} ${password.value} ${confirmPassword.value}');
       return;
     }
     Auth.instance.signUpWithEmail(e, p);
     email.value = '';
     password.value = '';
     confirmPassword.value = '';
-    first.value = '';
-    last.value = '';
+    name.value = '';
     emailController.clear();
     passwordController.clear();
     confirmPasswordController.clear();

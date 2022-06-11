@@ -185,12 +185,13 @@ class RegisterScreenUI extends StatelessWidget {
               ),
               const Divider(
                 color: kAccent,
+                thickness: 2,
               ),
               SizedBox(
                 width: Get.width * 0.8,
                 // Display name field
                 child: TextField(
-                  onChanged: (value) => _controller.email.value = value,
+                  onChanged: (value) => _controller.name.value = value,
                   controller: _controller.nameController,
                   decoration: InputDecoration(
                       enabledBorder: UnderlineInputBorder(
@@ -292,8 +293,7 @@ class RegisterScreenUI extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     _controller.register(
-                      _controller.first.value,
-                      _controller.last.value,
+                      _controller.name.value,
                       _controller.email.value,
                       _controller.password.value,
                       _controller.confirmPassword.value,
@@ -310,6 +310,7 @@ class RegisterScreenUI extends StatelessWidget {
               ),
               const Divider(
                 color: kAccent,
+                thickness: 3,
               ),
               const GoogleSignInButton(clientId: clientID),
             ]),

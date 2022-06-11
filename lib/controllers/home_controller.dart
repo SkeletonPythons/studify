@@ -39,12 +39,11 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   @override
   void onReady() {
     super.onReady();
-    if (Auth.instance.auth.currentUser != null) {
-      Auth.instance.USER = AppUser(
-          email: Auth.instance.auth.currentUser!.email!,
-          uid: Auth.instance.auth.currentUser!.uid,
-          name: Auth.instance.auth.currentUser!.displayName!,
-          photoUrl: Auth.instance.auth.currentUser!.photoURL);
-    }
+    if (Auth.instance.auth.currentUser != null) {}
+    Auth.instance.USER = AppUser(
+        email: Auth.instance.auth.currentUser!.email!,
+        uid: Auth.instance.auth.currentUser!.uid,
+        name: Auth.instance.auth.currentUser?.displayName! ?? 'App User',
+        photoUrl: Auth.instance.auth.currentUser!.photoURL ?? '');
   }
 }

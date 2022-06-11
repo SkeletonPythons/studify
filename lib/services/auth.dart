@@ -11,6 +11,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studify/views/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
@@ -28,7 +29,7 @@ class Auth extends GetxController {
   AppUser USER =
       AppUser(email: '', name: 'Default', photoUrl: '', uid: '00000');
   RxBool newUser = false.obs;
-
+  RxBool isLoggedIn = false.obs;
   @override
   void onReady() {
     super.onReady();
@@ -40,19 +41,25 @@ class Auth extends GetxController {
 
   _gateKeeper(User? user) {
     if (user != null) {
+      isLoggedIn.value = true;
       debugPrint('User is logged in');
+      Future.delayed(const Duration(milliseconds: 3000), () {
+        Get.offAllNamed(Routes.NAVBAR);
+      });
       if (newUser.value) {
         debugPrint('User is new');
         return;
       }
-      Get.offAllNamed(Routes.HOME);
     } else {
       debugPrint('User is not logged in');
     }
   }
 
   void signUpWithEmail(String email, String password) async {
+    LoadIndicator.ON();
     try {
+      debugPrint('Signing up with email');
+
       await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -68,6 +75,8 @@ class Auth extends GetxController {
   }
 
   void logInWithEmail(String email, String password) async {
+    debugPrint('Logging in with email');
+
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (e) {

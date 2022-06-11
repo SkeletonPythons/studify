@@ -14,8 +14,11 @@ class BottomNavBar extends StatefulWidget {
   BottomNavBarState createState() => BottomNavBarState();
 }
 
-class BottomNavBarState extends State<BottomNavBar> with SingleTickerProviderStateMixin {
+class BottomNavBarState extends State<BottomNavBar>
+    with SingleTickerProviderStateMixin {
   HomeController homeController = Get.put<HomeController>(HomeController());
+
+  // Controller widgets like PageController need to be disposed to avoid memory leaks.
   final PageController _bottomNavController = PageController();
   final List<Widget> _screens = [
     Dashboard(),
@@ -23,6 +26,14 @@ class BottomNavBarState extends State<BottomNavBar> with SingleTickerProviderSta
     TimerHomePage(),
     FlashcardPage(),
   ];
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _bottomNavController.dispose();
+    super.dispose();
+  }
+
   int _selectedIndex = 0;
 
   void _onPageChanged(int index) {

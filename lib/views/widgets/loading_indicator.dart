@@ -18,18 +18,15 @@ class LoadIndicator {
   static void ON() {
     if (_state.value == APPLOADINGSTATE.IDLE) {
       _state.value = APPLOADINGSTATE.ACTIVE;
-      Get.dialog(Dialog(
-        child: SizedBox(
-          height: Get.height,
-          width: Get.width,
-          child: const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(kAccent),
-              backgroundColor: Colors.grey,
-            ),
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(kAccent),
+            backgroundColor: Colors.grey,
           ),
         ),
-      ));
+        barrierDismissible: false,
+      );
     }
   }
 
