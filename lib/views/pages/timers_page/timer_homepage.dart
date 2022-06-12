@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/timer_cards.dart';
 import '../../../controllers/timer_controller.dart';
 import '../../../controllers/home_controller.dart';
@@ -23,22 +24,16 @@ class TimerHomePageState extends State<TimerHomePage>
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Color(0xff313131),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: DefaultAppBar(),
+      ),
       body: Stack(
         children: <Widget>[
-          Container(
-            height: size.height * .3,
-            width: Get.width,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                scale: 4,
-                alignment: Alignment.topCenter,
-                image: AssetImage('assets/images/timer_header.png'),
-              ),
-            ),
-          ),
           GridView.count(
             shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 120, left: 20, right: 20),
+            padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
