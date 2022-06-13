@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/demo_page/demo.dart';
 import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
@@ -23,6 +24,7 @@ class BottomNavBarState extends State<BottomNavBar>
     Dashboard(),
     DemoPage(title: 'Hello World'),
     TimerHomePage(),
+    CalendarPage(),
     FlashcardPage(),
   ];
 
