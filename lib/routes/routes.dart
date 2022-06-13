@@ -8,6 +8,7 @@ import '../../../views/pages/login_page/login_page.dart';
 import '../../../views/pages/timers_page/timer_homepage.dart';
 import '../../../views/pages/bottom_nav_page/bottom_nav_bar.dart';
 import '../views/pages/timers_page/timer_pomodoro.dart';
+
 abstract class Routes {
   static const String LOGIN = '/login';
   static const String DASH = '/dashboard';
