@@ -1,12 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/timer_cards.dart';
 import '../../../controllers/timer_controller.dart';
-import '../../../controllers/home_controller.dart';
+import 'package:studify/routes/routes.dart';
 
 class TimerHomePage extends StatefulWidget {
   const TimerHomePage({Key? key}) : super(key: key);
@@ -18,7 +17,7 @@ class TimerHomePage extends StatefulWidget {
 class TimerHomePageState extends State<TimerHomePage>
     with SingleTickerProviderStateMixin {
   TimerController timerController = Get.put<TimerController>(TimerController());
-  HomeController homeController = Get.put<HomeController>(HomeController());
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -31,9 +30,24 @@ class TimerHomePageState extends State<TimerHomePage>
       ),
       body: Stack(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 80.0, left: 81.0, right: 20.0),
+            child: SizedBox(
+              height: size.height * 0.5,
+              width: size.width,
+              child: Text(
+                'Study Timers',
+                style: GoogleFonts.ubuntu(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           GridView.count(
             shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+            padding: const EdgeInsets.only(top: 150, left: 20, right: 20),
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
@@ -41,19 +55,20 @@ class TimerHomePageState extends State<TimerHomePage>
             children: <Widget>[
               TimerCard(
                   icon: timerController.pomodoroIcon,
-                  title: 'New Pomodoro Timer'),
+                  cardTitle: 'Pomodoro Timer',
+                  routeForOnPressed: Routes.POMODORO),
               TimerCard(
                   icon: timerController.stopwatchIcon,
-                  title: 'New Stopwatch Timer'),
+                  cardTitle: 'Stopwatch Timer',
+                  routeForOnPressed: Routes.DASH),
               TimerCard(
                   icon: timerController.countdownIcon,
-                  title: 'New Countdown Timer'),
+                  cardTitle: 'Countdown Timer',
+                  routeForOnPressed: Routes.DASH),
               TimerCard(
-                  icon: timerController.presetTimers, title: 'Preset Timers'),
-              TimerCard(
-                  icon: timerController.savedTimers, title: 'Saved Timers'),
-              TimerCard(
-                  icon: timerController.timerStats, title: 'Timer Statistics'),
+                  icon: timerController.timerStats,
+                  cardTitle: 'Timer Statistics',
+                  routeForOnPressed: Routes.DASH),
             ],
           ),
         ],

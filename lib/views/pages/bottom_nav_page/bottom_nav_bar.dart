@@ -19,7 +19,6 @@ class BottomNavBarState extends State<BottomNavBar>
   HomeController homeController = Get.put<HomeController>(HomeController());
 
   // Controller widgets like PageController need to be disposed to avoid memory leaks.
-  final PageController _bottomNavController = PageController();
   final List<Widget> _screens = [
     Dashboard(),
     DemoPage(title: 'Hello World'),
@@ -27,25 +26,9 @@ class BottomNavBarState extends State<BottomNavBar>
     CalendarPage(),
     FlashcardPage(),
   ];
-
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _bottomNavController.dispose();
-    super.dispose();
-  }
-
   int _selectedIndex = 0;
 
-  void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
-  void _onItemTapped(int selectedIndex) {
-    _bottomNavController.jumpToPage(selectedIndex);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +38,8 @@ class BottomNavBarState extends State<BottomNavBar>
     var flashcardsIcon = 'assets/icons/flashcards.png';
 
     return Scaffold(
-      body: PageView(
-        controller: _bottomNavController,
-        onPageChanged: _onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
+      body: IndexedStack(
+        index: _selectedIndex,
         children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -66,7 +47,7 @@ class BottomNavBarState extends State<BottomNavBar>
         backgroundColor: Color(0xff414141),
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.redAccent,
-        onTap: _onItemTapped,
+        onTap: (index) => setState(() => _selectedIndex = index),
         items: [
           BottomNavigationBarItem(
               icon: Image.asset(
@@ -99,5 +80,6 @@ class BottomNavBarState extends State<BottomNavBar>
         ],
       ),
     );
+
   }
 }
