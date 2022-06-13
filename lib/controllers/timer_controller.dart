@@ -13,4 +13,6 @@ class TimerController extends GetxController
   String presetTimers = 'assets/images/preset_timers.svg';
   String savedTimers = 'assets/images/saved_timers.svg';
   String timerStats = 'assets/images/timer_stats.svg';
+
+
 }

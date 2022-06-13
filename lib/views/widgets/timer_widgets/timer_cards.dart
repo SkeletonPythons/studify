@@ -5,15 +5,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/routes/routes.dart';
 
-
-class TimerCard extends StatelessWidget
-{
-  const TimerCard({Key? key, required this.icon, required this.cardTitle, required this.routeForOnPressed}) : super(key: key);
+class TimerCard extends StatelessWidget {
+  const TimerCard(
+      {Key? key,
+      required this.icon,
+      required this.cardTitle,
+      required this.routeForOnPressed})
+      : super(key: key);
 
   final String icon;
   final String cardTitle;
   final String routeForOnPressed;
-  
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -24,14 +27,18 @@ class TimerCard extends StatelessWidget
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          IconButton(onPressed: () => Get.toNamed(routeForOnPressed), icon: SvgPicture.asset(icon), iconSize: 115,),
-          Text(cardTitle, style: GoogleFonts.ubuntu(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),),
+          IconButton(
+            onPressed: () => Get.toNamed(routeForOnPressed),
+            icon: SvgPicture.asset(icon),
+            iconSize: 115,
+          ),
+          Text(
+            cardTitle,
+            style: GoogleFonts.ubuntu(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
+          ),
         ],
       ),
     );
   }
 }
-
-
-
-

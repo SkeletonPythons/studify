@@ -18,7 +18,6 @@ class BottomNavBarState extends State<BottomNavBar>
   HomeController homeController = Get.put<HomeController>(HomeController());
 
   // Controller widgets like PageController need to be disposed to avoid memory leaks.
-  final PageController _bottomNavController = PageController();
   final List<Widget> _screens = [
     Dashboard(),
     DemoPage(title: 'Hello World'),
@@ -27,12 +26,7 @@ class BottomNavBarState extends State<BottomNavBar>
   ];
   int _selectedIndex = 0;
 
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _bottomNavController.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {

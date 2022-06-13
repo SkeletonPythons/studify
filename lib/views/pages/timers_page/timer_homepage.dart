@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/timer_cards.dart';
 import '../../../controllers/timer_controller.dart';
-import '../../../controllers/home_controller.dart';
 import 'package:studify/routes/routes.dart';
 
 class TimerHomePage extends StatefulWidget {
@@ -19,7 +17,7 @@ class TimerHomePage extends StatefulWidget {
 class TimerHomePageState extends State<TimerHomePage>
     with SingleTickerProviderStateMixin {
   TimerController timerController = Get.put<TimerController>(TimerController());
-  HomeController homeController = Get.put<HomeController>(HomeController());
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -56,7 +54,9 @@ class TimerHomePageState extends State<TimerHomePage>
             primary: false,
             children: <Widget>[
               TimerCard(
-                  icon: timerController.pomodoroIcon, cardTitle: 'Pomodoro Timer', routeForOnPressed: Routes.DASH),
+                  icon: timerController.pomodoroIcon,
+                  cardTitle: 'Pomodoro Timer',
+                  routeForOnPressed: Routes.POMODORO),
               TimerCard(
                   icon: timerController.stopwatchIcon,
                   cardTitle: 'Stopwatch Timer',
@@ -66,7 +66,8 @@ class TimerHomePageState extends State<TimerHomePage>
                   cardTitle: 'Countdown Timer',
                   routeForOnPressed: Routes.DASH),
               TimerCard(
-                  icon: timerController.timerStats, cardTitle: 'Timer Statistics',
+                  icon: timerController.timerStats,
+                  cardTitle: 'Timer Statistics',
                   routeForOnPressed: Routes.DASH),
             ],
           ),
