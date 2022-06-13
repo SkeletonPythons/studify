@@ -7,6 +7,7 @@ import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/timer_cards.dart';
 import '../../../controllers/timer_controller.dart';
 import '../../../controllers/home_controller.dart';
+import 'package:studify/routes/routes.dart';
 
 class TimerHomePage extends StatefulWidget {
   const TimerHomePage({Key? key}) : super(key: key);
@@ -55,15 +56,18 @@ class TimerHomePageState extends State<TimerHomePage>
             primary: false,
             children: <Widget>[
               TimerCard(
-                  icon: timerController.pomodoroIcon, title: 'Pomodoro Timer'),
+                  icon: timerController.pomodoroIcon, cardTitle: 'Pomodoro Timer', routeForOnPressed: Routes.DASH),
               TimerCard(
                   icon: timerController.stopwatchIcon,
-                  title: 'Stopwatch Timer'),
+                  cardTitle: 'Stopwatch Timer',
+                  routeForOnPressed: Routes.DASH),
               TimerCard(
                   icon: timerController.countdownIcon,
-                  title: 'Countdown Timer'),
+                  cardTitle: 'Countdown Timer',
+                  routeForOnPressed: Routes.DASH),
               TimerCard(
-                  icon: timerController.timerStats, title: 'Timer Statistics'),
+                  icon: timerController.timerStats, cardTitle: 'Timer Statistics',
+                  routeForOnPressed: Routes.DASH),
             ],
           ),
         ],
