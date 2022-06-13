@@ -33,7 +33,7 @@ class TimerHomePageState extends State<TimerHomePage>
         children: <Widget>[
           GridView.count(
             shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+            padding: const EdgeInsets.only(top: 150, left: 20, right: 20),
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
@@ -48,10 +48,6 @@ class TimerHomePageState extends State<TimerHomePage>
               TimerCard(
                   icon: timerController.countdownIcon,
                   title: 'New Countdown Timer'),
-              TimerCard(
-                  icon: timerController.presetTimers, title: 'Preset Timers'),
-              TimerCard(
-                  icon: timerController.savedTimers, title: 'Saved Timers'),
               TimerCard(
                   icon: timerController.timerStats, title: 'Timer Statistics'),
             ],
