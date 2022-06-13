@@ -20,7 +20,7 @@ class BottomNavBarState extends State<BottomNavBar>
   // Controller widgets like PageController need to be disposed to avoid memory leaks.
   final List<Widget> _screens = [
     Dashboard(),
-    DemoPage(title: 'Hello World'),
+    DemoPage(title: 'Hello World'), //placeholder for Calendar page
     TimerHomePage(),
     FlashcardPage(),
   ];
