@@ -31,6 +31,21 @@ class TimerHomePageState extends State<TimerHomePage>
       ),
       body: Stack(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 80.0, left: 81.0, right: 20.0),
+            child: SizedBox(
+              height: size.height * 0.5,
+              width: size.width,
+              child: Text(
+                'Study Timers',
+                style: GoogleFonts.ubuntu(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           GridView.count(
             shrinkWrap: true,
             padding: const EdgeInsets.only(top: 150, left: 20, right: 20),
@@ -40,14 +55,13 @@ class TimerHomePageState extends State<TimerHomePage>
             primary: false,
             children: <Widget>[
               TimerCard(
-                  icon: timerController.pomodoroIcon,
-                  title: 'New Pomodoro Timer'),
+                  icon: timerController.pomodoroIcon, title: 'Pomodoro Timer'),
               TimerCard(
                   icon: timerController.stopwatchIcon,
-                  title: 'New Stopwatch Timer'),
+                  title: 'Stopwatch Timer'),
               TimerCard(
                   icon: timerController.countdownIcon,
-                  title: 'New Countdown Timer'),
+                  title: 'Countdown Timer'),
               TimerCard(
                   icon: timerController.timerStats, title: 'Timer Statistics'),
             ],

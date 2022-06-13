@@ -25,24 +25,13 @@ class BottomNavBarState extends State<BottomNavBar>
     TimerHomePage(),
     FlashcardPage(),
   ];
+  int _selectedIndex = 0;
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
     _bottomNavController.dispose();
     super.dispose();
-  }
-
-  int _selectedIndex = 0;
-
-  void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _onItemTapped(int selectedIndex) {
-    _bottomNavController.jumpToPage(selectedIndex);
   }
 
   @override
@@ -53,10 +42,8 @@ class BottomNavBarState extends State<BottomNavBar>
     var flashcardsIcon = 'assets/icons/flashcards.png';
 
     return Scaffold(
-      body: PageView(
-        controller: _bottomNavController,
-        onPageChanged: _onPageChanged,
-        physics: NeverScrollableScrollPhysics(),
+      body: IndexedStack(
+        index: _selectedIndex,
         children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -64,7 +51,7 @@ class BottomNavBarState extends State<BottomNavBar>
         backgroundColor: Color(0xff414141),
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.redAccent,
-        onTap: _onItemTapped,
+        onTap: (index) => setState(() => _selectedIndex = index),
         items: [
           BottomNavigationBarItem(
               icon: Image.asset(
@@ -97,5 +84,6 @@ class BottomNavBarState extends State<BottomNavBar>
         ],
       ),
     );
+
   }
 }
