@@ -1,18 +1,21 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
+import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
 import '../../../views/pages/splash_page/splash_page.dart';
 import '../../../views/pages/login_page/login_page.dart';
 import '../../../views/pages/timers_page/timer_homepage.dart';
 import '../../../views/pages/bottom_nav_page/bottom_nav_bar.dart';
 import '../views/pages/timers_page/timer_pomodoro.dart';
+
 abstract class Routes {
   static const String LOGIN = '/login';
   static const String DASH = '/dashboard';
   static const String SPLASH = '/splash';
   static const String TIMER = '/timer';
   static const String NAVBAR = '/navbar';
+  static const String CALENDAR = '/calendar';
   static const String POMODORO = '/pomodoro';
 }
 
@@ -41,6 +44,10 @@ class AppPages {
     GetPage(
       name: Routes.TIMER,
       page: () => TimerHomePage(),
+    ),
+    GetPage(
+      name: Routes.CALENDAR,
+      page: () => CalendarPage(),
     ),
     GetPage(
       name: Routes.POMODORO,
