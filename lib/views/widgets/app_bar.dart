@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../controllers/timer_controller.dart';
+import '../../controllers/timer controllers/timer_controller.dart';
 import '../pages/timers_page/timer_homepage.dart';
 
 class DefaultAppBar extends StatelessWidget {

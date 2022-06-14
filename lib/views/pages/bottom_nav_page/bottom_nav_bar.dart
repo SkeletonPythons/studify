@@ -1,11 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:studify/controllers/timer%20controllers/timer_controller.dart';
 import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
 import 'package:studify/views/pages/timers_page/timer_homepage.dart';
 import '../../../controllers/home_controller.dart';
+import '../timers_page/pomodoro.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -16,14 +18,18 @@ class BottomNavBar extends StatefulWidget {
 class BottomNavBarState extends State<BottomNavBar>
     with SingleTickerProviderStateMixin {
   HomeController homeController = Get.put<HomeController>(HomeController());
+  TimerController timerController = Get.put<TimerController>(TimerController());
 
-  final List<Widget> _screens = [
+  /*made screen and selectedIndex static in order to access them from other
+  controllers/classes in case page order needs to change*/
+
+  static List<Widget> screens = [
     Dashboard(),
     CalendarPage(),
     TimerHomePage(),
     FlashcardPage(),
   ];
-  int _selectedIndex = 0;
+  static int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +40,15 @@ class BottomNavBarState extends State<BottomNavBar>
 
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
+        index: selectedIndex,
+        children: screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Color(0xff414141),
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         selectedItemColor: Colors.redAccent,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) => setState(() => selectedIndex = index),
         items: [
           BottomNavigationBarItem(
               icon: Image.asset(

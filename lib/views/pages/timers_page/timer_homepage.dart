@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/timer_cards.dart';
-import '../../../controllers/timer_controller.dart';
+import '../../../controllers/timer controllers/timer_controller.dart';
 import 'package:studify/routes/routes.dart';
 
 class TimerHomePage extends StatefulWidget {
@@ -56,7 +56,7 @@ class TimerHomePageState extends State<TimerHomePage>
               TimerCard(
                   icon: timerController.pomodoroIcon,
                   cardTitle: 'Pomodoro Timer',
-                  routeForOnPressed: Routes.POMODORO),
+                  routeForOnPressed: Routes.POMODOROSETUP),
               TimerCard(
                   icon: timerController.stopwatchIcon,
                   cardTitle: 'Stopwatch Timer',

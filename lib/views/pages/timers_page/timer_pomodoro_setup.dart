@@ -7,6 +7,9 @@ import 'package:studify/views/widgets/timer_widgets/number_fields.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:studify/routes/routes.dart';
 
+import '../../../controllers/timer controllers/timer_controller.dart';
+import '../bottom_nav_page/bottom_nav_bar.dart';
+
 class PomodoroSetUp extends StatefulWidget {
   const PomodoroSetUp({Key? key}) : super(key: key);
 
@@ -16,6 +19,8 @@ class PomodoroSetUp extends StatefulWidget {
 
 class PomodoroSetUpState extends State<PomodoroSetUp>
     with SingleTickerProviderStateMixin {
+  TimerController timerController = Get.put<TimerController>(TimerController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +34,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
           children: <Widget>[
             Positioned(
               top: 70,
-              left: 25,
+              left: 20,
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.6,
               child: Opacity(
@@ -73,11 +78,14 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
               height: 85,
               width: 85,
               child: IconButton(
-                icon: SvgPicture.asset(
-                  'assets/images/start_button.svg',
-                ),
-                onPressed: () {},
-              ),
+                  icon: SvgPicture.asset(
+                    'assets/images/start_button.svg',
+                  ),
+                  onPressed: () {
+                    timerController.isRunning = true;
+                    timerController.ScreensIfPomodoroActive();
+                    Get.offAllNamed(Routes.NAVBAR);
+                  }),
             ),
             Positioned(
               top: 274,
@@ -91,6 +99,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                 onPressed: () {},
               ),
             ),
+            //Divider(height: 700, color: Colors.red, thickness: 2,),
           ],
         ),
       ),
