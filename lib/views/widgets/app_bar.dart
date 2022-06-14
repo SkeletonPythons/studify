@@ -39,7 +39,7 @@ class DefaultAppBar extends StatelessWidget {
               child: CircleAvatar(
                 onBackgroundImageError: (value, trace) {},
                 backgroundImage: AssetImage(
-                    'assets/images/user.png'), //Changed to this for now because, since it still can't grab the actual user name, when maneuvering away from the page the name would clear and crash the app
+                    'assets/images/user.png'),
               ),
             ),
           ),
