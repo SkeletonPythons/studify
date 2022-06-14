@@ -17,7 +17,6 @@ class BottomNavBarState extends State<BottomNavBar>
     with SingleTickerProviderStateMixin {
   HomeController homeController = Get.put<HomeController>(HomeController());
 
-  // Controller widgets like PageController need to be disposed to avoid memory leaks.
   final List<Widget> _screens = [
     Dashboard(),
     CalendarPage(),

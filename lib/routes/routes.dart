@@ -51,7 +51,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.POMODORO,
-      page: () => PomodoroTimer(),
+      page: () => PomodoroSetUp(),
     ),
   ];
 }

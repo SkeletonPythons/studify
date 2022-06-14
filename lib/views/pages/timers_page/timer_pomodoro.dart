@@ -3,16 +3,18 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/views/widgets/app_bar.dart';
+import 'package:studify/views/widgets/timer_widgets/number_fields.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:studify/routes/routes.dart';
 
-class PomodoroTimer extends StatefulWidget {
-  const PomodoroTimer({Key? key}) : super(key: key);
+class PomodoroSetUp extends StatefulWidget {
+  const PomodoroSetUp({Key? key}) : super(key: key);
 
   @override
-  PomodoroTimerState createState() => PomodoroTimerState();
+  PomodoroSetUpState createState() => PomodoroSetUpState();
 }
 
-class PomodoroTimerState extends State<PomodoroTimer>
+class PomodoroSetUpState extends State<PomodoroSetUp>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
@@ -23,30 +25,70 @@ class PomodoroTimerState extends State<PomodoroTimer>
         child: DefaultAppBar(),
       ),
       body: SizedBox(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
           children: <Widget>[
-            Text(
-              'Set Study Time (minutes)',
-              style: GoogleFonts.ubuntu(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white),
-            ),
-            SizedBox(
-              height: 35,
-              width: 45,
-              child: TextField(
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2.0),
-                  ),
+            Positioned(
+              top: 70,
+              left: 25,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Opacity(
+                opacity: 0.09,
+                child: SvgPicture.asset(
+                  'assets/images/tomato_timer2.svg',
                 ),
+              ),
+            ),
+            Positioned(
+              top: 45,
+              left: 70,
+              child: Text('New Pomodoro Timer',
+                  style: GoogleFonts.ubuntu(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  )),
+            ),
+            TimerNumberField(
+              prompt: 'Study time (minutes)',
+              positionTop: 100,
+              positionLeft: 75,
+              textFieldPadding: 33,
+            ),
+            TimerNumberField(
+              prompt: 'Rest time (minutes)',
+              positionTop: 150,
+              positionLeft: 75,
+              textFieldPadding: 42,
+            ),
+            TimerNumberField(
+              prompt: 'How many study cycles?',
+              positionTop: 200,
+              positionLeft: 75,
+              textFieldPadding: 10,
+            ),
+            Positioned(
+              top: 250,
+              left: 130,
+              height: 85,
+              width: 85,
+              child: IconButton(
+                icon: SvgPicture.asset(
+                  'assets/images/start_button.svg',
+                ),
+                onPressed: () {},
+              ),
+            ),
+            Positioned(
+              top: 274,
+              left: 205,
+              height: 60,
+              width: 60,
+              child: IconButton(
+                icon: SvgPicture.asset(
+                  'assets/images/bookmark3.svg',
+                ),
+                onPressed: () {},
               ),
             ),
           ],
