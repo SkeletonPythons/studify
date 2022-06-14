@@ -83,8 +83,8 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   ),
                   onPressed: () {
                     timerController.isRunning = true;
-                    timerController.ScreensIfPomodoroActive();
-                    Get.offAllNamed(Routes.NAVBAR);
+                    timerController.ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
+                    Get.offAllNamed(Routes.NAVBAR); //Routes to navbar which will display updated screens & index
                   }),
             ),
             Positioned(
@@ -99,7 +99,6 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                 onPressed: () {},
               ),
             ),
-            //Divider(height: 700, color: Colors.red, thickness: 2,),
           ],
         ),
       ),
