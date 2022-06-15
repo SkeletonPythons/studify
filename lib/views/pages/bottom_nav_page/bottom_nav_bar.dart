@@ -6,6 +6,7 @@ import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
 import 'package:studify/views/pages/timers_page/timer_homepage.dart';
+import 'package:studify/views/widgets/app_bar.dart';
 import '../../../controllers/home_controller.dart';
 import '../timers_page/pomodoro.dart';
 
@@ -39,6 +40,8 @@ class BottomNavBarState extends State<BottomNavBar>
     var flashcardsIcon = 'assets/icons/flashcards.png';
 
     return Scaffold(
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0), child: DefaultAppBar()),
       body: IndexedStack(
         index: selectedIndex,
         children: screens,

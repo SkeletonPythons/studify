@@ -21,12 +21,6 @@ class CalendarPageState extends State<CalendarPage>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return const Scaffold(
-      backgroundColor: Color(0xff313131),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: DefaultAppBar(),
-      ),
-    );
+    return Container();
   }
 }

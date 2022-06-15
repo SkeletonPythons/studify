@@ -24,12 +24,16 @@ class Auth extends GetxController {
   /// Access this object by calling `Auth.instance.USER to get the user object.
 
   static final Auth instance = Get.find();
+
   late Rx<User?> _user;
+
   FirebaseAuth auth = FirebaseAuth.instance;
-  AppUser USER =
-      AppUser(email: '', name: 'Default', photoUrl: '', uid: '00000');
+
+  AppUser USER = AppUser(email: '', name: 'User', photoUrl: '', uid: '00000');
+
   RxBool newUser = false.obs;
   RxBool isLoggedIn = false.obs;
+
   @override
   void onReady() {
     super.onReady();
@@ -91,5 +95,7 @@ class Auth extends GetxController {
 
   void logOut() async {
     await auth.signOut();
+    isLoggedIn.value = false;
+    Get.offAllNamed(Routes.LOGIN);
   }
 }
