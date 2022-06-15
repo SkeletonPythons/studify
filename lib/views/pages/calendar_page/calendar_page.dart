@@ -22,12 +22,7 @@ class CalendarPageState extends State<CalendarPage>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Container(
-      // backgroundColor: const Color(0xff313131),
-      // appBar: const PreferredSize(
-      //   preferredSize: Size.fromHeight(80.0),
-      //   child: DefaultAppBar(),
-      // ),
+    return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 150),
         child: SfCalendar(
@@ -50,9 +45,10 @@ class CalendarPageState extends State<CalendarPage>
           ),
           headerStyle: const CalendarHeaderStyle(
               textStyle: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
+            color: Colors.red,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          )),
           monthViewSettings: MonthViewSettings(
             numberOfWeeksInView: 6,
             monthCellStyle: MonthCellStyle(
