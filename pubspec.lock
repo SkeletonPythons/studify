@@ -7,7 +7,7 @@ packages:
       name: _discoveryapis_commons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1"
+    version: "1.0.3"
   animations:
     dependency: "direct main"
     description:
@@ -363,7 +363,7 @@ packages:
       name: googleapis
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "9.1.0"
   googleapis_auth:
     dependency: "direct main"
     description:
@@ -599,21 +599,21 @@ packages:
       name: syncfusion_flutter_calendar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.56"
+    version: "20.1.60"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.56"
+    version: "20.1.60"
   syncfusion_flutter_datepicker:
     dependency: transitive
     description:
       name: syncfusion_flutter_datepicker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.56"
+    version: "20.1.60"
   term_glyph:
     dependency: transitive
     description:

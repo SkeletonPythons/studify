@@ -31,7 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  syncfusion_flutter_calendar: ^19.1.54
+  syncfusion_flutter_calendar: ^20.1.60
   intl: ^0.17.0
   firebase_core: ^1.16.0
   firebase_auth: ^3.3.17
@@ -41,10 +41,10 @@ dependencies:
   logger: ^1.1.0
   get: ^4.6.3
   font_awesome_flutter: ^10.1.0
-  http: ^0.13.0
+  http: ^0.13.4
   google_sign_in: ^5.3.1
-  googleapis_auth: ^1.0.0-nullsafety.0
-  googleapis: ^1.0.0-beta.0
+  googleapis_auth: ^1.3.1
+  googleapis: ^9.1.0
   flutter_local_notifications: ^9.5.3+1
   google_fonts: ^2.3.2
   flutterfire_ui: ^0.4.1+2
