@@ -10,21 +10,17 @@ class FlashcardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-            height: Get.height,
-            width: Get.width,
-            child: Stack(
-              children: [
-                CustomScrollView(slivers: [
-                  SliverGrid(
-                    delegate: controller.sliverChildDelegate.value,
-                    gridDelegate: controller.sliverDelegate.value,
-                  )
-                ]),
-              ],
-            )),
+      child: SizedBox(
+        height: Get.height,
+        width: Get.width,
+        child: CustomScrollView(
+          slivers: [
+            SliverGrid(
+              delegate: controller.sliverChildDelegate.value,
+              gridDelegate: controller.sliverDelegate.value,
+            )
+          ],
+        ),
       ),
     );
   }

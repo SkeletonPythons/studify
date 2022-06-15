@@ -16,6 +16,6 @@ class PomodoroTimerState extends State<PomodoroTimer>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Material(child: Container());
   }
 }

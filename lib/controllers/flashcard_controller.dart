@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:animations/animations.dart';
 
 import '../models/flashcard_deck_model.dart';
 import '../models/flashcard_model.dart';
+import '../utils/sample_cards.dart';
 
-class FlashcardController extends GetxController {
+class FlashcardController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   RxList<Deck> decks = RxList<Deck>();
+
+  late AnimationController animationController;
+  late Rx<Animation<Offset>> position;
 
   void addDeck(Deck deck) {
     decks.add(deck);
@@ -41,12 +45,26 @@ class FlashcardController extends GetxController {
     // ignore: prefer_const_constructors
     SliverChildBuilderDelegate(
       (BuildContext context, int index) {
-        // return OpenContainer(
-        //   duration: const Duration(seconds: 3),
-        //   child: GridTile(
-        //     child: Text(decks[index].subject),
-        //   ),
-        // );
+        return OpenContainer(
+            closedBuilder: (BuildContext context, VoidCallback openContainer) {
+          return GridTile(
+            child: Card(
+              child: InkWell(
+                onTap: () {
+                  openContainer();
+                },
+                child: Center(
+                  child: Text(
+                    statesAndCapital[index].draw(index).q,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }, openBuilder: (BuildContext context, VoidCallback openContainer) {
+          return Container();
+        });
       },
       childCount: decks.length,
     ),
