@@ -22,15 +22,7 @@ class DashboardState extends State<Dashboard> {
     } else {
       homeController.photoUrl?.value = Auth.instance.USER.photoUrl!;
     }
-    var sideMenuIcon = 'assets/icons/menu-burger.png';
-    var size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: Color(0xff313131),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: DefaultAppBar(),
-      ),
-    );
+    return Container();
   }
 }

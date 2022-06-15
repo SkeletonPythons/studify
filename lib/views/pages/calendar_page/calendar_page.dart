@@ -21,7 +21,8 @@ class CalendarPageState extends State<CalendarPage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    final Size size = MediaQuery.of(context).size;
+    return Container(
       // backgroundColor: const Color(0xff313131),
       // appBar: const PreferredSize(
       //   preferredSize: Size.fromHeight(80.0),
@@ -79,22 +80,3 @@ class CalendarPageState extends State<CalendarPage>
     );
   }
 }
-// List<Appointment> getAppointments() {
-//   List<Appointment> meetings = <Appointment>[];
-//   final DateTime today = DateTime.now();
-//   final DateTime startTime =
-//       DateTime(today.year, today.month, today.day, 9, 0, 0);
-//   final DateTime endTime = startTime.add(const Duration(hours: 2));
-//   meetings.add(Appointment(
-//       startTime: startTime,
-//       endTime: endTime,
-//       subject: 'Conference',
-//       color: Colors.red));
-//   return meetings;
-// }
-
-// class AddDataSource extends CalendarDataSource {
-//   AddDataSource(List<Appointment> source) {
-//     appointments = source;
-//   }
-// }

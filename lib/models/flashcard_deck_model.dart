@@ -4,6 +4,7 @@ import './flashcard_model.dart';
 
 class Deck {
   final String subject;
+  final String id;
   RxList<Flashcard> flashcards;
   int? currentCardIndex;
   int? numCorrect;
@@ -13,9 +14,9 @@ class Deck {
     required this.flashcards,
     this.currentCardIndex = 0,
     this.numCorrect = 0,
-  });
+  }) : id = DateTime.now().millisecondsSinceEpoch.toString();
 
-  Deck.fromJson(Map<String, dynamic> json)
+  Deck.fromJson(Map<String, dynamic> json, this.id)
       : subject = json['subject'],
         flashcards = json['flashcards'],
         currentCardIndex = 0,

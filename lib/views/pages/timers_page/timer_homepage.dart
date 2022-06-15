@@ -22,57 +22,50 @@ class TimerHomePageState extends State<TimerHomePage>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: Color(0xff313131),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: DefaultAppBar(),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 80.0, left: 81.0, right: 20.0),
-            child: SizedBox(
-              height: size.height * 0.5,
-              width: size.width,
-              child: Text(
-                'Study Timers',
-                style: GoogleFonts.ubuntu(
-                  fontSize: 40,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 80.0, left: 81.0, right: 20.0),
+          child: SizedBox(
+            height: size.height * 0.5,
+            width: size.width,
+            child: Text(
+              'Study Timers',
+              style: GoogleFonts.ubuntu(
+                fontSize: 40,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
           ),
-          GridView.count(
-            shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 150, left: 20, right: 20),
-            crossAxisCount: 2,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            primary: false,
-            children: <Widget>[
-              TimerCard(
-                  icon: timerController.pomodoroIcon,
-                  cardTitle: 'Pomodoro Timer',
-                  routeForOnPressed: Routes.POMODOROSETUP),
-              TimerCard(
-                  icon: timerController.stopwatchIcon,
-                  cardTitle: 'Stopwatch Timer',
-                  routeForOnPressed: Routes.DASH),
-              TimerCard(
-                  icon: timerController.countdownIcon,
-                  cardTitle: 'Countdown Timer',
-                  routeForOnPressed: Routes.DASH),
-              TimerCard(
-                  icon: timerController.timerStats,
-                  cardTitle: 'Timer Statistics',
-                  routeForOnPressed: Routes.DASH),
-            ],
-          ),
-        ],
-      ),
+        ),
+        GridView.count(
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(top: 150, left: 20, right: 20),
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          primary: false,
+          children: <Widget>[
+            TimerCard(
+                icon: timerController.pomodoroIcon,
+                cardTitle: 'Pomodoro Timer',
+                routeForOnPressed: Routes.POMODOROSETUP),
+            TimerCard(
+                icon: timerController.stopwatchIcon,
+                cardTitle: 'Stopwatch Timer',
+                routeForOnPressed: Routes.DASH),
+            TimerCard(
+                icon: timerController.countdownIcon,
+                cardTitle: 'Countdown Timer',
+                routeForOnPressed: Routes.DASH),
+            TimerCard(
+                icon: timerController.timerStats,
+                cardTitle: 'Timer Statistics',
+                routeForOnPressed: Routes.DASH),
+          ],
+        ),
+      ],
     );
   }
 }

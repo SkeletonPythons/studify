@@ -6,23 +6,16 @@ import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/number_fields.dart';
 
 class PomodoroTimer extends StatefulWidget {
- const PomodoroTimer({Key? key}) : super(key: key);
-
- @override
- PomodoroTimerState createState() => PomodoroTimerState();
-}
-
-class PomodoroTimerState extends State<PomodoroTimer> with SingleTickerProviderStateMixin {
-
+  const PomodoroTimer({Key? key}) : super(key: key);
 
   @override
+  PomodoroTimerState createState() => PomodoroTimerState();
+}
+
+class PomodoroTimerState extends State<PomodoroTimer>
+    with SingleTickerProviderStateMixin {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff313131),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
-        child: DefaultAppBar(),
-      ),
-    );
+    return Container();
   }
 }

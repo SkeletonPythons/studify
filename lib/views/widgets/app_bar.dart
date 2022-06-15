@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../controllers/timer controllers/timer_controller.dart';
-import '../pages/timers_page/timer_homepage.dart';
 
 class DefaultAppBar extends StatelessWidget {
   const DefaultAppBar({Key? key}) : super(key: key);
 
   final String sideMenuIcon = 'assets/icons/menu-burger.png';
   final String logo = 'assets/images/studify_logo.png';
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +32,7 @@ class DefaultAppBar extends StatelessWidget {
               width: 50,
               child: CircleAvatar(
                 onBackgroundImageError: (value, trace) {},
-                backgroundImage: AssetImage(
-                    'assets/images/user.png'),
+                backgroundImage: AssetImage('assets/images/user.png'),
               ),
             ),
           ),
