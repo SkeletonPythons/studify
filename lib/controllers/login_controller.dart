@@ -16,6 +16,15 @@ const String clientID =
     '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com';
 
 class LoginController extends GetxController {
+  GlobalKey<FormState> formKey = GlobalKey();
+
+  String? val(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Fields cannot be blank!';
+    }
+    return null;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -51,37 +60,53 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  bool validateEmail(String email) {
-    if (isEmptyCheck(email)) {
-      showErrorSnackBar(
-          'Uh-oh!', 'Please enter an email address.', Get.context);
-      return true;
-    } else if (!email.contains('@')) {
-      showErrorSnackBar(
-          'Uh-oh!', 'Please enter a valid email address.', Get.context);
-      return true;
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Fields cannot be blank!';
     }
-    return false;
+    if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value)) {
+      return 'Enter a valid email!';
+    }
+    return null;
   }
 
-  bool validatePassword(String pass, confirm) {
-    if (isEmptyCheck(pass) || isEmptyCheck(confirm)) {
-      showErrorSnackBar('Hey!', 'Fields cannot be blank!', Get.context);
-      debugPrint('error: code 111223');
-      return true;
-    } else if (pass.length <= 5) {
-      debugPrint('error: code 44556');
-
-      showErrorSnackBar(
-          'Hey!', 'Password must be at least 6 characters long!', Get.context);
-      return true;
-    } else if (pass != confirm) {
-      debugPrint('error: code 11345');
-
-      showErrorSnackBar('Hey!', 'Passwords do not match!', Get.context);
-      return true;
+  String? validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
     }
-    return false;
+    if (value.trim().length < 4) {
+      return 'Username must be at least 4 characters in length';
+    }
+    // Return null if the entered username is valid
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value.trim().length < 6) {
+      return 'Password must be at least 6 characters in length';
+    }
+    if (value != confirmPassword.value) {
+      return 'Passwords do not match';
+    }
+    // Return null if the entered password is valid
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value != password.value) {
+      return 'Passwords do not match';
+    }
+
+    // Return null if the entered password is valid
+    return null;
   }
 
   bool isEmptyCheck(String thingToValidate) {
@@ -101,25 +126,11 @@ class LoginController extends GetxController {
     }
   }
 
-  void register(String n, e, p, c) {
+  void register(String n, String e, String p, String c) async {
     Auth.instance.newUser.value = true;
     LoadIndicator.ON();
-    if (isEmptyCheck(n) || validateEmail(e) || validatePassword(p, c)) {
-      LoadIndicator.OFF();
-      debugPrint(
-          'register validation error ${name.value} ${email.value} ${password.value} ${confirmPassword.value}');
-      return;
-    }
-    Auth.instance.signUpWithEmail(e, p);
-    email.value = '';
-    password.value = '';
-    confirmPassword.value = '';
-    name.value = '';
-    emailController.clear();
-    passwordController.clear();
-    confirmPasswordController.clear();
-    nameController.clear();
 
+    await Auth.instance.signUpWithEmail(e, p);
     Future.delayed(const Duration(seconds: 2), () {
       LoadIndicator.OFF();
       Get.offAllNamed(Routes.NAVBAR);

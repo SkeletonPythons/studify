@@ -16,8 +16,8 @@ class FlashcardPage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverGrid(
-              delegate: controller.sliverChildDelegate.value,
-              gridDelegate: controller.sliverDelegate.value,
+              delegate: controller.sliverChildDelegate,
+              gridDelegate: controller.sliverDelegate,
             )
           ],
         ),
