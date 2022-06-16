@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:studify/services/db.dart';
 
 import '../services/auth.dart';
 import '../views/widgets/snackbars/error_snackbar.dart';
@@ -11,137 +10,138 @@ import '../views/widgets/snackbars/error_snackbar.dart';
 import '../routes/routes.dart';
 import '../models/user_model.dart';
 import '../../../consts/app_colors.dart';
+import '../views/widgets/loading_indicator.dart';
 
 const String clientID =
     '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com';
 
-class LoginController extends GetxController with GetTickerProviderStateMixin {
-  Stream<User?> get onAuthStateChanged => Auth.instance.auth.authStateChanges();
+class LoginController extends GetxController {
+  GlobalKey<FormState> formKey = GlobalKey();
+
+  String? val(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Fields cannot be blank!';
+    }
+    return null;
+  }
 
   @override
   void onInit() {
     super.onInit();
-    Auth.instance.USER = AppUser(
-        email: 'test@test.com',
-        photoUrl: '',
-        name: 'Testy Tester',
-        uid: '00000');
-    Auth.instance.auth.authStateChanges().listen((User? user) {
-      if (Auth.instance.auth.currentUser != null) {
-        Get.offAllNamed(Routes.HOME);
-      }
-    });
+
+    // Auth.instance.auth.authStateChanges().listen((User? user) {
+    //   if (Auth.instance.auth.currentUser != null) {
+    //     Get.offAllNamed(Routes.NAVBAR);
+    //   }
+    // }
+    // );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+  }
+
+  RxString name = ''.obs;
+  RxString email = ''.obs;
+  RxString password = ''.obs;
+  RxString confirmPassword = ''.obs;
 
   RxBool obscurePass = true.obs;
   RxBool obscureConfirm = true.obs;
   RxBool signinScreen = true.obs;
 
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  void validate() {
-    if (emailController.text != '' &&
-        passwordController.text != '' &&
-        confirmPasswordController.text != '' &&
-        firstNameController.text != '' &&
-        lastNameController.text != '') {
-      if (passwordController.text == confirmPasswordController.text) {
-        register(
-          emailController.text.trim(),
-          passwordController.text.trim(),
-          firstNameController.text.trim(),
-          lastNameController.text.trim(),
-        );
-      } else {
-        Get.snackbar(
-          'Error',
-          'Passwords do not match',
-          icon: const Icon(Icons.error),
-          backgroundColor: kAccent,
-        );
-      }
-    } else {
-      Get.snackbar(
-        'Error',
-        'Please fill in all fields',
-        icon: const Icon(Icons.error),
-        backgroundColor: kAccent,
-      );
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Fields cannot be blank!';
     }
+    if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value)) {
+      return 'Enter a valid email!';
+    }
+    return null;
   }
 
-  RxDouble opacity = 1.0.obs;
+  String? validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value.trim().length < 4) {
+      return 'Username must be at least 4 characters in length';
+    }
+    // Return null if the entered username is valid
+    return null;
+  }
 
-  late AnimationController animationController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1000),
-  );
-  late Animation<double> animation =
-      Tween(begin: 1.0, end: 0.0).animate(animationController);
+  String? validatePassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value.trim().length < 6) {
+      return 'Password must be at least 6 characters in length';
+    }
+    if (value != confirmPassword.value) {
+      return 'Passwords do not match';
+    }
+    // Return null if the entered password is valid
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field is required';
+    }
+    if (value != password.value) {
+      return 'Passwords do not match';
+    }
+
+    // Return null if the entered password is valid
+    return null;
+  }
+
+  bool isEmptyCheck(String thingToValidate) {
+    if (thingToValidate.isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  Rx<CrossFadeState> xFadeState = Rx<CrossFadeState>(CrossFadeState.showFirst);
 
   void transition() {
-    animationController.addListener(() {
-      opacity.value = animation.value;
-      debugPrint(animation.value.toString());
-    });
-    animationController.forward().then((_) {
-      signinScreen.toggle();
-      animationController.reverse();
-    });
+    if (xFadeState.value == CrossFadeState.showFirst) {
+      xFadeState.value = CrossFadeState.showSecond;
+    } else {
+      xFadeState.value = CrossFadeState.showFirst;
+    }
   }
 
-  void register(String first, last, email, pass) async {
-    try {
-      {
-        await Auth.instance.auth
-            .createUserWithEmailAndPassword(email: email, password: pass)
-            .then(
-          (user) async {
-            await Auth.instance.auth.currentUser!.updateDisplayName(
-              '$first $last',
-            );
+  void register(String n, String e, String p, String c) async {
+    Auth.instance.newUser.value = true;
+    LoadIndicator.ON();
 
-            Auth.instance.USER = AppUser(
-              uid: user.user!.uid,
-              email: user.user!.email!,
-              name: user.user!.displayName!,
-              photoUrl: user.user!.photoURL ??
-                  '', // <- this sets the photoUrl to an empty string if it's null.
-            );
-            debugPrint(Auth.instance.USER.toJson().toString());
-            Get.offAllNamed(Routes.HOME);
-          },
-        );
-      }
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        showErrorSnackBar('uh-oh!', e.message!, Get.context);
-        debugPrint(e.message);
-      } else {
-        showErrorSnackBar('uh-oh!', e.toString(), Get.context);
-      }
-    }
+    await Auth.instance.signUpWithEmail(e, p);
+    Future.delayed(const Duration(seconds: 2), () {
+      LoadIndicator.OFF();
+      Get.offAllNamed(Routes.NAVBAR);
+    });
   }
 
   void login(String email, String pass) async {
     try {
       {
         await Auth.instance.auth
-            .signInWithEmailAndPassword(email: email, password: pass)
-            .then(
-          (user) {
-            Auth.instance.USER = AppUser(
-              uid: user.user!.uid,
-              email: user.user!.email!,
-              name: user.user!.displayName!,
-              photoUrl: user.user!.photoURL,
-            );
-          },
-        );
+            .signInWithEmailAndPassword(email: email, password: pass);
       }
     } catch (e) {
       if (e is FirebaseAuthException) {
@@ -152,14 +152,6 @@ class LoginController extends GetxController with GetTickerProviderStateMixin {
       }
     }
   }
-
-  AuthStateChangeAction<SignedIn> signedIn = AuthStateChangeAction<SignedIn>(
-    (context, state) {
-      if (state.user != null) {
-        Get.offAllNamed(Routes.HOME);
-      }
-    },
-  );
 
   final provideConfigs = [
     const EmailProviderConfiguration(),

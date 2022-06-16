@@ -1,18 +1,16 @@
 class AppUser {
   AppUser({
     required this.uid,
-    required this.name,
+    this.name,
     required this.email,
-    this.phoneNumber,
     this.photoUrl,
     this.settings,
   });
 
   String uid;
-  String name;
+  String? name;
   String email;
   String? photoUrl;
-  String? phoneNumber;
   Map<String, bool>? settings = {
     // TODO: Add settings that will be synced to the database.
     'isVerified': false,
@@ -37,10 +35,9 @@ class AppUser {
 
   Map<String, dynamic> toJson() => {
         'uid': uid,
-        'first': name,
+        'name': name,
         'email': email,
         'photoUrl': photoUrl,
-        'phoneNumber': phoneNumber,
         'settings': settings,
         'stats': stats,
       };
@@ -50,7 +47,6 @@ class AppUser {
         name = json['name'],
         email = json['email'],
         photoUrl = json['photoUrl'],
-        phoneNumber = json['phoneNumber'],
         settings = json['settings'],
         stats = json['stats'];
 }

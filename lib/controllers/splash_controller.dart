@@ -20,16 +20,29 @@ class SplashController extends GetxController
     animation = Tween(begin: 0.01, end: 1.0).animate(animationController)
       ..addListener(() {
         animationValue.value = animation.value;
-        debugPrint('animation running');
       });
 
-    animationController.forward().then((_) {
-      Future.delayed(const Duration(seconds: 3), () {
-        Get.offAllNamed(Routes.LOGIN);
-      });
-    });
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    animationController.forward().then((_) {
+      Future.delayed(const Duration(seconds: 3), () {
+        if (!Auth.instance.isLoggedIn.value) {
+          Get.offAllNamed(Routes.LOGIN);
+        }
+      });
+    });
+  }
+
   Duration duration = const Duration(milliseconds: 800);
+
+  @override
+  void dispose() {
+    animationController.dispose();
+
+    super.dispose();
+  }
 }
