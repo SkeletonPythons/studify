@@ -24,6 +24,8 @@ class BottomNavBarState extends State<BottomNavBar>
   /*made screen and selectedIndex static in order to access them from other
   controllers/classes in case page order needs to change*/
 
+  // ** Consider using a TabBar an dTabBarView instead of a BottomNavBar. It has an animation built in for transitioning between pages.
+
   static List<Widget> screens = [
     Dashboard(),
     CalendarPage(),

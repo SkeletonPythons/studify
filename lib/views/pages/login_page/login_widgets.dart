@@ -70,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(color: kAccent, thickness: 22),
+            const Divider(color: kAccent, thickness: 2),
             TextField(
               controller: controller.emailController,
               decoration: InputDecoration(
