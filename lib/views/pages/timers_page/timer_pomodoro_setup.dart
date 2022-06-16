@@ -23,9 +23,13 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SizedBox(
-        child: Stack(
+    return Scaffold(
+      backgroundColor: Color(0xff313131),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: DefaultAppBar(),
+      ),
+        body: Stack(
           children: <Widget>[
             Positioned(
               top: 70,
@@ -98,7 +102,6 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

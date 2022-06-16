@@ -6,6 +6,7 @@ import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
 import 'package:studify/views/pages/timers_page/timer_homepage.dart';
+import 'package:studify/views/pages/timers_page/timer_pomodoro_setup.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import '../../../controllers/home_controller.dart';
 import '../timers_page/pomodoro.dart';

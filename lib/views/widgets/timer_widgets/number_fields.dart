@@ -21,36 +21,34 @@ class TimerNumberField extends StatelessWidget {
     return Positioned(
       top: positionTop,
       left: positionLeft,
-      child: Material(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(prompt,
-                style: GoogleFonts.ubuntu(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white)),
-            Padding(
-              padding: EdgeInsets.only(left: textFieldPadding),
-              child: SizedBox(
-                height: 35,
-                width: 55,
-                child: TextField(
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red, width: 2.0),
-                    ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(prompt,
+              style: GoogleFonts.ubuntu(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white)),
+          Padding(
+            padding: EdgeInsets.only(left: textFieldPadding),
+            child: SizedBox(
+              height: 35,
+              width: 55,
+              child: TextField(
+                maxLines: 1,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
