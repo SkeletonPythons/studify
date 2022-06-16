@@ -59,7 +59,7 @@ class Auth extends GetxController {
     }
   }
 
-  void signUpWithEmail(String email, String password) async {
+  Future<void> signUpWithEmail(String email, String password) async {
     LoadIndicator.ON();
     try {
       debugPrint('Signing up with email');

@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TimerNumberField extends StatelessWidget {
-  const TimerNumberField({Key? key, required this.prompt, required this.positionTop, required this.positionLeft, required this.textFieldPadding}) : super(key: key);
+  const TimerNumberField(
+      {Key? key,
+      required this.prompt,
+      required this.positionTop,
+      required this.positionLeft,
+      required this.textFieldPadding})
+      : super(key: key);
 
   final String prompt;
   final double positionTop;

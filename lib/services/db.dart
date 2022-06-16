@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -69,27 +71,17 @@ class DB extends GetxController {
     void updateItem(
         {required String collection,
         required String doc,
-        required String item,
-        required dynamic value}) async {
+        required Map<String, dynamic> thingToUpdate}) async {
       try {
-        await _fs.collection(collection).doc(doc).update({
-          item: value,
-        });
+        await _fs.collection(collection).doc(doc).update(thingToUpdate);
       } catch (e) {
         debugPrint(e.toString());
       }
     }
 
-    void addDeck(Deck deck) {
-      _fs.doc(_userPath.value).collection('decks').add(deck.toJson());
-    }
-
-    void removeDeck(Deck deck) {
-      _fs.doc(_userPath.value).collection('decks').doc(deck.id).delete();
-    }
-
     @override
     void onReady() {
+      super.onReady();
       DB.instance._initDB(Auth.instance.USER);
     }
 
@@ -101,34 +93,16 @@ class DB extends GetxController {
           .get();
     }
 
-    Future<QuerySnapshot> getFlashcards(AppUser user) async {
-      final QuerySnapshot querySnapshot = await _fs
-          .collection('users')
-          .doc(user.uid)
-          .collection('flashcards')
+    Future<DocumentSnapshot> getDoc(String collection, String doc) async {
+      return await _fs
+          .doc(_userPath.value)
+          .collection(collection)
+          .doc(doc)
           .get()
-          .then(
-        (snapshot) {
-          return snapshot;
-        },
-      );
-      return querySnapshot;
-    }
-
-    void createFlashcardDeck(AppUser user, Deck deck) async {
-      try {
-        for (int i = 0; i < deck.flashcards.length; i++) {
-          await _fs
-              .collection('users')
-              .doc(user.uid)
-              .collection('flashcards')
-              .doc(deck.id)
-              .set(deck.flashcards[i].toJson());
-        }
-      } catch (e) {
+          .then((value) => value)
+          .catchError((e) {
         debugPrint(e.toString());
-        showErrorSnackBar('uh-oh', e.toString(), Get.context);
-      }
+      });
     }
   }
 }
