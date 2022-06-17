@@ -20,6 +20,25 @@ class DB extends GetxController {
 
   final RxBool _gotDB = false.obs;
 
+  /// The [DocumentReference] for the user.
+  DocumentReference get userDoc => _fs.doc(_userPath.value);
+
+  /// The [CollectionReference] for the user's flashcards.
+  CollectionReference get flashcardsCol =>
+      _fs.collection('${_userPath.value}/flashcards');
+
+  /// The [CollectionReference] for the user's events.
+  CollectionReference get eventsCol =>
+      _fs.collection('${_userPath.value}/events');
+
+  /// The [CollectionReference] for the user's tasks.
+  CollectionReference get tasksCol =>
+      _fs.collection('${_userPath.value}/tasks');
+
+  /// The [CollectionReference] for the user's timers.
+  CollectionReference get timersCol =>
+      _fs.collection('${_userPath.value}/timers');
+
   void _initDB(AppUser user) async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
     _userPath.value = 'users/${user.uid}';
@@ -29,8 +48,8 @@ class DB extends GetxController {
           _gotDB.value = true;
         } else {
           try {
+            _createDB(user);
             _gotDB.value = true;
-            _fs.collection('users').doc(user.uid).set(user.toJson());
           } catch (e) {
             debugPrint(e.toString());
           }
@@ -103,6 +122,55 @@ class DB extends GetxController {
           .catchError((e) {
         debugPrint(e.toString());
       });
+    }
+  }
+
+  Future<bool> doesExist(String collection, String doc) async {
+    return await _fs
+        .doc(_userPath.value)
+        .collection(collection)
+        .doc(doc)
+        .get()
+        .then((value) => value.exists)
+        .catchError((e) {
+      debugPrint(e.toString());
+    });
+  }
+
+  Future<void> _createDB(AppUser user) async {
+    /// This function is used to create the database. It will create one if it doesn't exist.
+    try {
+      _userPath.value = 'users/${user.uid}';
+      await _fs
+          .collection('users')
+          .doc(user.uid)
+          .set(user.toJson())
+          .whenComplete(
+        () async {
+          await _fs
+              .doc(_userPath.value)
+              .collection('flashcards')
+              .doc('initCollection')
+              .set({'deck': []});
+          await _fs
+              .doc(_userPath.value)
+              .collection('calendar')
+              .doc('initCollection')
+              .set({'events': []});
+          await _fs
+              .doc(_userPath.value)
+              .collection('tasks')
+              .doc('initCollection')
+              .set({'tasks': []});
+          await _fs
+              .doc(_userPath.value)
+              .collection('timers')
+              .doc('initCollection')
+              .set({'timers': []});
+        },
+      );
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }
