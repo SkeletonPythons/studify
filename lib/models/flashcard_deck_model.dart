@@ -3,7 +3,8 @@ import 'dart:math';
 import './flashcard_model.dart';
 
 class Deck {
-  final String subject;
+  final String? subject;
+  final String? id;
   RxList<Flashcard> flashcards;
   int? currentCardIndex;
   int? numCorrect;
@@ -13,18 +14,24 @@ class Deck {
     required this.flashcards,
     this.currentCardIndex = 0,
     this.numCorrect = 0,
-  });
+  }) : id = DateTime.now().millisecondsSinceEpoch.toString();
 
-  Deck.fromJson(Map<String, dynamic> json)
+  Deck.fromJson({required Map<String, dynamic> json, this.id})
       : subject = json['subject'],
-        flashcards = json['flashcards'],
+        flashcards = json['flashcards'] ?? RxList<Flashcard>([]),
         currentCardIndex = 0,
         numCorrect = 0;
 
-  Map<String, dynamic> toJson() => {
-        'subject': subject,
-        'flashcards': flashcards,
-      };
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {
+      'subject': subject,
+      'flashcards': flashcards,
+    };
+    for (Flashcard card in flashcards) {
+      json['flashcards'].add(card.toJson());
+    }
+    return json;
+  }
 
   Flashcard draw(int index) {
     return flashcards[index];

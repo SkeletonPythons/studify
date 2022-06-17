@@ -11,7 +11,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:studify/views/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
@@ -21,39 +21,49 @@ class Auth extends GetxController {
   /// This is the Firebase Auth controller.
   /// It is used to handle the login and registration.
   /// It also contains the `user` object.
-  /// Access this object by calling `Auth.instance.<WHAT YOU WANT TO ACCESS>
+  /// Access this object by calling `Auth.instance.USER to get the user object.
 
   static final Auth instance = Get.find();
-  // late Rx<User?> _user;
+
+  late Rx<User?> _user;
+
   FirebaseAuth auth = FirebaseAuth.instance;
-  // RxString initialRoute = Routes.LOGIN.obs;
-  late AppUser USER;
 
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  //   debugPrint('Auth onReady');
-  //   _user = Rx<User?>(auth.currentUser);
-  //   _user.bindStream(auth.userChanges());
-  //   ever(_user, _gateKeeper);
-  // }
+  AppUser USER = AppUser(email: '', name: 'User', photoUrl: '', uid: '00000');
 
-  /// Checks if user is persisted in the app. If so, it will route to the home page.
-  /// If not, it will route to the login page.
-  // _gateKeeper(User? user) {
-  //   if (user != null) {
-  //     debugPrint('User is logged in');
-  //     populateUser(null, user);
+  RxBool newUser = false.obs;
+  RxBool isLoggedIn = false.obs;
 
-  //     initialRoute.value = Routes.HOME;
-  //   } else {
-  //     debugPrint('User is not logged in going to ');
-  //     initialRoute.value = Routes.LOGIN;
-  //   }
-  // }
+  @override
+  void onReady() {
+    super.onReady();
+    debugPrint('Auth onReady');
+    _user = Rx<User?>(auth.currentUser);
+    _user.bindStream(auth.userChanges());
+    ever(_user, _gateKeeper);
+  }
 
-  void signUpWithEmail(String email, String password) async {
+  _gateKeeper(User? user) {
+    if (user != null) {
+      isLoggedIn.value = true;
+      debugPrint('User is logged in');
+      Future.delayed(const Duration(milliseconds: 3000), () {
+        Get.offAllNamed(Routes.NAVBAR);
+      });
+      if (newUser.value) {
+        debugPrint('User is new');
+        return;
+      }
+    } else {
+      debugPrint('User is not logged in');
+    }
+  }
+
+  Future<void> signUpWithEmail(String email, String password) async {
+    LoadIndicator.ON();
     try {
+      debugPrint('Signing up with email');
+
       await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -69,6 +79,8 @@ class Auth extends GetxController {
   }
 
   void logInWithEmail(String email, String password) async {
+    debugPrint('Logging in with email');
+
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (e) {
@@ -83,5 +95,7 @@ class Auth extends GetxController {
 
   void logOut() async {
     await auth.signOut();
+    isLoggedIn.value = false;
+    Get.offAllNamed(Routes.LOGIN);
   }
 }
