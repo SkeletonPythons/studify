@@ -1,7 +1,12 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../../controllers/flashcard_controller.dart';
+import './closed_card.dart';
+import './open_card.dart';
+import '../../../utils/sample_cards.dart';
+import '../../../consts/app_colors.dart';
 
 class FlashcardPage extends StatelessWidget {
   FlashcardPage({Key? key}) : super(key: key);
@@ -13,15 +18,50 @@ class FlashcardPage extends StatelessWidget {
       child: SizedBox(
         height: Get.height,
         width: Get.width,
-        child: CustomScrollView(
-          slivers: [
-            SliverGrid(
-              delegate: controller.sliverChildDelegate,
-              gridDelegate: controller.sliverDelegate,
-            )
-          ],
+        child: GridView.custom(
+          childrenDelegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return OpenContainer(
+                  transitionDuration: const Duration(milliseconds: 900),
+                  closedColor: kBackground,
+                  openColor: kBackgroundLight,
+                  transitionType: ContainerTransitionType.fadeThrough,
+                  closedElevation: 4,
+                  openElevation: 8,
+                  closedBuilder:
+                      (BuildContext context, VoidCallback openContainer) {
+                    return ClosedFC(index);
+                  },
+                  openBuilder:
+                      (BuildContext context, VoidCallback openContainer) {
+                    return OpenFC(index);
+                  });
+            },
+            childCount: statesAndCapital.length,
+          ),
+          gridDelegate: SliverQuiltedGridDelegate(
+            crossAxisCount: 4,
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 4,
+            repeatPattern: QuiltedGridRepeatPattern.inverted,
+            pattern: [
+              const QuiltedGridTile(2, 2),
+              const QuiltedGridTile(1, 1),
+              const QuiltedGridTile(1, 1),
+              const QuiltedGridTile(1, 2),
+            ],
+          ),
         ),
       ),
     );
+
+    // child: CustomScrollView(
+    //   slivers: [
+    //     SliverGrid(
+    //       delegate: controller.sliverChildDelegate,
+    //       gridDelegate: controller.sliverDelegate,
+    //     )
+    //   ],
+    // ),
   }
 }

@@ -3,8 +3,6 @@
 // Team: Skeleton Pythons
 // Author: Justin.Morton
 // Date Created: 05/15/2022
-// Last Modified By: Justin.Morton
-// Last Modified Date: 05/15/2022
 //-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-//
 // ignore_for_file: non_constant_identifier_names
 
@@ -16,6 +14,7 @@ import 'package:studify/views/widgets/loading_indicator.dart';
 import '../models/user_model.dart';
 import '../routes/routes.dart';
 import '../views/widgets/snackbars/error_snackbar.dart';
+import './db.dart';
 
 class Auth extends GetxController {
   /// This is the Firebase Auth controller.
@@ -23,7 +22,7 @@ class Auth extends GetxController {
   /// It also contains the `user` object.
   /// Access this object by calling `Auth.instance.USER to get the user object.
 
-  static final Auth instance = Get.find();
+  static Auth get instance => Get.find();
 
   late Rx<User?> _user;
 
@@ -47,6 +46,7 @@ class Auth extends GetxController {
     if (user != null) {
       isLoggedIn.value = true;
       debugPrint('User is logged in');
+      // ignore: unused_local_variable
       Future.delayed(const Duration(milliseconds: 3000), () {
         Get.offAllNamed(Routes.NAVBAR);
       });

@@ -8,11 +8,11 @@ import '../models/user_model.dart';
 import './auth.dart';
 
 class DB extends GetxController {
-  final FirebaseFirestore _fs = FirebaseFirestore.instance;
-
   /// Like the Auth controller, call this to access the DB.
   /// ex: DB.instance.addItem(collection, doc, item);
-  static final DB instance = Get.find();
+  static DB get instance => Get.find();
+
+  final FirebaseFirestore _fs = FirebaseFirestore.instance;
 
   final RxString _userPath = ''.obs;
 
@@ -37,16 +37,18 @@ class DB extends GetxController {
   CollectionReference get timersCol =>
       _fs.collection('${_userPath.value}/timers');
 
-  void _initDB(AppUser user) async {
+  void _initDB() async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
-    _userPath.value = 'users/${user.uid}';
-    await _fs.collection('users').doc(user.uid).get().then(
+    _userPath.value = 'users/${Auth.instance.USER.uid}';
+    await _fs.collection('users').doc(Auth.instance.USER.uid).get().then(
       (doc) {
         if (doc.exists) {
           _gotDB.value = true;
+          debugPrint('DB exists');
         } else {
           try {
-            _createDB(user);
+            debugPrint('Creating user doc');
+            _createDB(Auth.instance.USER);
             _gotDB.value = true;
           } catch (e) {
             debugPrint(e.toString());
@@ -97,9 +99,9 @@ class DB extends GetxController {
     }
 
     @override
-    void onReady() {
-      super.onReady();
-      DB.instance._initDB(Auth.instance.USER);
+    void onInit() {
+      super.onInit();
+      DB.instance._initDB();
     }
 
     Future<QuerySnapshot> getCollection(String collection) async {

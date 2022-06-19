@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/timer_cards.dart';
-import '../../../controllers/timer controllers/timer_controller.dart';
+import '../../../controllers/timer_controllers/timer_controller.dart';
 import 'package:studify/routes/routes.dart';
 
 class TimerHomePage extends StatefulWidget {

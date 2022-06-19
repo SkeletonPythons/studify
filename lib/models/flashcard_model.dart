@@ -1,6 +1,7 @@
 class Flashcard {
   String q;
   String a;
+  String? notes;
   int id;
   bool isLearned;
 
@@ -8,12 +9,14 @@ class Flashcard {
     required this.q,
     required this.a,
     required this.isLearned,
+    this.notes,
   }) : id = DateTime.now().millisecondsSinceEpoch;
 
   Flashcard.fromJson(Map<String, dynamic> json)
       : q = json['q'],
         a = json['a'],
         id = json['id'],
+        notes = json['notes'],
         isLearned = json['isLearned'];
 
   Map<String, dynamic> toJson() => {
