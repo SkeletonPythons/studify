@@ -3,10 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:studify/views/widgets/snackbars/error_snackbar.dart';
 
 import '../models/user_model.dart';
-import '../models/flashcard_deck_model.dart';
 import './auth.dart';
 
 class DB extends GetxController {
@@ -138,7 +136,7 @@ class DB extends GetxController {
   }
 
   Future<void> _createDB(AppUser user) async {
-    /// This function is used to create the database. It will create one if it doesn't exist.
+    /// This function is used to find the database. It will create one if it doesn't exist.
     try {
       _userPath.value = 'users/${user.uid}';
       await _fs
