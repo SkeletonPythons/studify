@@ -8,13 +8,15 @@ class TimerNumberField extends StatelessWidget {
       required this.prompt,
       required this.positionTop,
       required this.positionLeft,
-      required this.textFieldPadding})
+      required this.textFieldPadding,
+      required this.textController})
       : super(key: key);
 
   final String prompt;
   final double positionTop;
   final double positionLeft;
   final double textFieldPadding;
+  final TextEditingController textController;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class TimerNumberField extends StatelessWidget {
               height: 35,
               width: 55,
               child: TextField(
+                controller: textController,
                 maxLines: 1,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
