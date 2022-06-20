@@ -174,3 +174,41 @@ class DB extends GetxController {
     }
   }
 }
+
+class Database extends GetxService {
+  final FirebaseFirestore _store = FirebaseFirestore.instance;
+  static FirebaseFirestore get instance => Get.find();
+
+  Future<bool> createNewUser(AppUser user) async {
+    try {
+      await _store.collection('users').doc(user.uid).set(user.toJson());
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  Future<AppUser?> getUser(String uid) async {
+    try {
+      return await _store
+          .collection('users')
+          .doc(uid)
+          .get()
+          .then((value) => AppUser.fromJson(value.data()!));
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> updateUser(AppUser user) async {
+    try {
+      await _store.collection('users').doc(user.uid).update(user.toJson());
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+}

@@ -25,6 +25,7 @@ class SplashPage extends StatelessWidget {
           'assets/animations/splash.riv',
           animations: const ['Animation 1'],
           controllers: [controller.rive],
+          antialiasing: true,
         ),
       ),
     );
