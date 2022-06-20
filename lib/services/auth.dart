@@ -32,6 +32,7 @@ class Auth extends GetxController {
 
   RxBool newUser = false.obs;
   RxBool isLoggedIn = false.obs;
+  RxBool isSplashDone = false.obs;
 
   @override
   void onReady() {
@@ -47,9 +48,14 @@ class Auth extends GetxController {
       isLoggedIn.value = true;
       debugPrint('User is logged in');
       // ignore: unused_local_variable
-      Future.delayed(const Duration(milliseconds: 3000), () {
+      if (isSplashDone.value) {
         Get.offAllNamed(Routes.NAVBAR);
-      });
+        return;
+      } else {
+        Future.delayed(const Duration(milliseconds: 4000), () {
+          Get.offAllNamed(Routes.NAVBAR);
+        });
+      }
       if (newUser.value) {
         debugPrint('User is new');
         return;

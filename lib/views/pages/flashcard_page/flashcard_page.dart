@@ -10,6 +10,7 @@ import '../../../consts/app_colors.dart';
 
 class FlashcardPage extends StatelessWidget {
   FlashcardPage({Key? key}) : super(key: key);
+
   final FlashcardController controller = Get.put(FlashcardController());
 
   @override
@@ -30,11 +31,11 @@ class FlashcardPage extends StatelessWidget {
                   openElevation: 8,
                   closedBuilder:
                       (BuildContext context, VoidCallback openContainer) {
-                    return ClosedFC(index);
+                    return ClosedFC(index: index, onTap: openContainer);
                   },
                   openBuilder:
-                      (BuildContext context, VoidCallback openContainer) {
-                    return OpenFC(index);
+                      (BuildContext context, VoidCallback closeContainer) {
+                    return OpenFC(index: index, onTap: closeContainer);
                   });
             },
             childCount: statesAndCapital.length,
@@ -54,14 +55,5 @@ class FlashcardPage extends StatelessWidget {
         ),
       ),
     );
-
-    // child: CustomScrollView(
-    //   slivers: [
-    //     SliverGrid(
-    //       delegate: controller.sliverChildDelegate,
-    //       gridDelegate: controller.sliverDelegate,
-    //     )
-    //   ],
-    // ),
   }
 }

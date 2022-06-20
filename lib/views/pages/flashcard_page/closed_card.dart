@@ -6,18 +6,18 @@ import './open_card.dart';
 import '../../../utils/sample_cards.dart';
 
 class ClosedFC extends StatelessWidget {
-  const ClosedFC(
-    this.index, {
+  const ClosedFC({
+    required this.index,
+    required this.onTap,
     Key? key,
   }) : super(key: key);
   final int index;
+  final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     return GridTile(
       child: InkWell(
-        onTap: () {
-          OpenFC(index);
-        },
+        onTap: () => onTap(),
         child: Center(
           child: Text(
             statesAndCapital['$index']['q'],
