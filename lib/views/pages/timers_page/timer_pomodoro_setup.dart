@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/controllers/timer_controllers/pomodoro_history_controller.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/number_fields.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +12,7 @@ import 'package:studify/routes/routes.dart';
 
 import '../../../controllers/timer_controllers/pomodoro_controller.dart';
 import '../../../controllers/timer_controllers/timer_controller.dart';
+import '../../../models/pomodoro_models/pomodoro_history.dart';
 import '../bottom_nav_page/bottom_nav_bar.dart';
 
 class PomodoroSetUp extends StatefulWidget {
@@ -21,12 +25,49 @@ class PomodoroSetUp extends StatefulWidget {
 class PomodoroSetUpState extends State<PomodoroSetUp>
     with SingleTickerProviderStateMixin {
   TimerController timerController = Get.put<TimerController>(TimerController());
+  PomodoroHistoryController pomodoroHistoryController =
+      Get.put<PomodoroHistoryController>(PomodoroHistoryController());
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController());
 
-  TextEditingController workTimeController = TextEditingController();
+  static TextEditingController workTimeController = TextEditingController();
   TextEditingController restTimeController = TextEditingController();
   TextEditingController cycleController = TextEditingController();
+
+  //variables
+  static int workTime = 0;
+  int restTime = 0;
+  int numOfCycles = 1;
+  List<PomodoroHistory> pomodoroHistory = [];
+  late Timer pomodoroTimer;
+
+  void startPomodoro() {
+    const oneSecond = Duration(seconds: 1);
+    pomodoroTimer = Timer.periodic(
+      oneSecond,
+      (Timer timer) {
+        if (workTime <= 1) {
+          setState(() {
+            pomodoroTimer.cancel();
+            workTime = 0;
+            timerController.isRunning.value = false;
+            pomodoroHistory = pomodoroHistoryController.read('pomodoroHistory');
+            pomodoroHistory.add(PomodoroHistory(
+                dateTime: DateTime.now(),
+                timeStudied: workTime,
+                timeRested: restTime,
+                cycles: numOfCycles));
+            pomodoroHistoryController.save('pomodoroHistory', pomodoroHistory);
+          });
+        } else {
+          setState(() {
+            timerController.isRunning.value = true;
+            workTime--;
+          });
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,21 +132,16 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   'assets/images/start_button.svg',
                 ),
                 onPressed: () {
-                  setState(
-                    () {
-                      pomodoroController.workTime =
-                          int.parse(workTimeController.text);
-                      pomodoroController.restTime =
-                          int.parse(restTimeController.text);
-                      pomodoroController.numOfCycles =
-                          int.parse(cycleController.text);
-                    },
-                  );
+                  setState(() {
+                    workTime = int.parse(workTimeController.text);
+                    restTime = int.parse(restTimeController.text);
+                    numOfCycles = int.parse(cycleController.text);
+                  });
                   timerController.isRunning.value = true;
                   timerController
                       .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
-                  Get.offAllNamed(Routes
-                      .NAVBAR); //Routes to navbar which will display updated screens & index
+                  Get.offAllNamed(Routes.NAVBAR);
+                  //Routes to navbar which will display updated screens & index
                 }),
           ),
           Positioned(

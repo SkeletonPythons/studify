@@ -7,16 +7,17 @@ import 'package:googleapis/cloudsearch/v1.dart';
 import 'package:studify/controllers/timer_controllers/pomodoro_history_controller.dart';
 import 'package:studify/controllers/timer_controllers/timer_controller.dart';
 import '../../models/pomodoro_models/pomodoro_history.dart';
+import '../../views/pages/timers_page/timer_pomodoro_setup.dart';
 
 class PomodoroController extends GetxController {
-  late int workTime;
+  int workTime = 0;
   int restTime = 0;
   int numOfCycles = 1;
   List<PomodoroHistory> pomodoroHistory = [];
-  PomodoroHistoryController pomodoroHistoryController =
-      PomodoroHistoryController();
-  TimerController timerController = TimerController();
   late Timer pomodoroTimer;
+
+  TimerController timerController = TimerController();
+  PomodoroHistoryController pomodoroHistoryController = PomodoroHistoryController();
 
   void startPomodoro() {
     const oneSecond = Duration(seconds: 1);
@@ -25,7 +26,7 @@ class PomodoroController extends GetxController {
       (Timer timer) {
         if (workTime <= 1) {
           pomodoroTimer.cancel();
-          workTime = 0;
+          workTime= 0;
           timerController.isRunning.value = false;
           pomodoroHistory = pomodoroHistoryController.read('pomodoroHistory');
           pomodoroHistory.add(PomodoroHistory(
@@ -36,6 +37,7 @@ class PomodoroController extends GetxController {
           pomodoroHistoryController.save('pomodoroHistory', pomodoroHistory);
         }
         else {
+          timerController.isRunning.value = true;
           workTime--;
         }
       },
