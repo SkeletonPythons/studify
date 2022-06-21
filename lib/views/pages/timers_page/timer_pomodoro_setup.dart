@@ -101,7 +101,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                           int.parse(cycleController.text);
                     },
                   );
-                  timerController.isRunning = true;
+                  timerController.isRunning.value = true;
                   timerController
                       .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
                   Get.offAllNamed(Routes

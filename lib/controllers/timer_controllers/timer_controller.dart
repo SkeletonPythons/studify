@@ -18,11 +18,12 @@ class TimerController extends GetxController {
   String savedTimers = 'assets/images/saved_timers.svg';
   String timerStats = 'assets/images/timer_stats.svg';
 
-  bool isRunning = false;
+   RxBool isRunning = false.obs;
+
 // this is just testing functionality that will be better implemented when the timer logic is more fleshed out
   void ScreensIfPomodoroActive() // if the Pomodoro timer is active, the timer homepage becomes the active timer itself in the navbar
   {
-    if (isRunning == true) {
+    if (isRunning.value == true) {
       BottomNavBarState.screens[2] = PomodoroTimer();
       BottomNavBarState.selectedIndex = 2;
     } else {

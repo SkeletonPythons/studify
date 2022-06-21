@@ -23,7 +23,6 @@ class PomodoroTimerState extends State<PomodoroTimer>
   @override
   void initState() {
     super.initState();
-    PomodoroHistoryController.init();
   }
 
   @override
