@@ -28,3 +28,5 @@ class ClosedFC extends StatelessWidget {
     );
   }
 }
+
+class ClosedCardController extends GetxController {}

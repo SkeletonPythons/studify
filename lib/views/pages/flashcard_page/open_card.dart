@@ -12,12 +12,14 @@ class OpenFC extends StatelessWidget {
     required this.onTap,
     Key? key,
   }) : super(key: key);
+
   final int index;
   final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OpenCardController>(
-        init: Get.put(OpenCardController(index)),
+        init: OpenCardController(index),
         // ignore: no_leading_underscores_for_local_identifiers
         builder: (_controller) {
           Matrix4 transform = Matrix4.identity();
@@ -104,33 +106,18 @@ class OpenFC extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'front: ',
-                                style: GoogleFonts.ubuntu(
-                                  fontSize: 20,
-                                  color: Colors.white54,
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            color: kAccent,
-                            indent: Get.width * 0.05,
-                            endIndent: Get.width * 0.05,
-                          ),
-                          SizedBox(
-                              height: Get.height * 0.1, width: Get.width * .07),
-                          OutlinedButton(
-                            onPressed: () {
-                              _controller.flip();
-                            },
-                            child: Text('test'),
-                          ),
+                          Obx(() => AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                switchInCurve: Curves.easeInOutSine,
+                                switchOutCurve: Curves.easeInOutCubic,
+                                transitionBuilder: (child, animation) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
+                                child: _controller.switcherChild.value,
+                              )),
                         ],
                       ),
                     ),
@@ -143,24 +130,150 @@ class OpenFC extends StatelessWidget {
   }
 }
 
+class FrontSide extends StatelessWidget {
+  const FrontSide(this.callback, this._controller, {Key? key})
+      : super(key: key);
+
+  final VoidCallback callback;
+  final OpenCardController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              'front side: ',
+              style: GoogleFonts.ubuntu(
+                fontSize: 20,
+                color: Colors.white54,
+              ),
+              textAlign: TextAlign.start,
+            ),
+          ),
+        ),
+        Divider(
+          color: kAccent,
+          indent: Get.width * 0.05,
+          endIndent: Get.width * 0.05,
+        ),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: Get.width * 0.9,
+            maxHeight: Get.height * 0.5,
+          ),
+          color: kBackgroundLight,
+          child: Obx(
+            () => TextField(
+              expands: true,
+              maxLines: null,
+              minLines: null,
+              enabled: _controller.fieldsUnlocked.value,
+            ),
+          ),
+        ),
+        OutlinedButton(
+          onPressed: () => callback(),
+          child: const Text('test'),
+        ),
+      ],
+    );
+  }
+}
+
+class BackSide extends StatelessWidget {
+  const BackSide(this.callback, {Key? key}) : super(key: key);
+  final VoidCallback callback;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              'back side: ',
+              style: GoogleFonts.ubuntu(
+                fontSize: 20,
+                color: Colors.white54,
+              ),
+              textAlign: TextAlign.start,
+            ),
+          ),
+        ),
+        Divider(
+          color: kAccent,
+          indent: Get.width * 0.05,
+          endIndent: Get.width * 0.05,
+        ),
+        SizedBox(height: Get.height * 0.1, width: Get.width * .07),
+        OutlinedButton(
+          onPressed: () => callback(),
+          child: const Text('test'),
+        ),
+      ],
+    );
+  }
+}
+
 class OpenCardController extends GetxController
-    with GetSingleTickerProviderStateMixin {
-  final int index;
+    with GetTickerProviderStateMixin {
   OpenCardController(
     this.index,
   );
-  RxBool fieldsUnlocked = RxBool(false);
-  RxBool isFav = RxBool(false);
-  RxBool isFlipped = RxBool(false);
-  RxDouble boxSize = 100.0.obs;
-  RxDouble initialSize = 100.0.obs;
-  RxDouble expandedSize = 300.0.obs;
 
-  late AnimationController flipAnimation;
   late Animation<double> animation;
+  late TextEditingController backController =
+      TextEditingController(text: statesAndCapital['$index']['a']);
 
+  RxDouble boxSize = 100.0.obs;
+  RxDouble expandedSize = 300.0.obs;
+  RxBool fieldsUnlocked = RxBool(false);
+  late AnimationController flipAnimation;
   late TextEditingController frontController =
       TextEditingController(text: statesAndCapital['$index']['q']);
+
+  final int index;
+  RxDouble initialSize = 100.0.obs;
+  RxBool isFav = RxBool(false);
+  RxBool isFlipped = RxBool(false);
+
+  late Rx<Widget> switcherChild = Rx<Widget>(FrontSide(() => flip(), this));
+
+  @override
+  void onClose() {
+    super.onClose();
+    frontController.dispose();
+    backController.dispose();
+    flipAnimation.dispose();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    flipAnimation = AnimationController(
+      vsync: this,
+      reverseDuration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
+    );
+    animation = TweenSequence(
+      <TweenSequenceItem<double>>[
+        TweenSequenceItem<double>(
+          tween: Tween<double>(begin: 0.0, end: pi)
+              .chain(CurveTween(curve: Curves.linear)),
+          weight: 50.0,
+        ),
+        TweenSequenceItem<double>(
+          tween: ConstantTween<double>(pi * 2),
+          weight: 50.0,
+        ),
+      ],
+    ).animate(flipAnimation);
+  }
 
   void toggleFields() {
     fieldsUnlocked.toggle();
@@ -172,35 +285,14 @@ class OpenCardController extends GetxController
     update();
   }
 
-  void flip() {
+  void flip() async {
+    isFlipped.toggle();
     if (isFlipped.value) {
       flipAnimation.forward();
+      switcherChild.value = BackSide(() => flip());
     } else {
       flipAnimation.reverse();
+      switcherChild.value = FrontSide(() => flip(), this);
     }
-    isFlipped.toggle();
-    update();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    flipAnimation = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    animation = TweenSequence(
-      <TweenSequenceItem<double>>[
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0.0, end: 2 * pi)
-              .chain(CurveTween(curve: Curves.linear)),
-          weight: 50.0,
-        ),
-        TweenSequenceItem<double>(
-          tween: ConstantTween<double>(pi * 2),
-          weight: 50.0,
-        ),
-      ],
-    ).animate(flipAnimation);
   }
 }
