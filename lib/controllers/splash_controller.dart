@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rive/rive.dart';
 
 import '../services/auth.dart';
 import '../routes/routes.dart';
@@ -13,28 +14,32 @@ class SplashController extends GetxController
 
   RxDouble animationValue = 0.1.obs;
 
+  RxBool isAnimationPlaying = false.obs;
+  late RiveAnimationController rive;
+
   @override
   void onInit() {
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    animation = Tween(begin: 0.01, end: 1.0).animate(animationController)
-      ..addListener(() {
-        animationValue.value = animation.value;
-      });
-
+    rive = OneShotAnimation('Animation 1', autoplay: false, onStop: () {
+      isAnimationPlaying.toggle();
+      launch();
+    }, onStart: () {
+      isAnimationPlaying.toggle();
+    });
     super.onInit();
+  }
+
+  Future<void> launch() async {
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!Auth.instance.isLoggedIn.value) {
+        Get.offAllNamed(Routes.LOGIN);
+      }
+    });
   }
 
   @override
   void onReady() {
+    rive.isActive = true;
     super.onReady();
-    animationController.forward().then((_) {
-      Future.delayed(const Duration(seconds: 3), () {
-        if (!Auth.instance.isLoggedIn.value) {
-          Get.offAllNamed(Routes.LOGIN);
-        }
-      });
-    });
   }
 
   Duration duration = const Duration(milliseconds: 800);
