@@ -54,15 +54,14 @@ class Auth extends GetxController {
 
   _gateKeeper(User? user) async {
     if (user != null) {
+      Get.put(DB());
       updateUser();
       debugPrint(USER.toJson().toString());
       isLoggedIn.value = true;
       debugPrint('User is logged in');
+      DB.instance.initDB();
       if (isSplashDone.value) {
         Get.offAllNamed(Routes.NAVBAR);
-        debugPrint(await DB.instance.doesExist('users', user.uid)
-            ? 'User exists'
-            : 'User does not exist');
         return;
       } else {
         Future.delayed(const Duration(milliseconds: 4000), () {
@@ -78,7 +77,10 @@ class Auth extends GetxController {
     }
   }
 
-  Future<void> signUpWithEmail(String email, String password) async {
+  Future<void> signUpWithEmail(
+      {required String email,
+      required String password,
+      required String name}) async {
     LoadIndicator.ON();
     try {
       debugPrint('Signing up with email');
@@ -87,6 +89,9 @@ class Auth extends GetxController {
         email: email,
         password: password,
       );
+      USER.name = name;
+      USER.email = email;
+      USER.uid = auth.currentUser!.uid;
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);

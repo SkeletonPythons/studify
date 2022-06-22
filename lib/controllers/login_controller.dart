@@ -119,7 +119,7 @@ class LoginController extends GetxController {
     Auth.instance.newUser.value = true;
     LoadIndicator.ON();
 
-    await Auth.instance.signUpWithEmail(e, p);
+    await Auth.instance.signUpWithEmail(email: e, password: p, name: n);
     await Future.delayed(const Duration(seconds: 2), () {
       LoadIndicator.OFF();
       Get.offAllNamed(Routes.NAVBAR);

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import './auth.dart';
 
-class DB extends GetxController {
+class DB extends GetxService {
   /// Like the Auth controller, call this to access the DB.
   /// ex: DB.instance.addItem(collection, doc, item);
   static DB get instance => Get.find();
@@ -45,6 +45,10 @@ class DB extends GetxController {
         if (doc.exists) {
           _gotDB.value = true;
           debugPrint('DB exists');
+          Auth.instance.USER.email = doc.data()?['email'] ?? '';
+          Auth.instance.USER.name = doc.data()?['name'] ?? '';
+          Auth.instance.USER.photoUrl = doc.data()?['photoUrl'] ?? '';
+          Auth.instance.USER.uid = doc.data()?['uid'] ?? '';
         } else {
           try {
             debugPrint('Creating user doc');
