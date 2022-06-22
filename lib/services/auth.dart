@@ -43,13 +43,26 @@ class Auth extends GetxController {
     ever(_user, _gateKeeper);
   }
 
-  _gateKeeper(User? user) {
+  void updateUser() {
+    USER = AppUser(
+      email: auth.currentUser!.email!,
+      name: auth.currentUser!.displayName,
+      photoUrl: auth.currentUser!.photoURL,
+      uid: auth.currentUser!.uid,
+    );
+  }
+
+  _gateKeeper(User? user) async {
     if (user != null) {
+      updateUser();
+      debugPrint(USER.toJson().toString());
       isLoggedIn.value = true;
       debugPrint('User is logged in');
-      // ignore: unused_local_variable
       if (isSplashDone.value) {
         Get.offAllNamed(Routes.NAVBAR);
+        debugPrint(await DB.instance.doesExist('users', user.uid)
+            ? 'User exists'
+            : 'User does not exist');
         return;
       } else {
         Future.delayed(const Duration(milliseconds: 4000), () {

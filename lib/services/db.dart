@@ -37,7 +37,7 @@ class DB extends GetxController {
   CollectionReference get timersCol =>
       _fs.collection('${_userPath.value}/timers');
 
-  void _initDB() async {
+  void initDB() async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
     _userPath.value = 'users/${Auth.instance.USER.uid}';
     await _fs.collection('users').doc(Auth.instance.USER.uid).get().then(
@@ -98,11 +98,10 @@ class DB extends GetxController {
       }
     }
 
-    @override
-    void onInit() {
-      super.onInit();
-      DB.instance._initDB();
-    }
+    // @override
+    // void onInit() {
+    //   super.onInit();
+    // }
 
     Future<QuerySnapshot> getCollection(String collection) async {
       return await _fs
