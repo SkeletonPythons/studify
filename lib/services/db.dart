@@ -3,22 +3,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:studify/views/widgets/snackbars/error_snackbar.dart';
 
 import '../models/user_model.dart';
-import '../models/flashcard_deck_model.dart';
 import './auth.dart';
 
-class DB extends GetxController {
+class DB extends GetxService {
   final FirebaseFirestore _fs = FirebaseFirestore.instance;
+  final RxBool _gotDB = false.obs;
+  final RxString _userPath = ''.obs;
 
   /// Like the Auth controller, call this to access the DB.
   /// ex: DB.instance.addItem(collection, doc, item);
-  static final DB instance = Get.find();
-
-  final RxString _userPath = ''.obs;
-
-  final RxBool _gotDB = false.obs;
+  static DB get instance => Get.find();
 
   /// The [DocumentReference] for the user.
   DocumentReference get userDoc => _fs.doc(_userPath.value);
@@ -39,16 +35,22 @@ class DB extends GetxController {
   CollectionReference get timersCol =>
       _fs.collection('${_userPath.value}/timers');
 
-  void _initDB(AppUser user) async {
+  void initDB() async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
-    _userPath.value = 'users/${user.uid}';
-    await _fs.collection('users').doc(user.uid).get().then(
+    _userPath.value = 'users/${Auth.instance.USER.uid}';
+    await _fs.collection('users').doc(Auth.instance.USER.uid).get().then(
       (doc) {
         if (doc.exists) {
           _gotDB.value = true;
+          debugPrint('DB exists');
+          Auth.instance.USER.email = doc.data()?['email'] ?? '';
+          Auth.instance.USER.name = doc.data()?['name'] ?? '';
+          Auth.instance.USER.photoUrl = doc.data()?['photoUrl'] ?? '';
+          Auth.instance.USER.uid = doc.data()?['uid'] ?? '';
         } else {
           try {
-            _createDB(user);
+            debugPrint('Creating user doc');
+            _createDB(Auth.instance.USER);
             _gotDB.value = true;
           } catch (e) {
             debugPrint(e.toString());
@@ -98,11 +100,10 @@ class DB extends GetxController {
       }
     }
 
-    @override
-    void onReady() {
-      super.onReady();
-      DB.instance._initDB(Auth.instance.USER);
-    }
+    // @override
+    // void onInit() {
+    //   super.onInit();
+    // }
 
     Future<QuerySnapshot> getCollection(String collection) async {
       return await _fs
@@ -138,7 +139,7 @@ class DB extends GetxController {
   }
 
   Future<void> _createDB(AppUser user) async {
-    /// This function is used to create the database. It will create one if it doesn't exist.
+    /// This function is used to find the database. It will create one if it doesn't exist.
     try {
       _userPath.value = 'users/${user.uid}';
       await _fs
@@ -171,6 +172,68 @@ class DB extends GetxController {
       );
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+}
+
+class Database extends GetxService {
+  final FirebaseFirestore _store = FirebaseFirestore.instance;
+
+  static FirebaseFirestore get instance => Get.find();
+
+  Future<bool> createNewUser(AppUser user) async {
+    try {
+      await _store.collection('users').doc(user.uid).set(user.toJson()).then(
+        (value) async {
+          await _store
+              .doc('users/${user.uid}')
+              .collection('flashcards')
+              .doc('initCollection')
+              .set({'deck': []});
+          await _store
+              .doc('users/${user.uid}')
+              .collection('calendar')
+              .doc('initCollection')
+              .set({'events': []});
+          await _store
+              .doc('users/${user.uid}')
+              .collection('tasks')
+              .doc('initCollection')
+              .set({'tasks': []});
+          await _store
+              .doc('users/${user.uid}')
+              .collection('timers')
+              .doc('initCollection')
+              .set({'timers': []});
+        },
+      );
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  Future<AppUser?> getUser(String uid) async {
+    try {
+      return await _store
+          .collection('users')
+          .doc(uid)
+          .get()
+          .then((value) => AppUser.fromJson(value.data()!));
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> updateUser(AppUser user) async {
+    try {
+      await _store.collection('users').doc(user.uid).update(user.toJson());
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
     }
   }
 }

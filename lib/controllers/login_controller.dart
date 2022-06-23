@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
+import '../services/db.dart';
 import '../views/widgets/snackbars/error_snackbar.dart';
 
 // import '../.secrets.dart';
@@ -26,24 +27,12 @@ class LoginController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-
-    // Auth.instance.auth.authStateChanges().listen((User? user) {
-    //   if (Auth.instance.auth.currentUser != null) {
-    //     Get.offAllNamed(Routes.NAVBAR);
-    //   }
-    // }
-    // );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+  void onClose() {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    super.onClose();
   }
 
   RxString name = ''.obs;
@@ -130,18 +119,22 @@ class LoginController extends GetxController {
     Auth.instance.newUser.value = true;
     LoadIndicator.ON();
 
-    await Auth.instance.signUpWithEmail(e, p);
-    Future.delayed(const Duration(seconds: 2), () {
+    await Auth.instance.signUpWithEmail(email: e, password: p, name: n);
+    await Future.delayed(const Duration(seconds: 2), () {
       LoadIndicator.OFF();
       Get.offAllNamed(Routes.NAVBAR);
     });
   }
 
   void login(String email, String pass) async {
+    LoadIndicator.ON();
     try {
       {
         await Auth.instance.auth
-            .signInWithEmailAndPassword(email: email, password: pass);
+            .signInWithEmailAndPassword(email: email, password: pass)
+            .then((value) {
+          LoadIndicator.OFF();
+        });
       }
     } catch (e) {
       if (e is FirebaseAuthException) {
@@ -150,6 +143,7 @@ class LoginController extends GetxController {
       } else {
         showErrorSnackBar('uh-oh!', e.toString(), Get.context);
       }
+      LoadIndicator.OFF();
     }
   }
 

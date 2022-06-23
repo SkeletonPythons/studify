@@ -1,15 +1,20 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:studify/controllers/timer%20controllers/timer_controller.dart';
-import 'package:studify/views/pages/calendar_page/calendar_page.dart';
-import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
-import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
-import 'package:studify/views/pages/timers_page/timer_homepage.dart';
-import 'package:studify/views/pages/timers_page/timer_pomodoro_setup.dart';
-import 'package:studify/views/widgets/app_bar.dart';
+
+// Use relative imports on our files to avoid collisions with other libraries.
+// They will begin with "../" or "./" instead of "package:".
+// "./" means current directory. "../" means parent directory.
+import '../../../controllers/timer_controllers/timer_controller.dart';
+import '../../../views/pages/calendar_page/calendar_page.dart';
+import '../../../views/pages/flashcard_page/flashcard_page.dart';
+import '../../../views/pages/dashboard_page/dashboard_page.dart';
+import '../../../views/pages/timers_page/timer_homepage.dart';
+import '../../../views/pages/timers_page/timer_pomodoro_setup.dart';
+import '../../../views/widgets/app_bar.dart';
 import '../../../controllers/home_controller.dart';
 import '../timers_page/pomodoro.dart';
+import '../../../services/db.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
