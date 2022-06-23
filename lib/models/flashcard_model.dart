@@ -23,3 +23,41 @@ class Flashcard {
         'isLearned': isLearned,
       };
 }
+
+class Note {
+  String front;
+  String back;
+  String subject;
+  String? notes;
+  String? title;
+  List<String?> tags;
+
+  int id;
+
+  Note({
+    required this.front,
+    required this.back,
+    required this.subject,
+    this.title = '',
+    this.notes = '',
+    this.tags = const [],
+  }) : id = DateTime.now().millisecondsSinceEpoch;
+
+  Note.fromJson(Map<String, dynamic> json)
+      : front = json['front'],
+        back = json['back'],
+        subject = json['subject'],
+        notes = json['notes'],
+        title = json['title'],
+        tags = json['tags'],
+        id = json['id'];
+
+  Map<String, dynamic> toJson() => {
+        'front': front,
+        'back': back,
+        'id': id,
+        'subject': subject,
+        'notes': notes,
+        'tags': tags,
+      };
+}
