@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: non_constant_identifier_names
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +8,7 @@ import 'package:studify/controllers/timer_controllers/pomodoro_controller.dart';
 import 'package:studify/controllers/timer_controllers/timer_controller.dart';
 import 'package:studify/views/pages/timers_page/timer_pomodoro_setup.dart';
 import '../../../controllers/timer_controllers/pomodoro_history_controller.dart';
-import '../../../models/pomodoro_models/pomodoro_history.dart';
+import '../../widgets/timer_widgets/pomodoro_cycle_progress_icons.dart';
 
 class PomodoroTimer extends StatefulWidget {
   const PomodoroTimer({Key? key}) : super(key: key);
@@ -28,7 +26,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
       Get.find<PomodoroHistoryController>();
 
   TimerController timerController = Get.find<TimerController>();
-  double workTime = PomodoroSetUpState.workTime.toDouble();
+
 
   // @override
   // void initState() {
@@ -37,70 +35,70 @@ class PomodoroTimerState extends State<PomodoroTimer>
 
   @override
   Widget build(BuildContext context) {
+    int maxTime = int.parse(PomodoroSetUpState.workTimeController.text) * 60;
     return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Center(
-            child: SizedBox(
-              width: 500, //use mediaquery or get width
-              height: 500,
-              child: Stack(children: [
-                if (timerController.isRunning.value)
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: 250,
-                      height: 250,
-                      color: Colors.transparent,
-                    ),
+      child: Center(
+        child: Stack(children: [
+          if (timerController.isRunning.value)
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: Get.width,
+                height: Get.height,
+                color: Colors.transparent,
+              ),
+            ),
+          Positioned(
+            top: 150,
+            left: 47,
+            child: Obx(
+              () => SleekCircularSlider(
+                //Obx makes widget listen for change
+                initialValue: pomodoroController.workTime.value.toDouble(),
+                min: 0,
+                max: maxTime.toDouble(),
+                appearance: CircularSliderAppearance(
+                  angleRange: 360,
+                  startAngle: 270,
+                  size: 300,
+                  customWidths: CustomSliderWidths(
+                    trackWidth: 15,
+                    handlerSize: 14,
+                    progressBarWidth: 15,
+                    shadowWidth: 0,
                   ),
-                Positioned(
-                  top: 100,
-                  left: 47,
-                  child: Obx(
-                    () => SleekCircularSlider(
-                      //Obx makes widget listen for change
-                      initialValue: pomodoroController.workTime.value
-                          .toDouble(), // I can't extract this value from the controller,
-                      // however I can extract it from inside timersetupstate,
-                      // need help with state management from the controllers
-                      min: 0,
-                      max: 5401,
-                      appearance: CircularSliderAppearance(
-                        size: 300,
-                        customWidths: CustomSliderWidths(
-                          trackWidth: 15,
-                          handlerSize: 18,
-                          progressBarWidth: 15,
-                          shadowWidth: 0,
-                        ),
-                        customColors: CustomSliderColors(
-                          progressBarColor: Colors.red[900],
-                          trackColor: Colors.red,
-                          shadowColor: Colors.redAccent,
-                        ),
-                      ),
-                      innerWidget: (double workTime) {
-                        return Center(
-                          child: Obx(() => Text(
-                                '${(pomodoroController.workTime.value ~/ 60).toInt().toString().padLeft(2, '0')}:${(pomodoroController.workTime.value % 60).toInt().toString().padLeft(2, '0')}',
-                                style: GoogleFonts.ubuntu(
-                                  color: Colors.white,
-                                  fontSize: 50,
-                                ),
-                              )),
-                        );
-                      },
-                    ),
+                  customColors: CustomSliderColors(
+                    progressBarColor: Colors.red[900],
+                    trackColor: Colors.red,
+                    shadowColor: Colors.redAccent,
                   ),
                 ),
-              ]),
+                innerWidget: (double workTime) {
+                  return Center(
+                    child: Obx(
+                      () => Text(
+                        pomodoroController.FormatTime(pomodoroController.workTime.value),
+                        style: GoogleFonts.ubuntu(
+                          color: Colors.white,
+                          fontSize: 50,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-        ],
+          SizedBox(
+            height: 10,
+            child: Obx(
+              () => CycleProgress(
+                totalCycles: pomodoroController.totalCycles.value,
+                currentCycle: pomodoroController.currentCycle.value,
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }

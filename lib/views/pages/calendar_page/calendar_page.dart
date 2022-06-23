@@ -46,12 +46,10 @@ class CalendarPageState extends State<CalendarPage>
     final Size size = MediaQuery.of(context).size;
 
     return SafeArea(
-      maintainBottomViewPadding: false,
-      bottom: false,
       child: Scaffold(
         body: Column(children: [
           SizedBox(
-            height: 364,
+            height: 417,
             width: 1000,
             child: TableCalendar(
               firstDay: DateTime(1990),
