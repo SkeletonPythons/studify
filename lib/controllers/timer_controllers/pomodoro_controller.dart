@@ -9,21 +9,50 @@ import 'package:studify/controllers/timer_controllers/timer_controller.dart';
 import '../../models/pomodoro_models/pomodoro_history.dart';
 import '../../views/pages/timers_page/timer_pomodoro_setup.dart';
 
+enum PomodoroStatus{
+  running,
+  paused,
+  stopped,
+  rest,
+  cycleFinished
+}
+
 class PomodoroController extends GetxController {
+
+  //Functionality variables
   RxInt workTime = 0.obs;
   RxInt restTime = 0.obs;
   RxInt totalCycles = 0.obs;
   RxInt currentCycle = 0.obs;
 
+//Status Variables
+  Map<String,PomodoroStatus> displayStatus =
+      {
+        "Study time!": PomodoroStatus.running,
+        "Ready to continue?": PomodoroStatus.paused,
+        "Time to relax, great job!": PomodoroStatus.rest,
+        "Cycle Complete!": PomodoroStatus.cycleFinished
+      };
+
+  Map<PomodoroStatus,Color> statusColors =
+    {
+        PomodoroStatus.running: Colors.red,
+        PomodoroStatus.paused: Colors.deepOrange,
+        PomodoroStatus.rest : Colors.white
+    };
+
+  //History variables
   List<PomodoroHistory> pomodoroHistory = [];
   late Timer pomodoroTimer;
 
+  //Controllers
   TimerController timerController = TimerController();
   PomodoroHistoryController pomodoroHistoryController =
       PomodoroHistoryController();
 
-  void startPomodoro() {
-    const oneSecond = Duration(seconds: 1);
+  // Functions
+  void StartPomodoro() {
+    const oneSecond = Duration(seconds: 1,);
     pomodoroTimer = Timer.periodic(
       oneSecond,
       (Timer timer) {
@@ -45,6 +74,35 @@ class PomodoroController extends GetxController {
       },
     );
   }
+
+  String FormatTime(int studyTimeInSeconds)
+  {
+    int minutes = workTime.value ~/ 60;
+    int seconds = workTime.value - (minutes * 60);
+    String secondsFormatted;
+    String minutesFormatted;
+    int hours = minutes ~/ 60;
+
+    if(seconds < 10)
+      {
+        secondsFormatted = '0$seconds';
+      }
+    else
+      {
+        secondsFormatted = seconds.toString();
+      }
+    if(minutes == 60)
+      {
+        minutesFormatted = '0$hours';
+      }
+    else
+      {
+        minutesFormatted = minutes.toString();
+      }
+
+    return '$minutesFormatted:$secondsFormatted';
+  }
+
 
   @override
   void dispose() {

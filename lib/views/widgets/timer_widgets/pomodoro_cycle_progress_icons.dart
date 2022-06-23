@@ -32,7 +32,7 @@ class CycleProgress extends StatelessWidget {
       }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 420,),
+      padding: const EdgeInsets.only(top: 480,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: icons,

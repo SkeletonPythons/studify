@@ -28,7 +28,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   //variables
   static int workTime = 0;
 
-  TextEditingController workTimeController = TextEditingController();
+  static TextEditingController workTimeController = TextEditingController();
   TextEditingController restTimeController = TextEditingController();
   TextEditingController cycleController = TextEditingController();
   int numOfCycles = 1;
@@ -107,13 +107,13 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                 ),
                 onPressed: () {
                   pomodoroController.workTime.value =
-                      int.parse(workTimeController.text);
-
+                      int.parse(workTimeController.text) * 60;
                   pomodoroController.restTime.value =
                       int.parse(restTimeController.text);
                   pomodoroController.totalCycles.value =
                       int.parse(cycleController.text);
                   timerController.isRunning.value = true;
+                  pomodoroController.StartPomodoro();
                   timerController
                       .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
                   //Routes to navbar which will display updated screens & index
