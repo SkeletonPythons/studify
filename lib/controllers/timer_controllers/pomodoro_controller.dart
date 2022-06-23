@@ -10,14 +10,15 @@ import '../../models/pomodoro_models/pomodoro_history.dart';
 import '../../views/pages/timers_page/timer_pomodoro_setup.dart';
 
 class PomodoroController extends GetxController {
-  int workTime = 0;
+  RxInt workTime = 0.obs;
   int restTime = 0;
   int numOfCycles = 1;
   List<PomodoroHistory> pomodoroHistory = [];
   late Timer pomodoroTimer;
 
   TimerController timerController = TimerController();
-  PomodoroHistoryController pomodoroHistoryController = PomodoroHistoryController();
+  PomodoroHistoryController pomodoroHistoryController =
+      PomodoroHistoryController();
 
   void startPomodoro() {
     const oneSecond = Duration(seconds: 1);
@@ -26,17 +27,16 @@ class PomodoroController extends GetxController {
       (Timer timer) {
         if (workTime <= 1) {
           pomodoroTimer.cancel();
-          workTime= 0;
+          workTime.value = 0;
           timerController.isRunning.value = false;
           pomodoroHistory = pomodoroHistoryController.read('pomodoroHistory');
           pomodoroHistory.add(PomodoroHistory(
               dateTime: DateTime.now(),
-              timeStudied: workTime,
+              timeStudied: workTime.value,
               timeRested: restTime,
               cycles: numOfCycles));
           pomodoroHistoryController.save('pomodoroHistory', pomodoroHistory);
-        }
-        else {
+        } else {
           timerController.isRunning.value = true;
           workTime--;
         }
@@ -45,9 +45,8 @@ class PomodoroController extends GetxController {
   }
 
   @override
-  void dispose()
-  {
-      pomodoroTimer.cancel();
-      super.dispose();
+  void dispose() {
+    pomodoroTimer.cancel();
+    super.dispose();
   }
 }

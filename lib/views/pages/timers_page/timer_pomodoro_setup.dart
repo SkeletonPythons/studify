@@ -24,22 +24,24 @@ class PomodoroSetUp extends StatefulWidget {
 
 class PomodoroSetUpState extends State<PomodoroSetUp>
     with SingleTickerProviderStateMixin {
-  TimerController timerController = Get.put<TimerController>(TimerController());
-  PomodoroHistoryController pomodoroHistoryController =
-      Get.put<PomodoroHistoryController>(PomodoroHistoryController());
+  //variables
+  static int workTime = 0;
+
+  static TextEditingController workTimeController = TextEditingController();
+
+  TextEditingController cycleController = TextEditingController();
+  int numOfCycles = 1;
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController());
 
-  static TextEditingController workTimeController = TextEditingController();
-  TextEditingController restTimeController = TextEditingController();
-  TextEditingController cycleController = TextEditingController();
-
-  //variables
-  static int workTime = 0;
-  int restTime = 0;
-  int numOfCycles = 1;
   List<PomodoroHistory> pomodoroHistory = [];
+  PomodoroHistoryController pomodoroHistoryController =
+      Get.put<PomodoroHistoryController>(PomodoroHistoryController());
+
   late Timer pomodoroTimer;
+  int restTime = 0;
+  TextEditingController restTimeController = TextEditingController();
+  TimerController timerController = Get.put<TimerController>(TimerController());
 
   void startPomodoro() {
     const oneSecond = Duration(seconds: 1);
@@ -132,14 +134,13 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   'assets/images/start_button.svg',
                 ),
                 onPressed: () {
-                  setState(() {
-                    workTime = int.parse(workTimeController.text);
-                    restTime = int.parse(restTimeController.text);
-                    numOfCycles = int.parse(cycleController.text);
-                  });
-                  timerController.isRunning.value = true;
-                  timerController
-                      .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
+                  pomodoroController.workTime.value =
+                      int.parse(workTimeController.text);
+                  restTime = int.parse(restTimeController.text);
+                  numOfCycles = int.parse(cycleController.text);
+
+                      
+                          .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
                   Get.offAllNamed(Routes.NAVBAR);
                   //Routes to navbar which will display updated screens & index
                 }),

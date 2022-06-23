@@ -8,15 +8,13 @@ import '../models/user_model.dart';
 import './auth.dart';
 
 class DB extends GetxService {
+  final FirebaseFirestore _fs = FirebaseFirestore.instance;
+  final RxBool _gotDB = false.obs;
+  final RxString _userPath = ''.obs;
+
   /// Like the Auth controller, call this to access the DB.
   /// ex: DB.instance.addItem(collection, doc, item);
   static DB get instance => Get.find();
-
-  final FirebaseFirestore _fs = FirebaseFirestore.instance;
-
-  final RxString _userPath = ''.obs;
-
-  final RxBool _gotDB = false.obs;
 
   /// The [DocumentReference] for the user.
   DocumentReference get userDoc => _fs.doc(_userPath.value);
@@ -180,11 +178,35 @@ class DB extends GetxService {
 
 class Database extends GetxService {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
+
   static FirebaseFirestore get instance => Get.find();
 
   Future<bool> createNewUser(AppUser user) async {
     try {
-      await _store.collection('users').doc(user.uid).set(user.toJson());
+      await _store.collection('users').doc(user.uid).set(user.toJson()).then(
+        (value) async {
+          await _store
+              .doc('users/${user.uid}')
+              .collection('flashcards')
+              .doc('initCollection')
+              .set({'deck': []});
+          await _store
+              .doc('users/${user.uid}')
+              .collection('calendar')
+              .doc('initCollection')
+              .set({'events': []});
+          await _store
+              .doc('users/${user.uid}')
+              .collection('tasks')
+              .doc('initCollection')
+              .set({'tasks': []});
+          await _store
+              .doc('users/${user.uid}')
+              .collection('timers')
+              .doc('initCollection')
+              .set({'timers': []});
+        },
+      );
       return true;
     } catch (e) {
       debugPrint(e.toString());

@@ -23,15 +23,17 @@ class PomodoroTimerState extends State<PomodoroTimer>
     with SingleTickerProviderStateMixin {
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController());
-  PomodoroHistoryController pomodoroHistoryController =
-      Get.put<PomodoroHistoryController>(PomodoroHistoryController());
-  TimerController timerController = Get.put<TimerController>(TimerController());
 
+  PomodoroHistoryController pomodoroHistoryController =
+      Get.find<PomodoroHistoryController>();
+
+  TimerController timerController = Get.find<TimerController>();
   double workTime = PomodoroSetUpState.workTime.toDouble();
-  @override
-  void initState() {
-    super.initState();
-  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -58,38 +60,41 @@ class PomodoroTimerState extends State<PomodoroTimer>
                 Positioned(
                   top: 100,
                   left: 47,
-                  child: SleekCircularSlider(
-                    initialValue: workTime
-                        .toDouble(), // I can't extract this value from the controller,
-                    // however I can extract it from inside timersetupstate,
-                    // need help with state management from the controllers
-                    min: 0,
-                    max: 5401,
-                    appearance: CircularSliderAppearance(
-                      size: 300,
-                      customWidths: CustomSliderWidths(
-                        trackWidth: 15,
-                        handlerSize: 18,
-                        progressBarWidth: 15,
-                        shadowWidth: 0,
-                      ),
-                      customColors: CustomSliderColors(
-                        progressBarColor: Colors.red[900],
-                        trackColor: Colors.red,
-                        shadowColor: Colors.redAccent,
-                      ),
-                    ),
-                    innerWidget: (double workTime) {
-                      return Center(
-                        child: Text(
-                          '${(workTime ~/ 60).toInt().toString().padLeft(2, '0')}:${(workTime % 60).toInt().toString().padLeft(2, '0')}',
-                          style: GoogleFonts.ubuntu(
-                            color: Colors.white,
-                            fontSize: 50,
-                          ),
+                  child: Obx(
+                    () => SleekCircularSlider(
+                      //Obx makes widget listen for change
+                      initialValue: pomodoroController.workTime.value
+                          .toDouble(), // I can't extract this value from the controller,
+                      // however I can extract it from inside timersetupstate,
+                      // need help with state management from the controllers
+                      min: 0,
+                      max: 5401,
+                      appearance: CircularSliderAppearance(
+                        size: 300,
+                        customWidths: CustomSliderWidths(
+                          trackWidth: 15,
+                          handlerSize: 18,
+                          progressBarWidth: 15,
+                          shadowWidth: 0,
                         ),
-                      );
-                    },
+                        customColors: CustomSliderColors(
+                          progressBarColor: Colors.red[900],
+                          trackColor: Colors.red,
+                          shadowColor: Colors.redAccent,
+                        ),
+                      ),
+                      innerWidget: (double workTime) {
+                        return Center(
+                          child: Text(
+                            '${(workTime ~/ 60).toInt().toString().padLeft(2, '0')}:${(workTime % 60).toInt().toString().padLeft(2, '0')}',
+                            style: GoogleFonts.ubuntu(
+                              color: Colors.white,
+                              fontSize: 50,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ]),
