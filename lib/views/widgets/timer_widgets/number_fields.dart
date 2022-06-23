@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class TimerNumberField extends StatelessWidget {
   const TimerNumberField(
@@ -9,7 +10,8 @@ class TimerNumberField extends StatelessWidget {
       required this.positionTop,
       required this.positionLeft,
       required this.textFieldPadding,
-      required this.textController})
+      required this.textController,
+      required this.value})
       : super(key: key);
 
   final String prompt;
@@ -17,6 +19,7 @@ class TimerNumberField extends StatelessWidget {
   final double positionLeft;
   final double textFieldPadding;
   final TextEditingController textController;
+  final RxInt value;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class TimerNumberField extends StatelessWidget {
               width: 55,
               child: TextField(
                 controller: textController,
+                onChanged: (value) => this.value.value = int.parse(value),
                 maxLines: 1,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(

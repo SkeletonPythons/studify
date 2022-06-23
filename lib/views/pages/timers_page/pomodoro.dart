@@ -45,7 +45,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
         children: <Widget>[
           Center(
             child: SizedBox(
-              width: 500,
+              width: 500, //use mediaquery or get width
               height: 500,
               child: Stack(children: [
                 if (timerController.isRunning.value)
@@ -85,13 +85,13 @@ class PomodoroTimerState extends State<PomodoroTimer>
                       ),
                       innerWidget: (double workTime) {
                         return Center(
-                          child: Text(
-                            '${(workTime ~/ 60).toInt().toString().padLeft(2, '0')}:${(workTime % 60).toInt().toString().padLeft(2, '0')}',
-                            style: GoogleFonts.ubuntu(
-                              color: Colors.white,
-                              fontSize: 50,
-                            ),
-                          ),
+                          child: Obx(() => Text(
+                                '${(pomodoroController.workTime.value ~/ 60).toInt().toString().padLeft(2, '0')}:${(pomodoroController.workTime.value % 60).toInt().toString().padLeft(2, '0')}',
+                                style: GoogleFonts.ubuntu(
+                                  color: Colors.white,
+                                  fontSize: 50,
+                                ),
+                              )),
                         );
                       },
                     ),

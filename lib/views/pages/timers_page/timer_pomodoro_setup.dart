@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/consts/app_colors.dart';
 import 'package:studify/controllers/timer_controllers/pomodoro_history_controller.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/number_fields.dart';
@@ -27,54 +28,22 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   //variables
   static int workTime = 0;
 
-  static TextEditingController workTimeController = TextEditingController();
-
+  TextEditingController workTimeController = TextEditingController();
+  TextEditingController restTimeController = TextEditingController();
   TextEditingController cycleController = TextEditingController();
   int numOfCycles = 1;
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController());
 
-  List<PomodoroHistory> pomodoroHistory = [];
   PomodoroHistoryController pomodoroHistoryController =
       Get.put<PomodoroHistoryController>(PomodoroHistoryController());
 
-  late Timer pomodoroTimer;
-  int restTime = 0;
-  TextEditingController restTimeController = TextEditingController();
   TimerController timerController = Get.put<TimerController>(TimerController());
-
-  void startPomodoro() {
-    const oneSecond = Duration(seconds: 1);
-    pomodoroTimer = Timer.periodic(
-      oneSecond,
-      (Timer timer) {
-        if (workTime <= 1) {
-          setState(() {
-            pomodoroTimer.cancel();
-            workTime = 0;
-            timerController.isRunning.value = false;
-            pomodoroHistory = pomodoroHistoryController.read('pomodoroHistory');
-            pomodoroHistory.add(PomodoroHistory(
-                dateTime: DateTime.now(),
-                timeStudied: workTime,
-                timeRested: restTime,
-                cycles: numOfCycles));
-            pomodoroHistoryController.save('pomodoroHistory', pomodoroHistory);
-          });
-        } else {
-          setState(() {
-            timerController.isRunning.value = true;
-            workTime--;
-          });
-        }
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff313131),
+      backgroundColor: kBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: DefaultAppBar(),
@@ -109,6 +78,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 33,
             textController: workTimeController,
+            value: pomodoroController.workTime,
           ),
           TimerNumberField(
             prompt: 'Rest time (minutes)',
@@ -116,6 +86,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 42,
             textController: restTimeController,
+            value: pomodoroController.restTime,
           ),
           TimerNumberField(
             prompt: 'How many study cycles?',
@@ -123,6 +94,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 10,
             textController: cycleController,
+            value: pomodoroController.cycles,
           ),
           Positioned(
             top: 250,
@@ -136,13 +108,16 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                 onPressed: () {
                   pomodoroController.workTime.value =
                       int.parse(workTimeController.text);
-                  restTime = int.parse(restTimeController.text);
-                  numOfCycles = int.parse(cycleController.text);
 
-                      
-                          .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
-                  Get.offAllNamed(Routes.NAVBAR);
+                  pomodoroController.restTime.value =
+                      int.parse(restTimeController.text);
+                  pomodoroController.cycles.value =
+                      int.parse(cycleController.text);
+                  timerController.isRunning.value = true;
+                  timerController
+                      .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
                   //Routes to navbar which will display updated screens & index
+                  Get.toNamed(Routes.NAVBAR);
                 }),
           ),
           Positioned(

@@ -42,7 +42,6 @@ class BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(BuildContext context) {
-    Get.put<DB>(DB());
     var homeIcon = 'assets/icons/home-outlined64x.png';
     var calendarIcon = 'assets/icons/calendar-outlined.png';
     var timersIcon = 'assets/icons/timer.png';
