@@ -12,7 +12,8 @@ import '../../views/pages/timers_page/timer_pomodoro_setup.dart';
 class PomodoroController extends GetxController {
   RxInt workTime = 0.obs;
   RxInt restTime = 0.obs;
-  RxInt cycles = 0.obs;
+  RxInt totalCycles = 0.obs;
+  RxInt currentCycle = 0.obs;
 
   List<PomodoroHistory> pomodoroHistory = [];
   late Timer pomodoroTimer;
@@ -35,7 +36,7 @@ class PomodoroController extends GetxController {
               dateTime: DateTime.now(),
               timeStudied: workTime.value,
               timeRested: restTime.value,
-              cycles: cycles.value));
+              cycles: totalCycles.value));
           pomodoroHistoryController.save('pomodoroHistory', pomodoroHistory);
         } else {
           timerController.isRunning.value = true;

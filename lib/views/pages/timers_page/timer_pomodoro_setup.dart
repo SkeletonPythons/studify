@@ -94,7 +94,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 10,
             textController: cycleController,
-            value: pomodoroController.cycles,
+            value: pomodoroController.totalCycles,
           ),
           Positioned(
             top: 250,
@@ -111,7 +111,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
 
                   pomodoroController.restTime.value =
                       int.parse(restTimeController.text);
-                  pomodoroController.cycles.value =
+                  pomodoroController.totalCycles.value =
                       int.parse(cycleController.text);
                   timerController.isRunning.value = true;
                   timerController
