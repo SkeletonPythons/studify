@@ -10,6 +10,8 @@ import '../views/pages/timers_page/timer_homepage.dart';
 import '../views/pages/bottom_nav_page/bottom_nav_bar.dart';
 import '../views/pages/timers_page/timer_pomodoro_setup.dart';
 import '../views/pages/alternate_reality/alt_home.dart';
+import '../views/pages/calendar_page/add_event.dart';
+import '../views/pages/calendar_page/calendar_page.dart';
 
 abstract class Routes {
   static const String LOGIN = '/login';
