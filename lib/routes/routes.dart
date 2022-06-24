@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
 import 'package:studify/views/pages/timers_page/pomodoro.dart';
-import '../../../views/pages/splash_page/splash_page.dart';
-import '../../../views/pages/login_page/login_page.dart';
-import '../../../views/pages/timers_page/timer_homepage.dart';
-import '../../../views/pages/bottom_nav_page/bottom_nav_bar.dart';
+import '../views/pages/splash_page/splash_page.dart';
+import '../views/pages/login_page/login_page.dart';
+import '../views/pages/timers_page/timer_homepage.dart';
+import '../views/pages/bottom_nav_page/bottom_nav_bar.dart';
 import '../views/pages/timers_page/timer_pomodoro_setup.dart';
-
+import '../views/pages/alternate_reality/alt_home.dart';
 
 abstract class Routes {
   static const String LOGIN = '/login';
@@ -20,6 +20,7 @@ abstract class Routes {
   static const String CALENDAR = '/calendar';
   static const String POMODOROSETUP = '/pomodoro_setup';
   static const String POMODORO = '/pomodoro';
+  static const String ALT_HOME = '/alt_home';
 }
 
 class AppPages {
@@ -59,6 +60,10 @@ class AppPages {
     GetPage(
       name: Routes.POMODORO,
       page: () => PomodoroTimer(),
-    )
+    ),
+    GetPage(
+      name: Routes.ALT_HOME,
+      page: () => AltHome(),
+    ),
   ];
 }

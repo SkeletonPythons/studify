@@ -46,7 +46,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
       backgroundColor: kBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
-        child: DefaultAppBar(),
+        child: DefaultAppBar(() {}),
       ),
       body: Stack(
         children: <Widget>[

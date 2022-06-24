@@ -5,16 +5,19 @@ import 'package:studify/consts/app_colors.dart';
 import 'dart:math';
 
 import '../../../utils/sample_cards.dart';
+import '../../../controllers/flashcard_controller.dart';
 
 class OpenFC extends StatelessWidget {
-  OpenFC({
+  const OpenFC({
     required this.index,
     required this.onTap,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
   final int index;
   final VoidCallback onTap;
+  final FlashcardController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -226,16 +229,18 @@ class OpenCardController extends GetxController
     this.index,
   );
 
+  final FlashcardController controller = Get.find();
+
   late Animation<double> animation;
   late TextEditingController backController =
-      TextEditingController(text: statesAndCapital['$index']['a']);
+      TextEditingController(text: controller.notes[index].back);
 
   RxDouble boxSize = 100.0.obs;
   RxDouble expandedSize = 300.0.obs;
   RxBool fieldsUnlocked = RxBool(false);
   late AnimationController flipAnimation;
   late TextEditingController frontController =
-      TextEditingController(text: statesAndCapital['$index']['q']);
+      TextEditingController(text: controller.notes[index].front);
 
   final int index;
   RxDouble initialSize = 100.0.obs;

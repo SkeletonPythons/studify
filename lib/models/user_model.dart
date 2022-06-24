@@ -14,6 +14,7 @@ class AppUser {
   Map<String, bool>? settings = {
     // TODO: Add settings that will be synced to the database.
     'isVerified': false,
+    'isNewUser': true,
   };
   Map<String, dynamic> stats = {
     /// Statistics that will be synced to the database.

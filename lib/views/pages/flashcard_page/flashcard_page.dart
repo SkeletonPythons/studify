@@ -19,38 +19,46 @@ class FlashcardPage extends StatelessWidget {
       child: SizedBox(
         height: Get.height,
         width: Get.width,
-        child: GridView.custom(
-          childrenDelegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return OpenContainer(
-                  transitionDuration: const Duration(milliseconds: 900),
-                  closedColor: kBackground,
-                  openColor: kBackgroundLight,
-                  transitionType: ContainerTransitionType.fadeThrough,
-                  closedElevation: 4,
-                  openElevation: 8,
-                  closedBuilder:
-                      (BuildContext context, VoidCallback openContainer) {
-                    return ClosedFC(index: index, onTap: openContainer);
-                  },
-                  openBuilder:
-                      (BuildContext context, VoidCallback closeContainer) {
-                    return OpenFC(index: index, onTap: closeContainer);
-                  });
-            },
-            childCount: statesAndCapital.length,
-          ),
-          gridDelegate: SliverQuiltedGridDelegate(
-            crossAxisCount: 4,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
-            repeatPattern: QuiltedGridRepeatPattern.inverted,
-            pattern: [
-              const QuiltedGridTile(2, 2),
-              const QuiltedGridTile(1, 1),
-              const QuiltedGridTile(1, 1),
-              const QuiltedGridTile(1, 2),
-            ],
+        child: Obx(
+          () => GridView.custom(
+            childrenDelegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return OpenContainer(
+                    transitionDuration: const Duration(milliseconds: 900),
+                    closedColor: kBackground,
+                    openColor: kBackgroundLight,
+                    transitionType: ContainerTransitionType.fadeThrough,
+                    closedElevation: 4,
+                    openElevation: 8,
+                    closedBuilder:
+                        (BuildContext context, VoidCallback openContainer) {
+                      return ClosedFC(
+                          index: index,
+                          onTap: openContainer,
+                          controller: controller);
+                    },
+                    openBuilder:
+                        (BuildContext context, VoidCallback closeContainer) {
+                      return OpenFC(
+                          index: index,
+                          onTap: closeContainer,
+                          controller: controller);
+                    });
+              },
+              childCount: controller.numberOfTiles.value,
+            ),
+            gridDelegate: SliverQuiltedGridDelegate(
+              crossAxisCount: 4,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+              repeatPattern: QuiltedGridRepeatPattern.inverted,
+              pattern: [
+                const QuiltedGridTile(2, 2),
+                const QuiltedGridTile(1, 1),
+                const QuiltedGridTile(1, 1),
+                const QuiltedGridTile(1, 2),
+              ],
+            ),
           ),
         ),
       ),

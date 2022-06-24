@@ -9,6 +9,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:studify/models/flashcard_model.dart';
+import 'package:studify/utils/sample_cards.dart';
 import 'package:studify/views/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
@@ -70,6 +72,7 @@ class Auth extends GetxController {
       }
       if (newUser.value) {
         debugPrint('User is new');
+
         return;
       }
     } else {

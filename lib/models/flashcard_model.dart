@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Flashcard {
   Flashcard({
     required this.q,
@@ -28,41 +32,66 @@ class Flashcard {
 }
 
 class Note {
+  String back;
+  String front;
+  String id;
+  String? content;
+  String? subject;
+  List<dynamic> tags;
+  String? title;
+  bool isFav;
+  bool isPinned;
+  bool isLearned;
+
   Note({
     required this.front,
     required this.back,
-    required this.subject,
+    this.subject,
     this.title = '',
     this.isFav = false,
-    this.notes = '',
+    this.content = '',
     this.tags = const [],
-  }) : id = DateTime.now().millisecondsSinceEpoch;
+    this.isPinned = false,
+    this.isLearned = false,
+  }) : id = DateTime.now().millisecondsSinceEpoch.toString();
+
+  factory Note.fromRawJson(String str) =>
+      Note.fromJson(json.decode(str) as Map<String, dynamic>);
 
   Note.fromJson(Map<String, dynamic> json)
       : front = json['front'],
         isFav = json['isFav'],
         back = json['back'],
         subject = json['subject'],
-        notes = json['notes'],
+        content = json['content'],
         title = json['title'],
         tags = json['tags'],
+        isPinned = json['isPinned'],
+        isLearned = json['isLearned'],
         id = json['id'];
 
-  String back;
-  String front;
-  int id;
-  String? notes;
-  String subject;
-  List<String?> tags;
-  String? title;
-  bool isFav;
+  Note.fromDoc({required DocumentSnapshot snapshot})
+      : id = snapshot.id,
+        front = snapshot['front'],
+        isFav = snapshot['isFav'],
+        back = snapshot['back'],
+        subject = snapshot['subject'],
+        content = snapshot['content'],
+        title = snapshot['title'],
+        isPinned = snapshot['isPinned'],
+        isLearned = snapshot['isLearned'],
+        tags = snapshot['tags'];
 
   Map<String, dynamic> toJson() => {
         'front': front,
         'back': back,
         'id': id,
         'subject': subject,
-        'notes': notes,
+        'content': content,
         'tags': tags,
+        'title': title,
+        'isFav': isFav,
+        'isPinned': isPinned,
+        'isLearned': isLearned,
       };
 }
