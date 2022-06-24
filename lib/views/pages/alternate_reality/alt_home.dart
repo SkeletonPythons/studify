@@ -24,7 +24,7 @@ class AltHome extends StatelessWidget {
             backgroundColor: kBackgroundDark,
             floatingActionButton: _.fabs[_.currentIndex.value],
             appBar: PreferredSize(
-                preferredSize: Size.fromHeight(70.0),
+                preferredSize: Size.fromHeight(60.0),
                 child: AltAppBar(
                     onSideMenuTap: () =>
                         _.altScaffoldKey.currentState!.openDrawer())),
