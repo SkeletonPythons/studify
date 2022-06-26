@@ -69,7 +69,7 @@ class AltHomeController extends GetxController
     FloatingActionButton.small(
         onPressed: () => Get.snackbar(
             'Timers!', 'Try switching tabs by scrolling left and right!')),
-    FloatingActionButton.large(
+    FloatingActionButton(
         onPressed: () =>
             Get.snackbar('flashcards', 'This page is kinda lame so far.')),
   ];

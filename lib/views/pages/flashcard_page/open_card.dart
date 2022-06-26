@@ -1,303 +1,216 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/consts/app_colors.dart';
 import 'dart:math';
 
+import '../../../models/flashcard_model.dart';
+import '../../../services/auth.dart';
+import '../../../services/db.dart';
 import '../../../utils/sample_cards.dart';
 import '../../../controllers/flashcard_controller.dart';
 
-class OpenFC extends StatelessWidget {
-  const OpenFC({
-    required this.index,
-    required this.onTap,
-    required this.controller,
-    Key? key,
-  }) : super(key: key);
-
-  final int index;
-  final VoidCallback onTap;
-  final FlashcardController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder<OpenCardController>(
-        init: OpenCardController(index),
-        // ignore: no_leading_underscores_for_local_identifiers
-        builder: (_controller) {
-          Matrix4 transform = Matrix4.identity();
-          transform.setEntry(2, 2, 0.001);
-          transform.rotateY(_controller.animation.value);
-          transform.scale(1.0, 1.0, 10);
-          return Transform(
-            transform: transform,
-            alignment: Alignment.center,
-            child: Container(
-              height: Get.height,
-              width: Get.width,
-              color: kBackgroundLight3,
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                  child: AnimatedBuilder(
-                    animation: _controller.flipAnimation,
-                    builder: (context, child) {
-                      Matrix4 transform = Matrix4.identity();
-                      transform.setEntry(3, 2, 0.001);
-                      transform.rotateY(_controller.animation.value);
-                      transform.scale(1.0, 1.0, 10);
-                      return Transform(
-                        transform: transform,
-                        alignment: Alignment.center,
-                        child: child,
-                      );
-                    },
-                    child: AnimatedContainer(
-                      height: _controller.boxSize.value,
-                      width: _controller.boxSize.value,
-                      decoration: BoxDecoration(
-                        color: kBackground,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      duration: const Duration(milliseconds: 900),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: Get.height * 0.1,
-                            width: Get.width - 20,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.arrow_back,
-                                        color: Colors.white54),
-                                    onPressed: () => onTap(),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: Get.width * .55,
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () => _controller.toggleFav(),
-                                    icon: _controller.isFav.value
-                                        ? const Icon(Icons.favorite,
-                                            color: Colors.red)
-                                        : const Icon(Icons.favorite_border,
-                                            color: Colors.white54),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () => _controller.toggleFields(),
-                                    icon: Icon(
-                                      _controller.fieldsUnlocked.value
-                                          ? Icons.lock_open_outlined
-                                          : Icons.lock_outlined,
-                                      color: _controller.fieldsUnlocked.value
-                                          ? Colors.lightBlueAccent
-                                          : Colors.redAccent,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Obx(() => AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                switchInCurve: Curves.easeInOutSine,
-                                switchOutCurve: Curves.easeInOutCubic,
-                                transitionBuilder: (child, animation) {
-                                  return FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  );
-                                },
-                                child: _controller.switcherChild.value,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
-}
-
-class FrontSide extends StatelessWidget {
-  const FrontSide(this.callback, this._controller, {Key? key})
+class OpenCard extends StatelessWidget {
+  const OpenCard({required this.note, required this.callback, Key? key})
       : super(key: key);
 
   final VoidCallback callback;
-  final OpenCardController _controller;
+  final Note note;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Text(
-              'front side: ',
-              style: GoogleFonts.ubuntu(
-                fontSize: 20,
-                color: Colors.white54,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ),
-        ),
-        Divider(
-          color: kAccent,
-          indent: Get.width * 0.05,
-          endIndent: Get.width * 0.05,
-        ),
-        Container(
-          constraints: BoxConstraints(
-            maxWidth: Get.width * 0.9,
-            maxHeight: Get.height * 0.5,
-          ),
+    final OC oc = Get.put(OC(note));
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 15, 8, 8),
+      child: Container(
+        height: Get.height,
+        width: Get.width,
+        decoration: BoxDecoration(
           color: kBackgroundLight,
-          child: Obx(
-            () => TextField(
-              expands: true,
-              maxLines: null,
-              minLines: null,
-              enabled: _controller.fieldsUnlocked.value,
-            ),
-          ),
+          borderRadius: BorderRadius.circular(10),
         ),
-        OutlinedButton(
-          onPressed: () => callback(),
-          child: const Text('test'),
-        ),
-      ],
-    );
-  }
-}
-
-class BackSide extends StatelessWidget {
-  const BackSide(this.callback, {Key? key}) : super(key: key);
-  final VoidCallback callback;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Text(
-              'back side: ',
-              style: GoogleFonts.ubuntu(
-                fontSize: 20,
-                color: Colors.white54,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: callback,
+                  ),
+                  TextField(
+                    controller: oc.titleController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Title',
+                      hintStyle: GoogleFonts.ubuntu(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                        note.isFav ? Icons.favorite : Icons.favorite_border,
+                        color: note.isFav ? Colors.redAccent : Colors.grey),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                        oc.editEnabled.value ? Icons.lock_open : Icons.lock,
+                        color: oc.editEnabled.value
+                            ? Colors.lightBlueAccent
+                            : Colors.redAccent),
+                  ),
+                ],
               ),
-              textAlign: TextAlign.start,
             ),
-          ),
+            Divider(
+              thickness: 2,
+            ),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: kBackgroundLight3,
+                        constraints: BoxConstraints(
+                            maxHeight: Get.height * .6,
+                            maxWidth: Get.width * .6),
+                        child: TextField(
+                          controller: oc.contentController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Content',
+                            hintStyle: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: kBackgroundLight3,
+                        constraints: BoxConstraints(
+                            maxHeight: Get.height * .3,
+                            maxWidth: Get.width * .3),
+                        child: TextField(
+                          controller: oc.frontController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Front',
+                            hintStyle: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        color: kBackgroundLight3,
+                        constraints: BoxConstraints(
+                            maxHeight: Get.height * .3,
+                            maxWidth: Get.width * .3),
+                        child: TextField(
+                          controller: oc.frontController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Back',
+                            hintStyle: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
-        Divider(
-          color: kAccent,
-          indent: Get.width * 0.05,
-          endIndent: Get.width * 0.05,
-        ),
-        SizedBox(height: Get.height * 0.1, width: Get.width * .07),
-        OutlinedButton(
-          onPressed: () => callback(),
-          child: const Text('test'),
-        ),
-      ],
+      ),
     );
   }
 }
 
-class OpenCardController extends GetxController
-    with GetTickerProviderStateMixin {
-  OpenCardController(
-    this.index,
-  );
+class OC extends GetxController {
+  OC(this.note);
+  final RxBool editEnabled = RxBool(false);
+  final RxBool fav = RxBool(false);
 
-  final FlashcardController controller = Get.find();
+  final Note note;
 
-  late Animation<double> animation;
-  late TextEditingController backController =
-      TextEditingController(text: controller.notes[index].back);
-
-  RxDouble boxSize = 100.0.obs;
-  RxDouble expandedSize = 300.0.obs;
-  RxBool fieldsUnlocked = RxBool(false);
-  late AnimationController flipAnimation;
-  late TextEditingController frontController =
-      TextEditingController(text: controller.notes[index].front);
-
-  final int index;
-  RxDouble initialSize = 100.0.obs;
-  RxBool isFav = RxBool(false);
-  RxBool isFlipped = RxBool(false);
-
-  late Rx<Widget> switcherChild = Rx<Widget>(FrontSide(() => flip(), this));
-
-  @override
-  void onClose() {
-    super.onClose();
-    frontController.dispose();
-    backController.dispose();
-    flipAnimation.dispose();
+  void toggleEdit() {
+    editEnabled.value = !editEnabled.value;
   }
+
+  late TextEditingController frontController;
+  late TextEditingController backController;
+  late TextEditingController titleController;
+  late TextEditingController tagsController;
+  late TextEditingController contentController;
 
   @override
   void onInit() {
     super.onInit();
-    flipAnimation = AnimationController(
-      vsync: this,
-      reverseDuration: const Duration(milliseconds: 300),
-      duration: const Duration(milliseconds: 300),
-    );
-    animation = TweenSequence(
-      <TweenSequenceItem<double>>[
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0.0, end: pi)
-              .chain(CurveTween(curve: Curves.linear)),
-          weight: 50.0,
-        ),
-        TweenSequenceItem<double>(
-          tween: ConstantTween<double>(pi * 2),
-          weight: 50.0,
-        ),
-      ],
-    ).animate(flipAnimation);
+    frontController = TextEditingController(text: note.front);
+    backController = TextEditingController(text: note.back);
+    titleController = TextEditingController(text: note.title);
+    tagsController = TextEditingController();
+    contentController = TextEditingController(text: note.content);
   }
 
-  void toggleFields() {
-    fieldsUnlocked.toggle();
-    update();
+  @override
+  void onClose() {
+    frontController.dispose();
+    backController.dispose();
+    titleController.dispose();
+    super.onClose();
   }
 
-  void toggleFav() {
-    isFav.toggle();
-    update();
-  }
-
-  void flip() async {
-    isFlipped.toggle();
-    if (isFlipped.value) {
-      flipAnimation.forward();
-      switcherChild.value = BackSide(() => flip());
-    } else {
-      flipAnimation.reverse();
-      switcherChild.value = FrontSide(() => flip(), this);
+  void toggleFav(Note note) async {
+    note.isFav = !note.isFav;
+    try {
+      await DB.instance.store
+          .collection('users')
+          .doc(Auth.instance.USER.uid)
+          .collection('flashcards')
+          .doc(note.id)
+          .update({
+        'isFav': note.isFav,
+      }).then((value) => fav.toggle);
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

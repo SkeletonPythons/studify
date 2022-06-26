@@ -10,8 +10,30 @@ import '../services/auth.dart';
 class FlashcardController extends GetxController
     with GetSingleTickerProviderStateMixin {
   RxList<Note> notes = <Note>[].obs;
+  RxDouble bottomBarTranslation = 0.0.obs;
+
+  late AnimationController barController;
 
   late RxInt numberOfTiles = notes.length.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    barController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    barController.addListener(() {
+      bottomBarTranslation.value =
+          Tween<double>(begin: 0, end: 1).transform(barController.value);
+    });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    barController.dispose();
+  }
 
   @override
   void onReady() {
