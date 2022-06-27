@@ -44,6 +44,7 @@ class ClosedCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: kAccent,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Divider(
                       thickness: 2,

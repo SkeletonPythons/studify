@@ -33,22 +33,30 @@ class AltHome extends StatelessWidget {
               controller: _.tabController,
               children: _.tabViews,
             ),
-            bottomNavigationBar: TabBar(
-              automaticIndicatorColorAdjustment: false,
-              enableFeedback: true,
-              labelStyle: GoogleFonts.ubuntu(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: kAccent,
+            bottomNavigationBar: Material(
+              color: kBackgroundLight,
+              child: TabBar(
+                unselectedLabelStyle: GoogleFonts.ubuntu(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: kAccent,
+                ),
+                automaticIndicatorColorAdjustment: false,
+                enableFeedback: true,
+                labelStyle: GoogleFonts.ubuntu(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: kAccent,
+                ),
+                onTap: (newIndex) {
+                  _.currentIndex.value = newIndex;
+                },
+                controller: _.tabController,
+                tabs: _.tabs,
+                indicatorColor: kAccent,
+                labelColor: kBackgroundLight2,
+                unselectedLabelColor: kBackgroundLight,
               ),
-              onTap: (newIndex) {
-                _.currentIndex.value = newIndex;
-              },
-              controller: _.tabController,
-              tabs: _.tabs,
-              indicatorColor: kAccent,
-              labelColor: kBackgroundLight2,
-              unselectedLabelColor: kBackgroundLight,
             ),
           ),
         );

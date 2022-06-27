@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/consts/app_colors.dart';
 // import '../../pages/dashboard_page/dashboard_page.dart';
+import '../../../controllers/flashcard_controller.dart';
 import '../../pages/calendar_page/calendar_page.dart';
 import '../../pages/flashcard_page/flashcard_page.dart';
 import '../../pages/timers_page/timer_homepage.dart';
@@ -21,14 +24,17 @@ class AltHomeController extends GetxController
     const TimerHomePage(),
     FlashcardPage(),
   ];
-  final List<Tab> tabs = [
+  final List<Widget> tabs = [
     Tab(
       icon: Image.asset(
         'assets/icons/home-outlined64x.png',
         width: 35,
         height: 35,
       ),
-      text: 'Home',
+      child: Text(
+        'Home',
+        style: GoogleFonts.ubuntu(fontSize: 12, color: Colors.white),
+      ),
     ),
     Tab(
       icon: Image.asset(
@@ -36,7 +42,10 @@ class AltHomeController extends GetxController
         width: 35,
         height: 35,
       ),
-      text: 'Calendar',
+      child: Text(
+        'Calendar',
+        style: GoogleFonts.ubuntu(fontSize: 12, color: Colors.white),
+      ),
     ),
     Tab(
       icon: Image.asset(
@@ -44,7 +53,10 @@ class AltHomeController extends GetxController
         width: 35,
         height: 35,
       ),
-      text: 'Timers',
+      child: Text(
+        'Timers',
+        style: GoogleFonts.ubuntu(fontSize: 12, color: Colors.white),
+      ),
     ),
     Tab(
       icon: Image.asset(
@@ -52,7 +64,10 @@ class AltHomeController extends GetxController
         width: 35,
         height: 35,
       ),
-      text: 'Flashcards',
+      child: Text(
+        'Flashcards',
+        style: GoogleFonts.ubuntu(fontSize: 12, color: Colors.white),
+      ),
     ),
   ];
 
@@ -67,11 +82,16 @@ class AltHomeController extends GetxController
             ),
         label: const Text('Calendar FAB')),
     FloatingActionButton.small(
-        onPressed: () => Get.snackbar(
-            'Timers!', 'Try switching tabs by scrolling left and right!')),
-    FloatingActionButton(
-        onPressed: () =>
-            Get.snackbar('flashcards', 'This page is kinda lame so far.')),
+      onPressed: () {
+        Get.snackbar('Hey!', 'This is the timers\'s floating action button!');
+      },
+    ),
+    FloatingActionButton(onPressed: () {
+      Get.find<FlashcardController>()
+          .notes
+          .add(Get.find<FlashcardController>().createNote());
+      Get.snackbar('WooHoo!', 'New Note Created!');
+    }),
   ];
 
   @override

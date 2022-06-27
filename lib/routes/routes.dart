@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
+import 'package:studify/controllers/flashcard_controller.dart';
 import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
 import 'package:studify/views/pages/timers_page/pomodoro.dart';
 
@@ -43,10 +44,12 @@ class AppPages {
     GetPage(
       name: Routes.NAVBAR,
       page: () => BottomNavBar(),
+      binding: FlashcardBinding(),
     ),
     GetPage(
       name: Routes.DASH,
       page: () => Dashboard(),
+      binding: FlashcardBinding(),
     ),
     GetPage(
       name: Routes.TIMER,
@@ -71,6 +74,7 @@ class AppPages {
     GetPage(
       name: Routes.ALT_HOME,
       page: () => AltHome(),
+      binding: FlashcardBinding(),
     ),
   ];
 }

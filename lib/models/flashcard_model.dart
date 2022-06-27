@@ -26,20 +26,16 @@ class Note {
     this.isLearned = false,
   }) : id = DateTime.now().millisecondsSinceEpoch.toString();
 
-  factory Note.fromRawJson(String str) =>
-      Note.fromJson(json.decode(str) as Map<String, dynamic>);
-
-  Note.fromJson(Map<String, dynamic> json)
-      : front = json['front'],
-        isFav = json['isFav'],
-        back = json['back'],
-        subject = json['subject'],
-        content = json['content'],
-        title = json['title'],
-        tags = json['tags'],
-        isPinned = json['isPinned'],
-        isLearned = json['isLearned'],
-        id = json['id'];
+  Note.fromJson(Map<String, dynamic> json, this.id)
+      : front = json['front'] ?? '',
+        isFav = json['isFav'] ?? false,
+        back = json['back'] ?? '',
+        subject = json['subject'] ?? '',
+        content = json['content'] ?? '',
+        title = json['title'] ?? '',
+        tags = json['tags'] ?? [],
+        isPinned = json['isPinned'] ?? false,
+        isLearned = json['isLearned'] ?? false;
 
   Note.fromDoc({required DocumentSnapshot snapshot})
       : id = snapshot.id,

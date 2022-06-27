@@ -14,8 +14,8 @@ final ThemeData themeOne = ThemeData.dark().copyWith(
   primaryColorDark: kAccent,
   brightness: Brightness.dark,
   tabBarTheme: ThemeData.dark().tabBarTheme.copyWith(
-        labelColor: kBackgroundLight,
-        unselectedLabelColor: kBackgroundLight2,
+        labelColor: kAccent,
+        unselectedLabelColor: Colors.white,
         labelStyle: GoogleFonts.ubuntu(
           fontSize: 12,
           fontWeight: FontWeight.w600,
