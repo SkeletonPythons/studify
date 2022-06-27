@@ -1,68 +1,64 @@
-class Flashcard {
-  Flashcard({
-    required this.q,
-    required this.a,
-    required this.isLearned,
-    this.notes,
-  }) : id = DateTime.now().millisecondsSinceEpoch;
+import 'dart:convert';
 
-  Flashcard.fromJson(Map<String, dynamic> json)
-      : q = json['q'],
-        a = json['a'],
-        id = json['id'],
-        notes = json['notes'],
-        isLearned = json['isLearned'];
-
-  String a;
-  int id;
-  bool isLearned;
-  String? notes;
-  String q;
-
-  Map<String, dynamic> toJson() => {
-        'q': q,
-        'a': a,
-        'id': id,
-        'isLearned': isLearned,
-      };
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Note {
+  String back;
+  String front;
+  String id;
+  String? content;
+  String? subject;
+  List<dynamic> tags;
+  String? title;
+  bool isFav;
+  bool isPinned;
+  bool isLearned;
+
   Note({
     required this.front,
     required this.back,
-    required this.subject,
+    this.subject,
     this.title = '',
     this.isFav = false,
-    this.notes = '',
+    this.content = '',
     this.tags = const [],
-  }) : id = DateTime.now().millisecondsSinceEpoch;
+    this.isPinned = false,
+    this.isLearned = false,
+  }) : id = DateTime.now().millisecondsSinceEpoch.toString();
 
-  Note.fromJson(Map<String, dynamic> json)
-      : front = json['front'],
-        isFav = json['isFav'],
-        back = json['back'],
-        subject = json['subject'],
-        notes = json['notes'],
-        title = json['title'],
-        tags = json['tags'],
-        id = json['id'];
+  Note.fromJson(Map<String, dynamic> json, this.id)
+      : front = json['front'] ?? '',
+        isFav = json['isFav'] ?? false,
+        back = json['back'] ?? '',
+        subject = json['subject'] ?? '',
+        content = json['content'] ?? '',
+        title = json['title'] ?? '',
+        tags = json['tags'] ?? [],
+        isPinned = json['isPinned'] ?? false,
+        isLearned = json['isLearned'] ?? false;
 
-  String back;
-  String front;
-  int id;
-  String? notes;
-  String subject;
-  List<String?> tags;
-  String? title;
-  bool isFav;
+  Note.fromDoc({required DocumentSnapshot snapshot})
+      : id = snapshot.id,
+        front = snapshot['front'],
+        isFav = snapshot['isFav'],
+        back = snapshot['back'],
+        subject = snapshot['subject'],
+        content = snapshot['content'],
+        title = snapshot['title'],
+        isPinned = snapshot['isPinned'],
+        isLearned = snapshot['isLearned'],
+        tags = snapshot['tags'];
 
   Map<String, dynamic> toJson() => {
         'front': front,
         'back': back,
         'id': id,
         'subject': subject,
-        'notes': notes,
+        'content': content,
         'tags': tags,
+        'title': title,
+        'isFav': isFav,
+        'isPinned': isPinned,
+        'isLearned': isLearned,
       };
 }
