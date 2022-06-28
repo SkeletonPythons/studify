@@ -27,8 +27,6 @@ class DefaultAppBar extends StatelessWidget {
             color: Colors.red,
             size: 36,
           ),
-          // icon: Image.asset(sideMenuIcon,
-          //     fit: BoxFit.fill, color: Colors.red[900], height: 50, width: 50),
           onPressed: () => onSideMenuTap(),
         ),
         actions: []);

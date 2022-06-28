@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: non_constant_identifier_names
 import 'package:get/get.dart';
+import 'package:studify/controllers/navbar_controller.dart';
 import 'package:studify/views/pages/timers_page/pomodoro.dart';
-import '../../views/pages/bottom_nav_page/bottom_nav_bar.dart';
+import '../../views/pages/bottom_nav_page/OLD_navbar.dart';
 import '../../views/pages/timers_page/timer_homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:studify/views/pages/calendar_page/calendar_page.dart';
@@ -24,10 +25,10 @@ class TimerController extends GetxController {
   void ScreensIfPomodoroActive() // if the Pomodoro timer is active, the timer homepage becomes the active timer itself in the navbar
   {
     if (isRunning.value == true) {
-      BottomNavBarState.screens[2] = PomodoroTimer();
-      BottomNavBarState.selectedIndex = 2;
+      NavBarController.tabViews[2] = PomodoroTimer();
+      NavBarController.currentIndex.value = 2;
     } else {
-      BottomNavBarState.screens[2] = TimerHomePage();
+      NavBarController.tabViews[2] = TimerHomePage();
     }
   }
 }

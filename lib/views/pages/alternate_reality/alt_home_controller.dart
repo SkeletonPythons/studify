@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, unused_field
+// ignore_for_file: prefer_const_constructors,prefer_final_fields, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +21,7 @@ class AltHomeController extends GetxController
   final List<Widget> tabViews = [
     const AltDashboard(),
     const CalendarPage(),
-    const TimerHomePage(),
+    TimerHomePage(),
     FlashcardPage(),
   ];
   final List<Widget> tabs = [

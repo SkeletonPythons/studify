@@ -14,7 +14,7 @@ import 'package:studify/routes/routes.dart';
 import '../../../controllers/timer_controllers/pomodoro_controller.dart';
 import '../../../controllers/timer_controllers/timer_controller.dart';
 import '../../../models/pomodoro_models/pomodoro_history.dart';
-import '../bottom_nav_page/bottom_nav_bar.dart';
+import '../bottom_nav_page/OLD_navbar.dart';
 
 class PomodoroSetUp extends StatefulWidget {
   const PomodoroSetUp({Key? key}) : super(key: key);
