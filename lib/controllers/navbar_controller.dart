@@ -11,20 +11,23 @@ import '../../../views/pages/timers_page/timer_homepage.dart';
 import '../../../views/widgets/app_bar.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../services/auth.dart';
+import '../views/pages/timers_page/pomodoro.dart';
 
 class NavBarController extends GetxController
-with GetSingleTickerProviderStateMixin {
+    with GetSingleTickerProviderStateMixin {
   static RxInt currentIndex = 0.obs;
   late TabController tabController;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  static List<Widget> tabViews = [
+  Rx<Widget> timerPage = Rx(TimerHomePage());
+
+  late RxList<Widget> tabViews = RxList([
     Dashboard(),
     CalendarPage(),
-    TimerHomePage(),
+    timerPage.value,
     FlashcardPage(),
-  ];
+  ]);
 
   final List<Widget> tabs = [
     Tab(
@@ -77,10 +80,11 @@ with GetSingleTickerProviderStateMixin {
   void onInit() {
     super.onInit();
     tabController = TabController(length: tabViews.length, vsync: this);
-    tabController.addListener(() {
-      currentIndex.value = tabController.index;
-      update();
-    });
+    // tabController.addListener(() {
+    //   currentIndex.value = tabController.index;
+    //   update();
+    TimerController timerController =
+        Get.put<TimerController>(TimerController(), permanent: true);
   }
 
   @override

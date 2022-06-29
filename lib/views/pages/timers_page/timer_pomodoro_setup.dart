@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/consts/app_colors.dart';
 import 'package:studify/controllers/timer_controllers/pomodoro_history_controller.dart';
+import 'package:studify/views/pages/timers_page/pomodoro.dart';
 import 'package:studify/views/widgets/app_bar.dart';
 import 'package:studify/views/widgets/timer_widgets/number_fields.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,12 +34,13 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   TextEditingController cycleController = TextEditingController();
   int numOfCycles = 1;
   PomodoroController pomodoroController =
-      Get.put<PomodoroController>(PomodoroController());
+      Get.put<PomodoroController>(PomodoroController(), permanent: true);
 
   PomodoroHistoryController pomodoroHistoryController =
-      Get.put<PomodoroHistoryController>(PomodoroHistoryController());
+      Get.put<PomodoroHistoryController>(PomodoroHistoryController(),
+          permanent: true);
 
-  TimerController timerController = Get.put<TimerController>(TimerController());
+  TimerController timerController = Get.find<TimerController>();
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +116,10 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                       int.parse(cycleController.text);
                   timerController.isRunning.value = true;
                   pomodoroController.StartPomodoro();
-                  timerController
-                      .ScreensIfPomodoroActive(); // updates navbar screens if Pomodoro timer active
+                  timerController.setActiveWidget(
+                      PomodoroTimer()); // updates navbar screens if Pomodoro timer active
                   //Routes to navbar which will display updated screens & index
-                  Get.toNamed(Routes.NAVBAR);
+                  Get.back();
                 }),
           ),
           Positioned(

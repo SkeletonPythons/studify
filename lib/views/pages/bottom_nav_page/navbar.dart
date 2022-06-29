@@ -1,68 +1,75 @@
 // ignore_for_file: prefer_const_constructors
-import'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/controllers/timer_controllers/timer_controller.dart';
 
 import '../../../consts/app_colors.dart';
 import '../../../controllers/navbar_controller.dart';
 import '../../../services/auth.dart';
 import '../../../routes/routes.dart';
 import '../../widgets/app_bar.dart';
+import '../calendar_page/calendar_page.dart';
+import '../dashboard_page/dashboard_page.dart';
+import '../flashcard_page/flashcard_page.dart';
+import '../timers_page/timer_homepage.dart';
+import '../timers_page/pomodoro.dart';
 
 class NavBar extends StatelessWidget {
-   NavBar({Key? key}) : super(key: key);
-
+  NavBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NavBarController>(
-      init: Get.put(NavBarController()),
-      initState: (_) {},
-      builder: (_) {
-        return SafeArea(
-          child: Scaffold(
-            key: _.scaffoldKey,
-            backgroundColor: kBackgroundDark,
-            appBar: PreferredSize(
-                preferredSize: Size.fromHeight(60.0),
-                child:
-                DefaultAppBar(() => _.scaffoldKey.currentState!.openDrawer())),
-            drawer: AppBarDrawer(),
-            body: TabBarView(
-              controller: _.tabController,
-              children: NavBarController.tabViews,
-            ),
-            bottomNavigationBar: Material(
-              color: kBackgroundLight,
-              child: TabBar(
-                unselectedLabelStyle: GoogleFonts.ubuntu(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: kAccent,
+        init: Get.put(NavBarController()),
+        initState: (_) {},
+        builder: (_) {
+          return SafeArea(
+            child: Scaffold(
+              key: _.scaffoldKey,
+              backgroundColor: kBackgroundDark,
+              appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(60.0),
+                  child: DefaultAppBar(
+                      () => _.scaffoldKey.currentState!.openDrawer())),
+              drawer: AppBarDrawer(),
+              body: Obx(() => TabBarView(
+                    controller: _.tabController,
+                    children: [
+                      Dashboard(),
+                      CalendarPage(),
+                      TimerController.instance.activeWidget.value,
+                      FlashcardPage(),
+                    ],
+                  )),
+              bottomNavigationBar: Material(
+                color: kBackgroundLight,
+                child: TabBar(
+                  unselectedLabelStyle: GoogleFonts.ubuntu(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: kAccent,
+                  ),
+                  automaticIndicatorColorAdjustment: false,
+                  enableFeedback: true,
+                  labelStyle: GoogleFonts.ubuntu(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: kAccent,
+                  ),
+                  controller: _.tabController,
+                  tabs: _.tabs,
+                  indicatorColor: kAccent,
+                  labelColor: kBackgroundLight2,
+                  unselectedLabelColor: kBackgroundLight,
                 ),
-                automaticIndicatorColorAdjustment: false,
-                enableFeedback: true,
-                labelStyle: GoogleFonts.ubuntu(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: kAccent,
-                ),
-                onTap: (newIndex) {
-                  NavBarController.currentIndex.value = newIndex;
-                },
-                controller: _.tabController,
-                tabs: _.tabs,
-                indicatorColor: kAccent,
-                labelColor: kBackgroundLight2,
-                unselectedLabelColor: kBackgroundLight,
               ),
             ),
-          ),
-        );
-      }
-    );
+          );
+        });
   }
 }
+
 class AltAppBar extends StatelessWidget {
   const AltAppBar({
     Key? key,
@@ -105,7 +112,7 @@ class AppBarDrawer extends StatelessWidget {
               backgroundImage: Auth.instance.USER.photoUrl == ''
                   ? AssetImage('assets/images/user.png')
                   : NetworkImage(Auth.instance.USER.photoUrl!, scale: .25)
-              as ImageProvider,
+                      as ImageProvider,
             ),
           ),
           ListTile(
@@ -113,7 +120,8 @@ class AppBarDrawer extends StatelessWidget {
               Icons.developer_mode_sharp,
             ),
             title: Text('Profile'),
-            onTap: () => Get.snackbar('Error!', 'This on tap function does nothing yet!'),
+            onTap: () => Get.snackbar(
+                'Error!', 'This on tap function does nothing yet!'),
           ),
         ],
       ),

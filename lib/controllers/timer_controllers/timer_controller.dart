@@ -10,8 +10,8 @@ import 'package:studify/views/pages/calendar_page/calendar_page.dart';
 import 'package:studify/views/pages/flashcard_page/flashcard_page.dart';
 import '../../views/pages/dashboard_page/dashboard_page.dart';
 
-
 class TimerController extends GetxController {
+  static TimerController instance = Get.find<TimerController>();
   String pomodoroIcon = 'assets/images/pomodoro_icon.svg';
   String stopwatchIcon = 'assets/images/stopwatch_icon.svg';
   String countdownIcon = 'assets/images/countdown_icon.svg';
@@ -19,16 +19,21 @@ class TimerController extends GetxController {
   String savedTimers = 'assets/images/saved_timers.svg';
   String timerStats = 'assets/images/timer_stats.svg';
 
-   RxBool isRunning = false.obs;
+  RxBool isRunning = false.obs;
 
+  Rx<Widget> activeWidget = Rx<Widget>(TimerHomePage());
 // this is just testing functionality that will be better implemented when the timer logic is more fleshed out
-  void ScreensIfPomodoroActive() // if the Pomodoro timer is active, the timer homepage becomes the active timer itself in the navbar
+  void
+      ScreensIfPomodoroActive() // if the Pomodoro timer is active, the timer homepage becomes the active timer itself in the navbar
   {
     if (isRunning.value == true) {
-      NavBarController.tabViews[2] = PomodoroTimer();
-      NavBarController.currentIndex.value = 2;
+      activeWidget.value = PomodoroTimer();
     } else {
-      NavBarController.tabViews[2] = TimerHomePage();
+      activeWidget.value = TimerHomePage();
     }
+  }
+
+  void setActiveWidget(Widget widget) {
+    activeWidget.value = widget;
   }
 }

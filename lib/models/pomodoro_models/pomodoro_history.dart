@@ -1,5 +1,3 @@
-
-
 class PomodoroHistory {
   DateTime dateTime;
   int timeStudied;
@@ -12,22 +10,22 @@ class PomodoroHistory {
     required this.timeStudied,
     required this.timeRested,
     required this.cycles,
-
-}): id = dateTime.millisecondsSinceEpoch.toString();
+  }) : id = dateTime.millisecondsSinceEpoch.toString();
 
   Map<String, dynamic> toJson() => {
-    'dateTime': dateTime.millisecondsSinceEpoch,
-    'timeStudied': timeStudied,
-    'timeRested': timeRested,
-    'cycles': cycles,
-  };
+        'dateTime': dateTime.millisecondsSinceEpoch,
+        'timeStudied': timeStudied,
+        'timeRested': timeRested,
+        'cycles': cycles,
+        'id': id,
+      };
 
-  PomodoroHistory.fromJson(Map<String,dynamic> json)
-  : dateTime = DateTime.fromMicrosecondsSinceEpoch(json['dateTime']),
-  timeStudied = json['timeStudied'],
-  timeRested = json['timeRested'],
-  cycles = json['cycles'],
-  id = json['id'];
+  PomodoroHistory.fromJson(Map<String, dynamic> json)
+      : dateTime = DateTime.fromMicrosecondsSinceEpoch(json['dateTime']),
+        timeStudied = json['timeStudied'],
+        timeRested = json['timeRested'],
+        cycles = json['cycles'],
+        id = json['id'];
 
   @override
   String toString() {
@@ -36,8 +34,5 @@ class PomodoroHistory {
         " \n timeRested: ${timeRested.toString()}, "
         "\n cycles: ${cycles.toString()}, "
         "\n,\n";
-
   }
-
-
 }
