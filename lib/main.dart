@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
-import 'consts/app_settings.dart';
 import './routes/routes.dart';
 import './services/auth.dart';
-import 'views/themes/apptheme.dart';
+import 'themes/apptheme.dart';
+import 'utils/consts/app_settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

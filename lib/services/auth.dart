@@ -10,11 +10,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '/views/widgets/loading_indicator.dart';
+import '/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
-import '../views/widgets/snackbars/error_snackbar.dart';
+import '../widgets/snackbars/error_snackbar.dart';
 import './db.dart';
 
 class Auth extends GetxController {

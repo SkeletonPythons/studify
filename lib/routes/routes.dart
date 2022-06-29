@@ -1,18 +1,18 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
-import 'package:studify/controllers/flashcard_controller.dart';
-import 'package:studify/views/pages/bottom_nav_page/navbar.dart';
-import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
-import 'package:studify/views/pages/timers_page/pomodoro.dart';
 
-import '../views/pages/splash_page/splash_page.dart';
-import '../views/pages/login_page/login_page.dart';
-import '../views/pages/timers_page/timer_homepage.dart';
-import '../views/pages/timers_page/timer_pomodoro_setup.dart';
-import '../views/pages/alternate_reality/alt_home.dart';
-import '../views/pages/calendar_page/add_event.dart';
-import '../views/pages/calendar_page/calendar_page.dart';
+import '../pages/alternate_reality/alt_home.dart';
+import '../pages/bottom_nav_page/navbar.dart';
+import '../pages/calendar_page/add_event.dart';
+import '../pages/calendar_page/calendar_page.dart';
+import '../pages/dashboard_page/dashboard_page.dart';
+import '../pages/flashcard_page/flashcard_controller.dart';
+import '../pages/login_page/login_page.dart';
+import '../pages/splash_page/splash_page.dart';
+import '../pages/timers_page/pomodoro.dart';
+import '../pages/timers_page/timer_homepage.dart';
+import '../pages/timers_page/timer_pomodoro_setup.dart';
 
 abstract class Routes {
   static const String LOGIN = '/login';
