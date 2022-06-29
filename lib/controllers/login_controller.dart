@@ -4,13 +4,10 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
-import '../services/db.dart';
 import '../views/widgets/snackbars/error_snackbar.dart';
 
 // import '../.secrets.dart';
 import '../routes/routes.dart';
-import '../models/user_model.dart';
-import '../../../consts/app_colors.dart';
 import '../views/widgets/loading_indicator.dart';
 
 const String clientID =

@@ -53,7 +53,7 @@ class CalendarPageState extends State<CalendarPage>
           child: SingleChildScrollView(
             child: Column(children: [
               SizedBox(
-                height: size.height * 0.55,
+                height: size.height * 0.61,
                 width: size.width,
                 child: TableCalendar(
                   firstDay: DateTime(1990),

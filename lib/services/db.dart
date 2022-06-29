@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user_model.dart';
+import '../utils/sample_cards.dart';
 import './auth.dart';
 import '../models/flashcard_model.dart';
 
 class DB extends GetxService {
+  static DB get instance => Get.find();
   @override
   void onReady() {
     super.onReady();
@@ -18,21 +20,61 @@ class DB extends GetxService {
   void onInit() {
     super.onInit();
     debugPrint('DB init');
-    initDB();
+  }
+
+  void getNewUser(AppUser user) async {
+    debugPrint('DB getSettings');
+    await store.collection('users').doc(user.uid).get().then((value) async {
+      if (value.data()!['settings']['newUser']) {
+        var writer = store.batch();
+        for (int i = 0; i < sample.length; i++) {
+          debugPrint(sample[i].toJson().toString());
+          writer.set(
+              store
+                  .collection('users')
+                  .doc(Auth.instance.USER.uid)
+                  .collection('notes')
+                  .doc(sample[i].id),
+              sample[i].toJson());
+        }
+        await writer.commit();
+      }
+    });
+    await store.collection('users').doc(user.uid).update({
+      'settings': {
+        'newUser': false,
+      },
+    });
   }
 
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
+  late final CollectionReference notes =
+      store.collection('users').doc(Auth.instance.USER.uid).collection('notes');
+
+  late final CollectionReference events = store
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .collection('events');
+
+  late final CollectionReference timers = store
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .collection('timers');
+
   final RxBool _gotDB = false.obs;
-  final RxString _userPath = ''.obs;
 
   /// Like the Auth controller, call this to access the DB.
   /// ex: DB.instance.addItem(collection, doc, item);
-  static DB get instance => Get.find();
+
+  void syncUser() async {
+    DocumentReference userRef =
+        store.collection('users').doc(Auth.instance.USER.uid);
+    await userRef.get().then((doc) {});
+  }
 
   void initDB() async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
-    _userPath.value = 'users/${Auth.instance.USER.uid}';
     await store.collection('users').doc(Auth.instance.USER.uid).get().then(
       (doc) {
         if (doc.exists) {
@@ -45,7 +87,6 @@ class DB extends GetxService {
         } else {
           try {
             debugPrint('Creating user doc');
-            _createDB(Auth.instance.USER);
             _gotDB.value = true;
           } catch (e) {
             debugPrint(e.toString());
@@ -57,18 +98,7 @@ class DB extends GetxService {
         debugPrint(e.toString());
       },
     );
-  }
-
-  Future<bool> doesExist(String collection, String doc) async {
-    return await store
-        .doc(_userPath.value)
-        .collection(collection)
-        .doc(doc)
-        .get()
-        .then((value) => value.exists)
-        .catchError((e) {
-      debugPrint(e.toString());
-    });
+    getNewUser(Auth.instance.USER);
   }
 
 // ** ** ** ** USER COLLECTION ** ** ** **//
@@ -83,39 +113,6 @@ class DB extends GetxService {
     } catch (e) {
       debugPrint(e.toString());
       return null;
-    }
-  }
-
-  Future<bool> createNewUser(AppUser user) async {
-    try {
-      await store.collection('users').doc(user.uid).set(user.toJson()).then(
-        (value) async {
-          await store
-              .doc('users/${user.uid}')
-              .collection('flashcards')
-              .doc('initCollection')
-              .set({'deck': []});
-          await store
-              .doc('users/${user.uid}')
-              .collection('calendar')
-              .doc('initCollection')
-              .set({'events': []});
-          await store
-              .doc('users/${user.uid}')
-              .collection('tasks')
-              .doc('initCollection')
-              .set({'tasks': []});
-          await store
-              .doc('users/${user.uid}')
-              .collection('timers')
-              .doc('initCollection')
-              .set({'timers': []});
-        },
-      );
-      return true;
-    } catch (e) {
-      debugPrint(e.toString());
-      return false;
     }
   }
 
@@ -167,41 +164,4 @@ class DB extends GetxService {
 
 // ** // *** / Used in the Auth process / *** // ** //
 
-  Future<void> _createDB(AppUser user) async {
-    /// This function is used to find the database.
-    /// It will create one if it doesn't exist.
-    try {
-      _userPath.value = 'users/${user.uid}';
-      await store
-          .collection('users')
-          .doc(user.uid)
-          .set(user.toJson())
-          .whenComplete(
-        () async {
-          await store
-              .doc(_userPath.value)
-              .collection('flashcards')
-              .doc('initCollection')
-              .set({'deck': []});
-          await store
-              .doc(_userPath.value)
-              .collection('calendar')
-              .doc('initCollection')
-              .set({'events': []});
-          await store
-              .doc(_userPath.value)
-              .collection('tasks')
-              .doc('initCollection')
-              .set({'tasks': []});
-          await store
-              .doc(_userPath.value)
-              .collection('timers')
-              .doc('initCollection')
-              .set({'timers': []});
-        },
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
 }

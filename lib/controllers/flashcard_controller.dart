@@ -24,8 +24,10 @@ class FlashcardController extends GetxController
   // }
 
   // @override
-  // void onReady() {
+  // void onReady() async {
   //   super.onReady();
+
+  //   }
   // }
 
   Note createNote(

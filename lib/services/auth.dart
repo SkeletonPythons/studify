@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:studify/views/widgets/loading_indicator.dart';
+import '/views/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
@@ -45,37 +45,28 @@ class Auth extends GetxController {
   }
 
   void updateUser() {
-    USER = AppUser(
-      email: auth.currentUser!.email!,
-      name: auth.currentUser!.displayName,
-      photoUrl: auth.currentUser!.photoURL,
-      uid: auth.currentUser!.uid,
-    );
+    USER
+      ..email = auth.currentUser!.email!
+      ..name = auth.currentUser!.displayName
+      ..photoUrl = auth.currentUser!.photoURL
+      ..uid = auth.currentUser!.uid;
   }
 
   _gateKeeper(User? user) async {
+    LoadIndicator.ON();
     if (user != null) {
-      Get.put(DB());
+      Get.put<DB>(DB(), permanent: true);
+      await Future.delayed(const Duration(seconds: 1));
       updateUser();
-      debugPrint(USER.toJson().toString());
       isLoggedIn.value = true;
       debugPrint('User is logged in');
       DB.instance.initDB();
-      if (isSplashDone.value) {
-        Get.offAllNamed(Routes.NAVBAR);
-        return;
-      } else {
-        Future.delayed(const Duration(milliseconds: 4000), () {
-          Get.offAllNamed(Routes.NAVBAR);
-        });
-      }
-      if (newUser.value) {
-        debugPrint('User is new');
-
-        return;
-      }
+      LoadIndicator.OFF();
+      Get.offAllNamed(Routes.NAVBAR);
     } else {
       debugPrint('User is not logged in');
+      LoadIndicator.OFF();
+      Get.offAllNamed(Routes.LOGIN);
     }
   }
 
@@ -86,14 +77,11 @@ class Auth extends GetxController {
     LoadIndicator.ON();
     try {
       debugPrint('Signing up with email');
-
+      newUser.value = true;
       await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      USER.name = name;
-      USER.email = email;
-      USER.uid = auth.currentUser!.uid;
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -106,7 +94,6 @@ class Auth extends GetxController {
 
   void logInWithEmail(String email, String password) async {
     debugPrint('Logging in with email');
-
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (e) {
