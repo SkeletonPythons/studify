@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/cloudsearch/v1.dart';
 
 import '../../../models/pomodoro_models/pomodoro_history.dart';
 import 'pomodoro_history_controller.dart';

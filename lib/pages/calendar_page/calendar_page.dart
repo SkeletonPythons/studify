@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_field
 // import 'package:get/get.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../routes/routes.dart';
 
 import '../../models/calendar_model.dart';
-import './calendar_controller.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);

@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math';
 
 import '../../../models/flashcard_model.dart';
 import '../../utils/consts/app_colors.dart';
 import 'flashcard_controller.dart';
 
 class OpenCard extends GetWidget<OC> {
-  OpenCard({required this.note, required this.callback, Key? key})
+  const OpenCard({required this.note, required this.callback, Key? key})
       : super(key: key);
 
   final VoidCallback callback;

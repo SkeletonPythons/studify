@@ -11,7 +11,6 @@ import '../../../services/db.dart';
 import '../../utils/consts/app_colors.dart';
 import './closed_card.dart';
 import './open_card.dart';
-import '../../../utils/sample_cards.dart';
 import 'flashcard_controller.dart';
 
 class FlashcardPage extends StatelessWidget {

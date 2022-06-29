@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/flashcard_model.dart';
-import '../../../utils/sample_cards.dart';
 import '../../utils/consts/app_colors.dart';
 import 'flashcard_controller.dart';
 

@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../calendar_page/calendar_page.dart';
 import '../dashboard_page/dashboard_page.dart';
 import '../flashcard_page/flashcard_page.dart';
-import '../timers_page/timer_controllers/timer_controller.dart';
 import '../timers_page/timer_homepage.dart';
 
 class NavBarController extends GetxController
@@ -79,8 +78,6 @@ class NavBarController extends GetxController
     // tabController.addListener(() {
     //   currentIndex.value = tabController.index;
     //   update();
-    TimerController timerController =
-        Get.put<TimerController>(TimerController(), permanent: true);
   }
 
   @override

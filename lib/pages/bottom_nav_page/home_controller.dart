@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/user_model.dart';
-
 class HomeController extends GetxController with GetTickerProviderStateMixin {
   late TabController tabController;
 

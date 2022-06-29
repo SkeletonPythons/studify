@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DefaultAppBar extends StatelessWidget {
   const DefaultAppBar(this.onSideMenuTap, {Key? key}) : super(key: key);
@@ -29,6 +28,6 @@ class DefaultAppBar extends StatelessWidget {
           ),
           onPressed: () => onSideMenuTap(),
         ),
-        actions: []);
+        actions: const []);
   }
 }
