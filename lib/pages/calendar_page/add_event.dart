@@ -21,7 +21,6 @@ class AddEventState extends State<AddEvent>
   final AddEventController controller = Get.put(AddEventController());
 
   final _formKey = GlobalKey<FormBuilderState>();
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -45,7 +44,7 @@ class AddEventState extends State<AddEvent>
                 onPrimary: Colors.white,
               ),
               onPressed: () async {
-                //save event
+                //DB.instance.store.collection('users').doc(Auth.instance.USER.uid).collection('events').doc(Event)//save event
               },
               child: Text('Save'),
             )),

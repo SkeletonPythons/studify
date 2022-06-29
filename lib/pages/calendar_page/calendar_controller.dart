@@ -1,7 +1,6 @@
-class Event {
-  final String title;
-  Event({required this.title});
-
-  @override
-  String toString() => title;
+/*@override
+ String toString(){
+    return
+  };
 }
+*/
