@@ -1,11 +1,13 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, prefer_const_literals_to_create_immutables
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:studify/consts/app_colors.dart';
 import '../../../routes/routes.dart';
 import '../../pages/calendar_page/calendar_page.dart';
+import '../../../controllers/add_event_controller.dart';
 
 class AddEvent extends StatefulWidget {
   const AddEvent({Key? key}) : super(key: key);
@@ -16,7 +18,10 @@ class AddEvent extends StatefulWidget {
 
 class AddEventState extends State<AddEvent>
     with SingleTickerProviderStateMixin {
+  final AddEventController controller = Get.put(AddEventController());
+
   final _formKey = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -110,6 +115,35 @@ class AddEventState extends State<AddEvent>
             ),
           ),
         ]),
+      ),
+    );
+  }
+}
+
+class AddEventPageTwo extends StatelessWidget {
+  AddEventPageTwo({Key? key}) : super(key: key);
+
+  final AddEventController controller = Get.put(AddEventController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height,
+      width: Get.width,
+      color: kBackground,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TabBar(tabs: [
+            IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                  Get.back();
+                })
+          ]),
+          Divider(),
+        ],
       ),
     );
   }

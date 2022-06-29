@@ -12,7 +12,6 @@ class AppUser {
   String email;
   String? photoUrl;
   Map<String, bool>? settings = {
-    // TODO: Add settings that will be synced to the database.
     'isVerified': false,
     'isNewUser': true,
   };
