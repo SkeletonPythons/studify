@@ -69,20 +69,28 @@ class PomodoroController extends GetxController {
     );
   }
 
+  void PausePomodoro() {
+    pomodoroTimer.cancel();
+    timerController.isRunning.value = false;
+  }
+
+
   String FormatTime(int studyTimeInSeconds) {
     int minutes = workTime.value ~/ 60;
     int seconds = workTime.value - (minutes * 60);
     String secondsFormatted;
     String minutesFormatted;
     int hours = minutes ~/ 60;
+    int minutesRemaining = minutes % 60;
 
     if (seconds < 10) {
       secondsFormatted = '0$seconds';
     } else {
       secondsFormatted = seconds.toString();
     }
-    if (minutes == 60) {
-      minutesFormatted = '0$hours';
+    if (minutes >= 60) {
+      minutesFormatted = '$minutesRemaining';
+      return '$hours:$minutesFormatted:$secondsFormatted';
     } else {
       minutesFormatted = minutes.toString();
     }
