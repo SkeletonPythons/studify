@@ -2,10 +2,9 @@
 // import 'package:get/get.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../routes/routes.dart';
-
+import '../../pages/calendar_page/calendar_controller.dart';
 import '../../models/calendar_model.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -128,7 +127,7 @@ class CalendarPageState extends State<CalendarPage>
               ),
               ..._getEventsFromDay(_selectedDay).map((Event event) => ListTile(
                     title: Text(event.title),
-                    subtitle: Text(event.description, maxLines: 2),
+                    //subtitle: Text(event.description, maxLines: 2),
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {},

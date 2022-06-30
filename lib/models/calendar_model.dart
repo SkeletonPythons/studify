@@ -1,29 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Event {
-  final String title;
-  final String description;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String location;
-  final String id;
-  final bool isAllDay;
+  String title;
+  String? description;
+  DateTime? startDate;
+  DateTime? endDate;
+  String? location;
+  String id;
+  bool isAllDay;
 
   Event({
     required this.title,
-    required this.description,
-    required this.startDate,
-    required this.endDate,
-    required this.location,
+    this.description,
+    this.startDate,
+    this.endDate,
+    this.location,
     this.isAllDay = false,
   }) : id = DateTime.now().millisecondsSinceEpoch.toString();
 
-  Event.fromMap(Map<String, dynamic> map)
+  Event.fromMap(Map<String, dynamic> map, this.id)
       : title = map['title'],
         description = map['description'],
         startDate = map['startDate'],
         endDate = map['endDate'],
         location = map['location'],
-        id = map['id'],
         isAllDay = map['isAllDay'];
+
+  Event.fromDoc({required DocumentSnapshot snapshot})
+      : id = snapshot.id,
+        title = snapshot['title'],
+        description = snapshot['description'],
+        startDate = snapshot['startDate'],
+        endDate = snapshot['endDate'],
+        location = snapshot['location'],
+        isAllDay = snapshot['isAllDay'];
 
   Map<String, dynamic> toMap() {
     return {
