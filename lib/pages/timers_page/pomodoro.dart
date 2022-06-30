@@ -29,14 +29,10 @@ class PomodoroTimerState extends State<PomodoroTimer>
 
   TimerController timerController = Get.find<TimerController>();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     int maxTime = int.parse(PomodoroSetUpState.workTimeController.text) * 60;
+    Rx<PomodoroStatus> currentPomodoroStatus = PomodoroStatus.running.obs;
     return Center(
       child: Stack(alignment: AlignmentDirectional.topCenter,children: [
         if (timerController.isRunning.value)
@@ -50,7 +46,14 @@ class PomodoroTimerState extends State<PomodoroTimer>
           ),
         Padding(
           padding: const EdgeInsets.only(top: 50),
-          child: Text('hello'),
+          child: Obx(
+          () => Text('${pomodoroController.displayStatus[currentPomodoroStatus.value]}',
+                style: GoogleFonts.roboto(
+                  fontSize: Get.height * 0.05,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                )),
+          ),
         ),
         Positioned(
           top: 150,
@@ -62,6 +65,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
               min: 0,
               max: maxTime.toDouble(),
               appearance: CircularSliderAppearance(
+                counterClockwise: true,
                 angleRange: 360,
                 startAngle: 270,
                 size: 300,
@@ -73,7 +77,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
                 ),
                 customColors: CustomSliderColors(
                   progressBarColor: Colors.red[900],
-                  trackColor: Colors.red,
+                  trackColor: pomodoroController.statusColors[currentPomodoroStatus.value],
                   shadowColor: Colors.redAccent,
                 ),
               ),
@@ -118,6 +122,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
               SizedBox(
                 height: 100,
                 child: IconButton(
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.only(left: 120),
                   iconSize: 60,
                   icon: SvgPicture.asset('assets/icons/stop_button2.svg'),

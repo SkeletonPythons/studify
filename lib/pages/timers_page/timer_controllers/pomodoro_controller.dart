@@ -11,18 +11,20 @@ import 'timer_controller.dart';
 enum PomodoroStatus { running, paused, stopped, rest, cycleFinished }
 
 class PomodoroController extends GetxController {
+
   //Functionality variables
   RxInt workTime = 0.obs;
   RxInt restTime = 0.obs;
   RxInt totalCycles = 0.obs;
   RxInt currentCycle = 0.obs;
 
-//Status Variables
-  Map<String, PomodoroStatus> displayStatus = {
-    "Study time!": PomodoroStatus.running,
-    "Ready to continue?": PomodoroStatus.paused,
-    "Time to relax, great job!": PomodoroStatus.rest,
-    "Cycle Complete!": PomodoroStatus.cycleFinished
+
+//Status Maps
+  Map<PomodoroStatus,String > displayStatus = {
+    PomodoroStatus.running:"Study time!",
+    PomodoroStatus.paused: "Ready to continue?",
+    PomodoroStatus.rest : "Time to relax, great job!",
+    PomodoroStatus.cycleFinished : "Cycle Complete!"
   };
 
   Map<PomodoroStatus, Color> statusColors = {
