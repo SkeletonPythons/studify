@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/pomodoro_models/pomodoro_history.dart';
+import '../pomodoro.dart';
 import 'pomodoro_history_controller.dart';
 import 'timer_controller.dart';
 
@@ -17,19 +18,19 @@ class PomodoroController extends GetxController {
   RxInt restTime = 0.obs;
   RxInt totalCycles = 0.obs;
   RxInt currentCycle = 0.obs;
-
+  Rx<PomodoroStatus> currentPomodoroStatus = PomodoroStatus.running.obs;
 
 //Status Maps
   Map<PomodoroStatus,String > displayStatus = {
     PomodoroStatus.running:"Study time!",
-    PomodoroStatus.paused: "Ready to continue?",
+    PomodoroStatus.paused: "Paused!",
     PomodoroStatus.rest : "Time to relax, great job!",
     PomodoroStatus.cycleFinished : "Cycle Complete!"
   };
 
   Map<PomodoroStatus, Color> statusColors = {
-    PomodoroStatus.running: Colors.red,
-    PomodoroStatus.paused: Colors.deepOrange,
+    PomodoroStatus.running: Colors.green,
+    PomodoroStatus.paused: Colors.amber,
     PomodoroStatus.rest: Colors.white
   };
 
@@ -70,9 +71,30 @@ class PomodoroController extends GetxController {
     );
   }
 
-  void PausePomodoro() {
+  void StartPauseBtnPress()
+  {
+    switch(currentPomodoroStatus.value) {
+      case PomodoroStatus.running:
+        currentPomodoroStatus.value = PomodoroStatus.paused;
+        pomodoroTimer.cancel();
+        timerController.isRunning.value = false;
+        break;
+      case PomodoroStatus.paused:
+        currentPomodoroStatus.value = PomodoroStatus.running;
+        StartPomodoro();
+        break;
+    }
+  }
+
+  void StopBtnPress()
+  {
     pomodoroTimer.cancel();
     timerController.isRunning.value = false;
+    workTime.value = 0;
+    restTime.value = 0;
+    totalCycles.value = 0;
+    currentCycle.value = 0;
+    currentPomodoroStatus.value = PomodoroStatus.stopped;
   }
 
 

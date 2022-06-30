@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:studify/pages/timers_page/timer_homepage.dart';
 
 import '../../widgets/timer_widgets/pomodoro_cycle_progress_icons.dart';
 import 'timer_controllers/pomodoro_controller.dart';
@@ -32,7 +33,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
   @override
   Widget build(BuildContext context) {
     int maxTime = int.parse(PomodoroSetUpState.workTimeController.text) * 60;
-    Rx<PomodoroStatus> currentPomodoroStatus = PomodoroStatus.running.obs;
+    Rx<PomodoroStatus> currentStatus = pomodoroController.currentPomodoroStatus.value.obs;
     return Center(
       child: Stack(alignment: AlignmentDirectional.topCenter,children: [
         if (timerController.isRunning.value)
@@ -47,14 +48,14 @@ class PomodoroTimerState extends State<PomodoroTimer>
         Padding(
           padding: const EdgeInsets.only(top: 50),
           child: Obx(
-          () => Text('${pomodoroController.displayStatus[currentPomodoroStatus.value]}',
-                style: GoogleFonts.roboto(
-                  fontSize: Get.height * 0.05,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                )),
+            () => Text('${pomodoroController.displayStatus[pomodoroController.currentPomodoroStatus.value]}',
+                  style: GoogleFonts.roboto(
+                    fontSize: Get.height * 0.05,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  )),
           ),
-        ),
+          ),
         Positioned(
           top: 150,
           left: 47,
@@ -76,8 +77,8 @@ class PomodoroTimerState extends State<PomodoroTimer>
                   shadowWidth: 0,
                 ),
                 customColors: CustomSliderColors(
-                  progressBarColor: Colors.red[900],
-                  trackColor: pomodoroController.statusColors[currentPomodoroStatus.value],
+                  progressBarColor: pomodoroController.statusColors[pomodoroController.currentPomodoroStatus.value],
+                  trackColor: Colors.red[900],
                   shadowColor: Colors.redAccent,
                 ),
               ),
@@ -116,7 +117,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
                 child: IconButton(
                   iconSize: 60,
                   icon: SvgPicture.asset('assets/icons/play_pause.svg'),
-                  onPressed: () {},
+                  onPressed: () { pomodoroController.StartPauseBtnPress();},
                 ),
               ),
               SizedBox(
@@ -126,7 +127,10 @@ class PomodoroTimerState extends State<PomodoroTimer>
                   padding: const EdgeInsets.only(left: 120),
                   iconSize: 60,
                   icon: SvgPicture.asset('assets/icons/stop_button2.svg'),
-                  onPressed: () {},
+                  onPressed: () {
+                    pomodoroController.StopBtnPress();
+                    timerController.setActiveWidget(TimerHomePage());
+                    },
                 ),
               ),
             ],
