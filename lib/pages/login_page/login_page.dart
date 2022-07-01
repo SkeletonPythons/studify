@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Obx(
             () => AnimatedCrossFade(
-              firstChild: LoginScreen(),
+              firstChild: LoginScreen(controller: _controller),
               secondChild: RegisterScreenUI(),
               crossFadeState: _controller.xFadeState.value,
               duration: const Duration(milliseconds: 500),

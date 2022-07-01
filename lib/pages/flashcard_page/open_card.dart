@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../models/flashcard_model.dart';
 import '../../utils/consts/app_colors.dart';
 import 'flashcard_controller.dart';
+import 'open_controller.dart';
 
 class OpenCard extends GetWidget<OC> {
   const OpenCard({required this.note, required this.callback, Key? key})

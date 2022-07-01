@@ -23,11 +23,11 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
+    super.onClose();
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    super.onClose();
   }
 
   RxString name = ''.obs;

@@ -10,20 +10,16 @@ import 'flashcard_controller.dart';
 
 class ClosedCard extends StatelessWidget {
   const ClosedCard({
-    required this.index,
-    required this.onTap,
-    required this.controller,
     required this.note,
+    required this.onTap,
     Key? key,
   }) : super(key: key);
-  final int index;
   final Note note;
-  final FlashcardController controller;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(controller.notes.toString());
+    debugPrint(note.toJson().toString());
     return GetBuilder<CardController>(
       init: Get.put<CardController>(CardController()),
       initState: (_) {},
@@ -37,9 +33,9 @@ class ClosedCard extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      controller.notes[index].title!,
+                      note.title!,
                       style: GoogleFonts.ubuntu(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: kAccent,
                       ),
@@ -49,8 +45,13 @@ class ClosedCard extends StatelessWidget {
                       thickness: 2,
                     ),
                     Text(
-                      controller.notes[index].front,
+                      note.front,
                       textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),

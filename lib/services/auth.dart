@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../pages/timers_page/timer_controllers/timer_controller.dart';
 import '/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
@@ -56,6 +57,7 @@ class Auth extends GetxController {
     LoadIndicator.ON();
     if (user != null) {
       Get.put<DB>(DB(), permanent: true);
+      Get.put<TimerController>(TimerController(), permanent: true);
       await Future.delayed(const Duration(seconds: 1));
       updateUser();
       isLoggedIn.value = true;

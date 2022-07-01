@@ -10,8 +10,8 @@ import '../../utils/consts/app_colors.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
-  final LoginController controller = Get.find();
+  const LoginScreen({required this.controller, Key? key}) : super(key: key);
+  final LoginController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +54,6 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {
-                    controller.nameController.clear();
-                    controller.emailController.clear();
-                    controller.passwordController.clear();
-                    controller.confirmPasswordController.clear();
                     controller.transition();
                   },
                   child: Text(

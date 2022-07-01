@@ -25,7 +25,18 @@ class DB extends GetxService {
   void getNewUser(AppUser user) async {
     debugPrint('DB getSettings');
     await store.collection('users').doc(user.uid).get().then((value) async {
-      if (value.data()!['settings']['newUser']) {
+      Map<String, dynamic>? data = value.data();
+      debugPrint(data.toString());
+      if (data?['settings'] == null) {
+        Map<String, dynamic> setSettings = {};
+        setSettings['newUser'] = true;
+        await store.collection('users').doc(user.uid).update(setSettings);
+      }
+    });
+    await store.collection('users').doc(user.uid).get().then((value) async {
+      Map<String, dynamic>? data = value.data();
+
+      if (data?['settings']['newUser'] == true) {
         var writer = store.batch();
         for (int i = 0; i < sample.length; i++) {
           debugPrint(sample[i].toJson().toString());

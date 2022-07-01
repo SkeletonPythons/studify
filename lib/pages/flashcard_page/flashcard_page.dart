@@ -32,10 +32,10 @@ class FlashcardPage extends StatelessWidget {
                   .doc(Auth.instance.USER.uid)
                   .collection('flashcards')
                   .snapshots(),
-              builder: (_, snapshots) {
-                controller.notes.clear();
-                if (snapshots.data != null) {
-                  for (var doc in snapshots.data!.docs) {
+              builder: (_, __) {
+                if (__.hasData) {
+                  controller.notes.clear();
+                  for (var doc in __.data!.docs) {
                     controller.notes.add(Note.fromJson(
                         doc.data() as Map<String, dynamic>, doc.id));
                   }
@@ -55,10 +55,9 @@ class FlashcardPage extends StatelessWidget {
                               closedBuilder: (BuildContext context,
                                   VoidCallback openContainer) {
                                 return ClosedCard(
-                                    note: controller.notes[index],
-                                    index: index,
-                                    onTap: openContainer,
-                                    controller: controller);
+                                  note: controller.notes[index],
+                                  onTap: openContainer,
+                                );
                               },
                               openBuilder: (BuildContext context,
                                   VoidCallback closeContainer) {
