@@ -34,7 +34,7 @@ class FlashcardController extends GetxController
       String? content = 'Write your ideas here.',
       String? front = 'The Front of the flashcard',
       String? back = 'The back of the flashcard',
-      List<String>? tags = const [''],
+      List<String>? tags,
       bool isFav = false,
       bool isPinned = false,
       bool isLearned = false}) {
@@ -43,7 +43,7 @@ class FlashcardController extends GetxController
       title: '',
       content: '',
       back: '',
-      tags: [],
+      tags: tags ?? [],
       isFav: false,
       isPinned: false,
       isLearned: false,

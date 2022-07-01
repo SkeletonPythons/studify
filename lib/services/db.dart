@@ -16,52 +16,41 @@ class DB extends GetxService {
     debugPrint('DB ready');
   }
 
+  RxBool isNewUser = RxBool(false);
+
   @override
   void onInit() {
     super.onInit();
     debugPrint('DB init');
   }
 
-  void getNewUser(AppUser user) async {
-    debugPrint('DB getSettings');
-    await store.collection('users').doc(user.uid).get().then((value) async {
-      Map<String, dynamic>? data = value.data();
-      debugPrint(data.toString());
-      if (data?['settings'] == null) {
-        Map<String, dynamic> setSettings = {};
-        setSettings['newUser'] = true;
-        await store.collection('users').doc(user.uid).update(setSettings);
-      }
-    });
-    await store.collection('users').doc(user.uid).get().then((value) async {
-      Map<String, dynamic>? data = value.data();
+  void checkNewUser() async {
+    if (Auth.instance.newUser.value) {
+      WriteBatch writer = store.batch();
+      for (int i = 0; i < sample.length; i++) {
+        debugPrint(sample[i].toJson().toString());
 
-      if (data?['settings']['newUser'] == true) {
-        var writer = store.batch();
-        for (int i = 0; i < sample.length; i++) {
-          debugPrint(sample[i].toJson().toString());
-          writer.set(
-              store
-                  .collection('users')
-                  .doc(Auth.instance.USER.uid)
-                  .collection('notes')
-                  .doc(sample[i].id),
-              sample[i].toJson());
-        }
-        await writer.commit();
+        writer.set(
+            store
+                .collection('users')
+                .doc(Auth.instance.USER.uid)
+                .collection('notes')
+                .doc(sample[i].id),
+            sample[i].toJson());
       }
-    });
-    await store.collection('users').doc(user.uid).update({
-      'settings': {
-        'newUser': false,
-      },
-    });
+      await writer.commit();
+    }
   }
 
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
-  late final CollectionReference notes =
-      store.collection('users').doc(Auth.instance.USER.uid).collection('notes');
+  late final notes = store
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .collection('notes')
+      .withConverter(
+          fromFirestore: Note.fromFirestore,
+          toFirestore: (Note note, _) => note.toFirestore());
 
   late final CollectionReference events = store
       .collection('users')
@@ -75,21 +64,23 @@ class DB extends GetxService {
 
   final RxBool _gotDB = false.obs;
 
-  /// Like the Auth controller, call this to access the DB.
-  /// ex: DB.instance.addItem(collection, doc, item);
-
   void syncUser() async {
-    DocumentReference userRef =
-        store.collection('users').doc(Auth.instance.USER.uid);
-    await userRef.get().then((doc) {});
+    try {
+      await store.collection('users').doc(Auth.instance.USER.uid).set(
+          {'email': Auth.instance.USER.email, 'name': Auth.instance.USER.name},
+          SetOptions(merge: true));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void initDB() async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
+    checkNewUser();
+
     await store.collection('users').doc(Auth.instance.USER.uid).get().then(
       (doc) {
         if (doc.exists) {
-          _gotDB.value = true;
           debugPrint('DB exists');
           Auth.instance.USER.email = doc.data()?['email'] ?? '';
           Auth.instance.USER.name = doc.data()?['name'] ?? '';
@@ -109,7 +100,6 @@ class DB extends GetxService {
         debugPrint(e.toString());
       },
     );
-    getNewUser(Auth.instance.USER);
   }
 
 // ** ** ** ** USER COLLECTION ** ** ** **//
@@ -127,13 +117,14 @@ class DB extends GetxService {
     }
   }
 
-  Future<bool> updateUser(AppUser user) async {
+  void updateUser(AppUser user) async {
     try {
-      await store.collection('users').doc(user.uid).update(user.toJson());
-      return true;
+      await store
+          .collection('users')
+          .doc(user.uid)
+          .set(user.toJson(), SetOptions(merge: true));
     } catch (e) {
       debugPrint(e.toString());
-      return false;
     }
   }
 

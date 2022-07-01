@@ -57,14 +57,14 @@ class Auth extends GetxController {
     LoadIndicator.ON();
     if (user != null) {
       Get.put<DB>(DB(), permanent: true);
-      Get.put<TimerController>(TimerController(), permanent: true);
-      await Future.delayed(const Duration(seconds: 1));
       updateUser();
       isLoggedIn.value = true;
       debugPrint('User is logged in');
       DB.instance.initDB();
-      LoadIndicator.OFF();
-      Get.offAllNamed(Routes.NAVBAR);
+      await Future.delayed(const Duration(seconds: 3), () {
+        LoadIndicator.OFF();
+        Get.offAllNamed(Routes.NAVBAR);
+      });
     } else {
       debugPrint('User is not logged in');
       LoadIndicator.OFF();
@@ -84,6 +84,7 @@ class Auth extends GetxController {
         email: email,
         password: password,
       );
+      newUser.value = true;
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -98,6 +99,7 @@ class Auth extends GetxController {
     debugPrint('Logging in with email');
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
+      newUser.value = false;
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -111,6 +113,6 @@ class Auth extends GetxController {
   void logOut() async {
     await auth.signOut();
     isLoggedIn.value = false;
-    Get.offAllNamed(Routes.LOGIN);
+    DB.instance.store.clearPersistence();
   }
 }

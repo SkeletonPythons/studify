@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -5,9 +7,7 @@ import 'package:get/get.dart';
 
 import '../../services/auth.dart';
 import '../../services/db.dart';
-import './closed_card.dart';
-import './open_card.dart';
-import 'flashcard_controller.dart';
+
 import '../../models/flashcard_model.dart';
 
 enum CardState {
@@ -80,7 +80,7 @@ class OC extends GetxController {
   }
 
   void toggleEdit() {
-    editEnabled.value = !editEnabled.value;
+    editEnabled.toggle();
   }
 
   late TextEditingController frontController =

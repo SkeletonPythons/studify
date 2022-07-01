@@ -18,10 +18,7 @@ class DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     if (Auth.instance.USER.photoUrl == null ||
         Auth.instance.USER.photoUrl == '') {
-      homeController.photoUrl?.value = '';
-    } else {
-      homeController.photoUrl?.value = Auth.instance.USER.photoUrl!;
-    }
+    } else {}
 
     return Container();
   }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../pages/alternate_reality/alt_home.dart';
 import '../pages/bottom_nav_page/navbar.dart';
+import '../pages/bottom_nav_page/navbar_controller.dart';
 import '../pages/calendar_page/add_event.dart';
 import '../pages/calendar_page/calendar_page.dart';
 import '../pages/dashboard_page/dashboard_page.dart';
@@ -11,6 +12,7 @@ import '../pages/flashcard_page/flashcard_controller.dart';
 import '../pages/login_page/login_page.dart';
 import '../pages/splash_page/splash_page.dart';
 import '../pages/timers_page/pomodoro.dart';
+import '../pages/timers_page/timer_controllers/timer_controller.dart';
 import '../pages/timers_page/timer_homepage.dart';
 import '../pages/timers_page/timer_pomodoro_setup.dart';
 
@@ -41,11 +43,10 @@ class AppPages {
       name: Routes.LOGIN,
       page: () => LoginPage(),
     ),
-    GetPage(
-      name: Routes.NAVBAR,
-      page: () => NavBar(),
-      binding: FlashcardBinding(),
-    ),
+    GetPage(name: Routes.NAVBAR, page: () => NavBar(), bindings: [
+      NavbarBinding(),
+      FlashcardBinding(),
+    ]),
     GetPage(
       name: Routes.DASH,
       page: () => Dashboard(),
@@ -77,4 +78,12 @@ class AppPages {
       binding: FlashcardBinding(),
     ),
   ];
+}
+
+class NavbarBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.put(NavBarController());
+    Get.put(TimerController(), permanent: true);
+  }
 }

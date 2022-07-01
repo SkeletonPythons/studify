@@ -45,7 +45,7 @@ class ClosedCard extends StatelessWidget {
                       thickness: 2,
                     ),
                     Text(
-                      note.front,
+                      note.front!,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.ubuntu(

@@ -6,11 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+import '../../services/auth.dart';
 import '../../utils/consts/app_colors.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({required this.controller, Key? key}) : super(key: key);
+  const LoginScreen(this.controller, {Key? key}) : super(key: key);
   final LoginController controller;
 
   @override
@@ -116,7 +117,10 @@ class LoginScreen extends StatelessWidget {
                 child: const Text('Sign in'),
               ),
             ),
-            const GoogleSignInButton(clientId: clientID),
+            GoogleSignInButton(
+                clientId: clientID,
+                auth: Auth.instance.auth,
+                action: AuthAction.signIn),
           ],
         ),
       ),
@@ -125,8 +129,8 @@ class LoginScreen extends StatelessWidget {
 }
 
 class RegisterScreenUI extends StatelessWidget {
-  RegisterScreenUI({Key? key}) : super(key: key);
-  final LoginController _controller = Get.find();
+  const RegisterScreenUI(this.controller, {Key? key}) : super(key: key);
+  final LoginController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +174,7 @@ class RegisterScreenUI extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     GestureDetector(
-                      onTap: () => _controller.transition(),
+                      onTap: () => controller.transition(),
                       child: Text(
                         'Login!',
                         style: GoogleFonts.ubuntu().copyWith(
@@ -190,14 +194,14 @@ class RegisterScreenUI extends StatelessWidget {
                 width: Get.width * 0.8,
                 // Display name field
                 child: Form(
-                  key: _controller.formKey,
+                  key: controller.formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
                       TextFormField(
-                        validator: (value) => _controller.validateName(value),
-                        onChanged: (value) => _controller.name.value = value,
-                        controller: _controller.nameController,
+                        validator: (value) => controller.validateName(value),
+                        onChanged: (value) => controller.name.value = value,
+                        controller: controller.nameController,
                         decoration: InputDecoration(
                             prefixIcon: const FaIcon(FontAwesomeIcons.user,
                                 color: kAccent, size: 20),
@@ -212,10 +216,9 @@ class RegisterScreenUI extends StatelessWidget {
                         width: Get.width * 0.8,
                         // Email field
                         child: TextFormField(
-                          validator: (value) =>
-                              _controller.validateEmail(value),
-                          onChanged: (value) => _controller.email.value = value,
-                          controller: _controller.emailController,
+                          validator: (value) => controller.validateEmail(value),
+                          onChanged: (value) => controller.email.value = value,
+                          controller: controller.emailController,
                           decoration: InputDecoration(
                               prefixIcon: const FaIcon(
                                   FontAwesomeIcons.envelope,
@@ -238,12 +241,12 @@ class RegisterScreenUI extends StatelessWidget {
                           () => TextFormField(
                             // Password field
                             validator: (value) =>
-                                _controller.validatePassword(value),
+                                controller.validatePassword(value),
 
                             onChanged: (value) =>
-                                _controller.password.value = value,
-                            controller: _controller.passwordController,
-                            obscureText: _controller.obscurePass.value,
+                                controller.password.value = value,
+                            controller: controller.passwordController,
+                            obscureText: controller.obscurePass.value,
                             decoration: InputDecoration(
                               prefixIcon: const FaIcon(FontAwesomeIcons.lock,
                                   color: kAccent, size: 20),
@@ -254,9 +257,9 @@ class RegisterScreenUI extends StatelessWidget {
                               labelText: 'Password',
                               suffixIcon: Obx(
                                 () => IconButton(
-                                  onPressed: () => _controller.obscurePass
-                                      .value = !_controller.obscurePass.value,
-                                  icon: _controller.obscurePass.value
+                                  onPressed: () => controller.obscurePass
+                                      .value = !controller.obscurePass.value,
+                                  icon: controller.obscurePass.value
                                       ? const FaIcon(
                                           FontAwesomeIcons.solidEyeSlash,
                                           color: Colors.white54,
@@ -276,12 +279,12 @@ class RegisterScreenUI extends StatelessWidget {
                         child: Obx(
                           () => TextFormField(
                             validator: (value) =>
-                                _controller.validateConfirmPassword(value),
+                                controller.validateConfirmPassword(value),
                             // Confirm password field
                             onChanged: (value) =>
-                                _controller.confirmPassword.value = value,
-                            controller: _controller.confirmPasswordController,
-                            obscureText: _controller.obscureConfirm.value,
+                                controller.confirmPassword.value = value,
+                            controller: controller.confirmPasswordController,
+                            obscureText: controller.obscureConfirm.value,
                             decoration: InputDecoration(
                               prefixIcon: const FaIcon(FontAwesomeIcons.lock,
                                   color: kAccent, size: 20),
@@ -294,10 +297,9 @@ class RegisterScreenUI extends StatelessWidget {
                               labelText: 'Confirm Password',
                               suffixIcon: Obx(
                                 () => IconButton(
-                                  onPressed: () =>
-                                      _controller.obscureConfirm.value =
-                                          !_controller.obscureConfirm.value,
-                                  icon: _controller.obscureConfirm.value
+                                  onPressed: () => controller.obscureConfirm
+                                      .value = !controller.obscureConfirm.value,
+                                  icon: controller.obscureConfirm.value
                                       ? const FaIcon(
                                           FontAwesomeIcons.solidEyeSlash,
                                           color: Colors.white54,
@@ -321,12 +323,12 @@ class RegisterScreenUI extends StatelessWidget {
                 height: Get.height * 0.05,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_controller.formKey.currentState!.validate()) {
-                      _controller.register(
-                        _controller.name.value,
-                        _controller.email.value,
-                        _controller.password.value,
-                        _controller.confirmPassword.value,
+                    if (controller.formKey.currentState!.validate()) {
+                      controller.register(
+                        controller.name.value,
+                        controller.email.value,
+                        controller.password.value,
+                        controller.confirmPassword.value,
                       );
                     }
                   },
@@ -343,7 +345,11 @@ class RegisterScreenUI extends StatelessWidget {
                 color: kAccent,
                 thickness: 3,
               ),
-              const GoogleSignInButton(clientId: clientID),
+              GoogleSignInButton(
+                clientId: clientID,
+                auth: Auth.instance.auth,
+                action: AuthAction.signUp,
+              ),
             ]),
       ),
     );

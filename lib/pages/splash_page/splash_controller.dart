@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
 import '../../routes/routes.dart';
-import '../../services/auth.dart';
 
 class SplashController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -13,14 +12,13 @@ class SplashController extends GetxController
 
   @override
   void onInit() {
-    rive = OneShotAnimation('Animation 1', autoplay: false, onStop: () {
-      isAnimationPlaying.value = false;
-      Get.put<Auth>(Auth(), permanent: true);
-      Get.offAllNamed(Routes.LOGIN);
-    }, onStart: () {
-      isAnimationPlaying.value = true;
-    })
-      ..isActive = true;
+    rive = OneShotAnimation(
+      'Animation 1',
+      autoplay: false,
+    )..isActive = true;
+    Future.delayed(const Duration(seconds: 4), () {
+      Get.offAndToNamed(Routes.LOGIN);
+    });
 
     super.onInit();
   }

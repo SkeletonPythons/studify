@@ -26,18 +26,13 @@ class FlashcardPage extends StatelessWidget {
           width: Get.width,
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: StreamBuilder<QuerySnapshot>(
-              stream: DB.instance.store
-                  .collection('users')
-                  .doc(Auth.instance.USER.uid)
-                  .collection('flashcards')
-                  .snapshots(),
-              builder: (_, __) {
-                if (__.hasData) {
+            child: StreamBuilder<QuerySnapshot<Note>>(
+              stream: DB.instance.notes.snapshots(),
+              builder: (_, fbNotes) {
+                if (fbNotes.hasData) {
                   controller.notes.clear();
-                  for (var doc in __.data!.docs) {
-                    controller.notes.add(Note.fromJson(
-                        doc.data() as Map<String, dynamic>, doc.id));
+                  for (var note in fbNotes.data!.docs) {
+                    controller.notes.add(note.data());
                   }
 
                   return GridView.custom(

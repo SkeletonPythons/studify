@@ -18,8 +18,8 @@ class OpenCard extends GetWidget<OC> {
   final Note note;
   @override
   Widget build(BuildContext context) {
-    controller.frontController.text = note.front;
-    controller.backController.text = note.back;
+    controller.frontController.text = note.front ?? '';
+    controller.backController.text = note.back ?? '';
     controller.titleController.text = note.title ?? '';
     controller.contentController.text = note.content ?? '';
 

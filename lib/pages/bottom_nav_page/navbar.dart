@@ -15,14 +15,11 @@ import '../timers_page/timer_controllers/timer_controller.dart';
 import 'navbar_controller.dart';
 
 class NavBar extends StatelessWidget {
-   NavBar({Key? key}) : super(key: key);
-
-  TimerController timerController = Get.put<TimerController>(TimerController(), permanent: true);
+  NavBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NavBarController>(
-        init: Get.put(NavBarController()),
         initState: (_) {},
         builder: (_) {
           return SafeArea(

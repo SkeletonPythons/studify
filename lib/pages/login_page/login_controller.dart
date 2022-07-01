@@ -22,8 +22,15 @@ class LoginController extends GetxController {
   }
 
   @override
-  void onClose() {
-    super.onClose();
+  void onInit() {
+    super.onInit();
+    debugPrint('LoginController onInit');
+    Get.put<Auth>(Auth(), permanent: true);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -53,6 +60,7 @@ class LoginController extends GetxController {
         .hasMatch(value)) {
       return 'Enter a valid email!';
     }
+    // Return null if the input is valid.
     return null;
   }
 
@@ -88,7 +96,6 @@ class LoginController extends GetxController {
     if (value != password.value) {
       return 'Passwords do not match';
     }
-
     // Return null if the entered password is valid
     return null;
   }
@@ -115,9 +122,8 @@ class LoginController extends GetxController {
     LoadIndicator.ON();
 
     await Auth.instance.signUpWithEmail(email: e, password: p, name: n);
-    await Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       LoadIndicator.OFF();
-      Get.offAllNamed(Routes.NAVBAR);
     });
   }
 
