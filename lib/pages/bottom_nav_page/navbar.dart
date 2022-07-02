@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../services/auth.dart';
 
+import '../../services/db.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
 import '../calendar_page/calendar_page.dart';
@@ -121,8 +122,74 @@ class AppBarDrawer extends StatelessWidget {
             onTap: () => Get.snackbar(
                 'Error!', 'This on tap function does nothing yet!'),
           ),
+          ListTile(
+            leading: Icon(
+              Icons.exit_to_app,
+            ),
+            title: Text('Logout'),
+            onTap: () => Auth.instance.logOut(),
+          ),
+          AboutWidget(),
+          Divider(
+            thickness: 2,
+            color: kAccent,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.note_add_outlined,
+            ),
+            title: Text('Add Sample FLashcards'),
+            onTap: () {
+              try {
+                DB.instance.populateWithSampleNotes();
+                Get.snackbar('Success!',
+                    'Sample flashcards added!\nPLEASE USE SPARRINGLY! It will cost money if we do too many writes/reads!',
+                    duration: Duration(seconds: 5));
+              } catch (e) {
+                Get.snackbar('Error!', 'Something went wrong!');
+              }
+            },
+          ),
         ],
       ),
+    );
+  }
+}
+
+class AboutWidget extends StatelessWidget {
+  const AboutWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AboutListTile(
+      applicationName: 'Studify',
+      applicationVersion: '0.0.0',
+      applicationIcon: Icon(
+        Icons.flash_on,
+        color: kAccent,
+      ),
+      icon: Icon(
+        Icons.info,
+        color: kAccent,
+      ),
+      aboutBoxChildren: [
+        Text(
+          'Studify is a study app made by:\n\n',
+          style: GoogleFonts.ubuntuMono(
+            fontSize: 13,
+          ),
+        ),
+        Text(
+          'Adonis Santos\nJustin Morton\nTeresa Ortiz',
+          style: GoogleFonts.architectsDaughter(fontSize: 16),
+        ),
+        Text(
+          '\n\n2022',
+          style: GoogleFonts.ubuntuMono(fontSize: 13),
+        )
+      ],
     );
   }
 }

@@ -24,19 +24,26 @@ class DB extends GetxService {
     debugPrint('DB init');
   }
 
+  void populateWithSampleNotes() async {
+    WriteBatch writer = store.batch();
+    for (int i = 0; i < sample.length; i++) {
+      debugPrint(sample[i].toJson().toString());
+      Note x = sample[i];
+
+      writer.set(
+          store.collection('users/${Auth.instance.USER.uid}/notes').doc(x.id),
+          x.toFirestore());
+    }
+    await writer.commit();
+  }
+
   void checkNewUser() async {
     if (Auth.instance.newUser.value) {
       WriteBatch writer = store.batch();
       for (int i = 0; i < sample.length; i++) {
         debugPrint(sample[i].toJson().toString());
 
-        writer.set(
-            store
-                .collection('users')
-                .doc(Auth.instance.USER.uid)
-                .collection('notes')
-                .doc(sample[i].id),
-            sample[i].toJson());
+        writer.set(notes.doc(sample[i].id), sample[i].toFirestore());
       }
       await writer.commit();
     }
@@ -44,7 +51,16 @@ class DB extends GetxService {
 
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
-  late final notes = store
+  DocumentReference<Note> setNote(Note note) => store
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .collection('notes')
+      .doc(note.id)
+      .withConverter(
+          fromFirestore: Note.fromFirestore,
+          toFirestore: (Note note, _) => note.toFirestore());
+
+  CollectionReference<Note> get notes => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
       .collection('notes')
@@ -52,17 +68,20 @@ class DB extends GetxService {
           fromFirestore: Note.fromFirestore,
           toFirestore: (Note note, _) => note.toFirestore());
 
-  late final CollectionReference events = store
+  DocumentReference<AppUser> get user =>
+      store.collection('users').doc(Auth.instance.USER.uid).withConverter(
+          fromFirestore: AppUser.fromFirebase,
+          toFirestore: (AppUser user, _) => user.toFirestore());
+
+  CollectionReference get events => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
       .collection('events');
 
-  late final CollectionReference timers = store
+  CollectionReference get timers => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
       .collection('timers');
-
-  final RxBool _gotDB = false.obs;
 
   void syncUser() async {
     try {
@@ -76,30 +95,14 @@ class DB extends GetxService {
 
   void initDB() async {
     /// This function is used to initialize the database. It will create one if it doesn't exist.
-    checkNewUser();
-
-    await store.collection('users').doc(Auth.instance.USER.uid).get().then(
-      (doc) {
-        if (doc.exists) {
-          debugPrint('DB exists');
-          Auth.instance.USER.email = doc.data()?['email'] ?? '';
-          Auth.instance.USER.name = doc.data()?['name'] ?? '';
-          Auth.instance.USER.photoUrl = doc.data()?['photoUrl'] ?? '';
-          Auth.instance.USER.uid = doc.data()?['uid'] ?? '';
-        } else {
-          try {
-            debugPrint('Creating user doc');
-            _gotDB.value = true;
-          } catch (e) {
-            debugPrint(e.toString());
-          }
-        }
-      },
-    ).catchError(
-      (e) {
-        debugPrint(e.toString());
-      },
-    );
+    if (await user.get().then((value) => value.exists)) {
+      debugPrint('User exists');
+      final appUser = await user.get();
+      Auth.instance.USER = appUser.data()!;
+    } else {
+      debugPrint('User does not exist');
+      await user.set(Auth.instance.USER, SetOptions(merge: true));
+    }
   }
 
 // ** ** ** ** USER COLLECTION ** ** ** **//

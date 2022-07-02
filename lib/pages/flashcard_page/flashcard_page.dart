@@ -19,7 +19,7 @@ class FlashcardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FlashcardController>(
-      init: Get.put(FlashcardController()),
+      init: FlashcardController(),
       builder: (controller) => Center(
         child: SizedBox(
           height: Get.height,

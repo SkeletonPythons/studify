@@ -14,7 +14,7 @@ import '../dashboard_page/dashboard_page.dart';
 import '../flashcard_page/flashcard_page.dart';
 import '../timers_page/timer_controllers/timer_controller.dart';
 import '../timers_page/timer_homepage.dart';
-import '../../pages/bottom_nav_page/home_controller.dart';
+import '../bottom_nav_page/home_controller.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Note {
@@ -23,7 +25,8 @@ class Note {
     this.isPinned = false,
     this.isLearned = false,
     String? id,
-  })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+  })  : id =
+            id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString(),
         tags = tags ?? [];
 
   factory Note.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -42,6 +45,8 @@ class Note {
       isLearned: data?['isLearned'],
     );
   }
+
+  static int pepper() => Random().nextInt(1000000);
 
   Map<String, dynamic> toFirestore() {
     return {

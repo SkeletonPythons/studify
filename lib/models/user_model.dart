@@ -1,37 +1,67 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AppUser {
   AppUser({
     required this.uid,
-    this.name,
+    this.name = 'User',
     required this.email,
-    this.photoUrl,
-    this.settings,
-  });
+    this.photoUrl = 'photoUrl',
+    Map<String, dynamic>? stats,
+    Map<String, bool>? settings,
+  })  : stats = stats ??
+            {
+              /// Statistics that will be synced to the database.
+              'cardsCreated': 0,
+              'testsTaken': 0,
+              'numCorrect': 0,
+              'numIncorrect': 0,
+              'numSkipped': 0,
+              'daysStudied': 0,
+              'hoursStudied': 0,
+              'minutesStudied': 0,
+              'tasksCreated': 0,
+              'tasksCompleted': 0,
+              'tasksSkipped': 0,
+              'tasksIncomplete': 0,
+              'eventsCreated': 0,
+              'eventsCompleted': 0,
+            },
+        settings = settings ??
+            {
+              'isVerified': false,
+            };
 
   String uid;
   String? name;
   String email;
   String? photoUrl;
-  Map<String, bool>? settings = {
-    'isVerified': false,
-    'isNewUser': true,
-  };
-  Map<String, dynamic> stats = {
-    /// Statistics that will be synced to the database.
-    'cardsCreated': 0,
-    'testsTaken': 0,
-    'numCorrect': 0,
-    'numIncorrect': 0,
-    'numSkipped': 0,
-    'daysStudied': 0,
-    'hoursStudied': 0,
-    'minutesStudied': 0,
-    'tasksCreated': 0,
-    'tasksCompleted': 0,
-    'tasksSkipped': 0,
-    'tasksIncomplete': 0,
-    'eventsCreated': 0,
-    'eventsCompleted': 0,
-  };
+  Map<String, bool>? settings;
+  Map<String, dynamic>? stats;
+
+  factory AppUser.fromFirebase(DocumentSnapshot<Map<String, dynamic>> snapshot,
+      SnapshotOptions? options) {
+    final data = snapshot.data();
+    return AppUser(
+      uid: data?['uid'],
+      name: data?['name'],
+      email: data?['email'],
+      photoUrl: data?['photoUrl'],
+      settings:
+          data?['settings'] is Iterable ? Map.from(data?['settings']) : {},
+      stats: data?['stats'] is Iterable ? Map.from(data?['stats']) : {},
+    );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      if (name != null) 'name': name,
+      if (photoUrl != null) 'photoUrl': photoUrl,
+      if (settings != null) 'settings': settings,
+      if (stats != null) 'stats': stats,
+      'email': email,
+      'uid': uid,
+    };
+  }
 
   Map<String, dynamic> toJson() => {
         'uid': uid,

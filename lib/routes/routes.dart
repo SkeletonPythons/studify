@@ -2,7 +2,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 
-import '../pages/alternate_reality/alt_home.dart';
 import '../pages/bottom_nav_page/navbar.dart';
 import '../pages/bottom_nav_page/navbar_controller.dart';
 import '../pages/calendar_page/add_event.dart';
@@ -71,11 +70,6 @@ class AppPages {
     GetPage(
       name: Routes.POMODORO,
       page: () => PomodoroTimer(),
-    ),
-    GetPage(
-      name: Routes.ALT_HOME,
-      page: () => AltHome(),
-      binding: FlashcardBinding(),
     ),
   ];
 }
