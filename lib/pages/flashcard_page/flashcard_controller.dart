@@ -50,11 +50,3 @@ class FlashcardController extends GetxController
     );
   }
 }
-
-class FlashcardBinding implements Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<FlashcardController>(() => FlashcardController());
-    Get.create<OC>(() => OC());
-  }
-}

@@ -8,6 +8,7 @@ import '../pages/calendar_page/add_event.dart';
 import '../pages/calendar_page/calendar_page.dart';
 import '../pages/dashboard_page/dashboard_page.dart';
 import '../pages/flashcard_page/flashcard_controller.dart';
+import '../pages/flashcard_page/open_controller.dart';
 import '../pages/login_page/login_page.dart';
 import '../pages/splash_page/splash_page.dart';
 import '../pages/timers_page/pomodoro.dart';
@@ -79,5 +80,13 @@ class NavbarBinding implements Bindings {
   void dependencies() {
     Get.put(NavBarController());
     Get.put(TimerController(), permanent: true);
+  }
+}
+
+class FlashcardBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<FlashcardController>(() => FlashcardController());
+    Get.create<OC>(() => OC());
   }
 }

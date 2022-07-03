@@ -8,14 +8,20 @@ import '../../../models/flashcard_model.dart';
 import '../../utils/consts/app_colors.dart';
 import 'flashcard_controller.dart';
 
+typedef SelectedCallback = int Function(int index);
+
 class ClosedCard extends StatelessWidget {
-  const ClosedCard({
+  const ClosedCard(
+    this.index, {
     required this.note,
     required this.onTap,
+    required this.isSelected,
     Key? key,
   }) : super(key: key);
   final Note note;
   final VoidCallback onTap;
+  final RxBool isSelected;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -25,35 +31,41 @@ class ClosedCard extends StatelessWidget {
       initState: (_) {},
       builder: (_) {
         return GridTile(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () => onTap(),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      note.title!,
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: kAccent,
+          child: Obx(
+            () => Material(
+              elevation: 4,
+              borderOnForeground: isSelected.value,
+              borderRadius: BorderRadius.circular(8),
+              color: Color(0xff2f2f2f),
+              type: MaterialType.card,
+              child: InkWell(
+                onTap: () => onTap(),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        note.title!,
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: kAccent,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Divider(
-                      thickness: 2,
-                    ),
-                    Text(
-                      note.front!,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                      Divider(
+                        thickness: 2,
                       ),
-                    ),
-                  ],
+                      Text(
+                        note.front!,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -51,3 +51,80 @@ final TextStyle textStyleOne = GoogleFonts.ubuntuMono(
   fontWeight: FontWeight.w500,
   color: kPrimary,
 );
+
+final ThemeData appThemeData = ThemeData.dark().copyWith(
+    primaryColor: bkgnds[1],
+    backgroundColor: bkgnds[1],
+    scaffoldBackgroundColor: bkgnds[1],
+    textTheme: textTheme);
+
+final TextTheme textTheme = GoogleFonts.ubuntuMonoTextTheme().copyWith(
+  headline1: GoogleFonts.ubuntuMono(
+      fontSize: 72.0, fontWeight: FontWeight.bold, color: txts[1]),
+  headline2: GoogleFonts.ubuntuMono(
+      fontSize: 36.0, fontWeight: FontWeight.normal, color: txts[2]),
+  headline3: GoogleFonts.neucha(
+      fontSize: 24.0, fontWeight: FontWeight.bold, color: txts[3]),
+  headline4: GoogleFonts.neucha(
+      fontSize: 18.0, fontWeight: FontWeight.normal, color: txts[4]),
+  headline5: GoogleFonts.ubuntuMono(
+      fontSize: 14.0, fontWeight: FontWeight.bold, color: txts[5]),
+  headline6: GoogleFonts.neucha(
+      fontSize: 12.0, fontWeight: FontWeight.normal, color: txts[6]),
+  subtitle1: GoogleFonts.ubuntuMono(
+      fontSize: 18.0, fontWeight: FontWeight.normal, color: txts[1]),
+  subtitle2: GoogleFonts.ubuntuMono(
+      fontSize: 14.0, fontWeight: FontWeight.normal, color: txts[2]),
+  bodyText1: GoogleFonts.ubuntuMono(
+      fontSize: 18.0, fontWeight: FontWeight.normal, color: txts[3]),
+  bodyText2: GoogleFonts.neucha(
+      fontSize: 14.0, fontWeight: FontWeight.normal, color: txts[4]),
+  button: GoogleFonts.ubuntuMono(
+      fontSize: 14.0, fontWeight: FontWeight.bold, color: txts[5]),
+  caption: GoogleFonts.neucha(
+      fontSize: 12.0, fontWeight: FontWeight.normal, color: txts[6]),
+  overline: GoogleFonts.ubuntuMono(
+      fontSize: 12.0, fontWeight: FontWeight.normal, color: txts[1]),
+);
+
+const Map<int, Color> bkgnds = {
+  1: Color(0xff1a1a1a),
+  2: Color(0xff313131),
+  3: Color(0xff424242),
+  4: Color(0xff616161),
+  5: Color(0xff717171),
+  6: Color(0xff828282),
+  7: Color(0xff929292),
+  8: Color(0xffa3a3a3),
+  9: Color(0xffb4b4b4),
+};
+
+const Map<int, Color> acnts = {
+  1: Color(0xff1f295b),
+  2: Color(0xffce82c7),
+  3: Color(0xff8d5be9),
+  4: Color(0xff6371c0),
+  5: Color(0xff819dad),
+  6: Color(0xffEEB76B),
+  7: Color(0xff346751),
+  8: Color(0xff515585),
+  9: Color(0xffE5A5FF),
+  10: Color(0xffabcbbe)
+};
+
+const Map<int, Color> brdrs = {
+  1: Color(0xffF6D7A7),
+  2: Color(0xffC37B89),
+  3: Color(0xff6D8299),
+  4: Color(0xffCAB8FF),
+};
+
+const Map<int, Color> txts = {
+  1: Color(0xffF9F3DF),
+  2: Color(0xffFDFCE5),
+  3: Color(0xffD7E9F7),
+  4: Color(0xffF4D19B),
+  5: Color(0xffFEFBF3),
+  6: Color(0xff9D9D9D),
+  7: Color(0xffCAB8FF),
+};

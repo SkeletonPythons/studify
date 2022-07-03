@@ -143,30 +143,4 @@ class DB extends GetxService {
 
 // ** ** ** // ** ** ** //
 
-  Stream<Map<String, dynamic>> notesStream() {
-    return store
-        .collection('users')
-        .doc(Auth.instance.USER.uid)
-        .collection('flashcards')
-        .snapshots()
-        .map((event) {
-      Map<String, dynamic> notes = {};
-      for (var doc in event.docs) {
-        notes[doc.id] = doc.data();
-      }
-      return notes;
-    });
-  }
-
-  Future<void> addNote(Note note) {
-    return store
-        .collection('users')
-        .doc(Auth.instance.USER.uid)
-        .collection('flashcards')
-        .doc(note.id)
-        .set(note.toJson());
-  }
-
-// ** // *** / Used in the Auth process / *** // ** //
-
 }

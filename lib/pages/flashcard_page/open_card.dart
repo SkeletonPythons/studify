@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -67,14 +69,12 @@ class OpenCard extends GetWidget<OC> {
                           elevation: 4,
                           borderRadius: BorderRadius.circular(10),
                           child: IconButton(
-                              icon: Obx(() => Icon(
-                                    controller.fav.value
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: controller.fav.value
-                                        ? Colors.redAccent
-                                        : kBackgroundDark,
-                                  )),
+                              icon: Icon(
+                                note.isFav
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.redAccent,
+                              ),
                               onPressed: () => controller.toggleFav(note)),
                         ),
                       ),
@@ -123,8 +123,9 @@ class OpenCard extends GetWidget<OC> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Container(
-                      height: Get.height * .06,
+                      height: Get.height * .07,
                       width: Get.width * .9,
+                      padding: const EdgeInsets.only(top: 5),
                       decoration: BoxDecoration(
                         color: kBackgroundLight2,
                         borderRadius: BorderRadius.circular(10),
@@ -135,7 +136,10 @@ class OpenCard extends GetWidget<OC> {
                                 controller.onEditComplete(note),
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Title',
+                              labelText: 'title',
+                              labelStyle: GoogleFonts.neucha(
+                                fontSize: 20,
+                              ),
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 0),
                               enabledBorder: OutlineInputBorder(
@@ -150,29 +154,68 @@ class OpenCard extends GetWidget<OC> {
                               ),
                             ),
                             enabled: controller.editEnabled.value,
-                            controller: controller.contentController,
+                            controller: controller.titleController,
                           )),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: Obx(() => AnimatedContainer(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.fastLinearToSlowEaseIn,
-                          transform:
-                              Matrix4.rotationY(controller.rotation.value),
-                          height: Get.height * .55,
+                    child: GestureDetector(
+                      onHorizontalDragUpdate: (details) =>
+                          controller.onDrag(details),
+                      onHorizontalDragEnd: (details) => controller.dragEnd(),
+                      child: Obx(
+                        () => Container(
+                          constraints: BoxConstraints(
+                              maxHeight: Get.height * .2,
+                              maxWidth: Get.width * .9),
                           width: Get.width * .9,
-                          clipBehavior: Clip.hardEdge,
+                          clipBehavior: Clip.antiAlias,
+                          transform: Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..rotateY(controller.flipValue.value * pi),
                           transformAlignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: kBackgroundLight2,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Obx(
-                            () => controller.state.value == CardState.CONTENT
-                                ? TextField(
-                                    onChanged: (value) => note.content = value,
+                          child: Obx(() => controller.flipValue <= 0.5
+                              ? TextField(
+                                  onChanged: (value) => note.front = value,
+                                  onEditingComplete: () =>
+                                      controller.onEditComplete(note),
+                                  expands: true,
+                                  maxLines: null,
+                                  minLines: null,
+                                  textAlign: TextAlign.start,
+                                  textAlignVertical: TextAlignVertical.top,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    labelText: 'front',
+                                    labelStyle: GoogleFonts.neucha(
+                                      fontSize: 34,
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 5),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.greenAccent,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    hintStyle: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      color: kBackgroundDark,
+                                    ),
+                                  ),
+                                  enabled: controller.editEnabled.value,
+                                  controller: controller.frontController,
+                                )
+                              : Transform.scale(
+                                  scaleX: -1,
+                                  alignment: Alignment.center,
+                                  child: TextField(
+                                    onChanged: (value) => note.back = value,
                                     onEditingComplete: () =>
                                         controller.onEditComplete(note),
                                     expands: true,
@@ -182,7 +225,10 @@ class OpenCard extends GetWidget<OC> {
                                     textAlignVertical: TextAlignVertical.top,
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      hintText: 'Content',
+                                      labelText: 'back',
+                                      labelStyle: GoogleFonts.neucha(
+                                        fontSize: 34,
+                                      ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               horizontal: 8, vertical: 5),
@@ -193,79 +239,65 @@ class OpenCard extends GetWidget<OC> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       hintStyle: GoogleFonts.roboto(
-                                        fontSize: Get.height * .02,
+                                        fontSize: 18,
                                         color: kBackgroundDark,
                                       ),
                                     ),
                                     enabled: controller.editEnabled.value,
-                                    controller: controller.contentController,
-                                  )
-                                : controller.state.value == CardState.FRONT
-                                    ? TextField(
-                                        onChanged: (value) =>
-                                            note.front = value,
-                                        onEditingComplete: () =>
-                                            controller.onEditComplete(note),
-                                        expands: true,
-                                        maxLines: null,
-                                        minLines: null,
-                                        textAlign: TextAlign.start,
-                                        textAlignVertical:
-                                            TextAlignVertical.top,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Front of card',
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 8, vertical: 5),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.greenAccent,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          hintStyle: GoogleFonts.roboto(
-                                            fontSize: Get.height * .02,
-                                            color: kBackgroundDark,
-                                          ),
-                                        ),
-                                        enabled: controller.editEnabled.value,
-                                        controller: controller.frontController,
-                                      )
-                                    : TextField(
-                                        onChanged: (value) => note.back = value,
-                                        onEditingComplete: () =>
-                                            controller.onEditComplete(note),
-                                        expands: true,
-                                        maxLines: null,
-                                        minLines: null,
-                                        textAlign: TextAlign.start,
-                                        textAlignVertical:
-                                            TextAlignVertical.top,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Back of card',
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 8, vertical: 5),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.greenAccent,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          hintStyle: GoogleFonts.roboto(
-                                            fontSize: Get.height * .02,
-                                            color: kBackgroundDark,
-                                          ),
-                                        ),
-                                        enabled: controller.editEnabled.value,
-                                        controller: controller.backController,
-                                      ),
+                                    controller: controller.backController,
+                                  ),
+                                )),
+                        ),
+                      ),
+                    ),
+                  ),
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    constraints: BoxConstraints(
+                      minHeight: Get.height * .27,
+                      minWidth: Get.width * .9,
+                      maxWidth: Get.width * .9,
+                      maxHeight: Get.height * .27,
+                    ),
+                    curve: Curves.fastLinearToSlowEaseIn,
+                    height: Get.height * .3,
+                    width: Get.width * .9,
+                    clipBehavior: Clip.hardEdge,
+                    transformAlignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: kBackgroundLight2,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      onChanged: (value) => note.content = value,
+                      onEditingComplete: () => controller.onEditComplete(note),
+                      expands: true,
+                      maxLines: null,
+                      minLines: null,
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: InputDecoration(
+                        labelText: 'notes',
+                        border: InputBorder.none,
+                        labelStyle: GoogleFonts.neucha(
+                          fontSize: 50,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 5),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.greenAccent,
                           ),
-                        )),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintStyle: GoogleFonts.roboto(
+                          fontSize: Get.height * .02,
+                          color: kBackgroundDark,
+                        ),
+                      ),
+                      enabled: controller.editEnabled.value,
+                      controller: controller.contentController,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -279,13 +311,24 @@ class OpenCard extends GetWidget<OC> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                  fixedSize: MaterialStateProperty.all<Size>(
-                                      Size(Get.width * .2, Get.height * .1))),
-                              onPressed: () => controller.flipBackwards(),
-                              child: FaIcon(FontAwesomeIcons.rotateLeft),
-                            ),
+                            Obx(() => ElevatedButton(
+                                  style: ButtonStyle(
+                                    fixedSize: MaterialStateProperty.all<Size>(
+                                      Size(
+                                        Get.width * .1,
+                                        Get.height * .06,
+                                      ),
+                                    ),
+                                    backgroundColor:
+                                        controller.state.value == CardState.BACK
+                                            ? MaterialStateProperty.all<Color>(
+                                                Colors.greenAccent)
+                                            : MaterialStateProperty.all<Color>(
+                                                Colors.blueGrey[800]!),
+                                  ),
+                                  onPressed: () => controller.flipBackward(),
+                                  child: FaIcon(FontAwesomeIcons.rotateLeft),
+                                )),
                             Obx(() => ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
@@ -295,20 +338,38 @@ class OpenCard extends GetWidget<OC> {
                                                   : Colors.redAccent),
                                       fixedSize:
                                           MaterialStateProperty.all<Size>(Size(
-                                              Get.width * .4,
-                                              Get.height * .1))),
+                                              Get.width * .01,
+                                              Get.height * .06))),
                                   onPressed: () => controller.toggleEdit(),
-                                  child: Icon(controller.editEnabled.value
-                                      ? Icons.edit
-                                      : Icons.edit_off),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Obx(() => Icon(
+                                          controller.editEnabled.value
+                                              ? Icons.edit
+                                              : Icons.edit_off)),
+                                      Text('edit'),
+                                    ],
+                                  ),
                                 )),
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                  fixedSize: MaterialStateProperty.all<Size>(
-                                      Size(Get.width * .2, Get.height * .1))),
-                              onPressed: () => controller.flipForward(),
-                              child: FaIcon(FontAwesomeIcons.arrowRotateRight),
-                            ),
+                            Obx(() => ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              controller.state.value ==
+                                                      CardState.FRONT
+                                                  ? Colors.greenAccent
+                                                  : Colors.blueGrey[800]),
+                                      fixedSize:
+                                          MaterialStateProperty.all<Size>(Size(
+                                              Get.width * .1,
+                                              Get.height * .06))),
+                                  onPressed: () => controller.flipFoward(),
+                                  child:
+                                      FaIcon(FontAwesomeIcons.arrowRotateRight),
+                                )),
                           ]),
                     ),
                   ),

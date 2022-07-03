@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,7 @@ class FlashcardPage extends StatelessWidget {
           height: Get.height,
           width: Get.width,
           child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 2.0),
             child: StreamBuilder<QuerySnapshot<Note>>(
               stream: DB.instance.notes.snapshots(),
               builder: (_, fbNotes) {
@@ -34,8 +36,9 @@ class FlashcardPage extends StatelessWidget {
                   for (var note in fbNotes.data!.docs) {
                     controller.notes.add(note.data());
                   }
-
-                  return GridView.custom(
+                  controller.numberOfTiles.value = controller.notes.length;
+                  return Obx(() => GridView.custom(
+                      clipBehavior: Clip.antiAlias,
                       childrenDelegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return OpenContainer(
@@ -50,8 +53,10 @@ class FlashcardPage extends StatelessWidget {
                               closedBuilder: (BuildContext context,
                                   VoidCallback openContainer) {
                                 return ClosedCard(
+                                  index,
                                   note: controller.notes[index],
                                   onTap: openContainer,
+                                  isSelected: false.obs,
                                 );
                               },
                               openBuilder: (BuildContext context,
@@ -62,20 +67,23 @@ class FlashcardPage extends StatelessWidget {
                                 );
                               });
                         },
-                        childCount: controller.notes.length,
+                        childCount: controller.numberOfTiles.value - 1,
                       ),
                       gridDelegate: SliverQuiltedGridDelegate(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 6,
-                        crossAxisSpacing: 6,
+                        crossAxisCount: 6,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
                         repeatPattern: QuiltedGridRepeatPattern.inverted,
                         pattern: [
-                          const QuiltedGridTile(2, 2),
-                          const QuiltedGridTile(1, 1),
-                          const QuiltedGridTile(1, 1),
-                          const QuiltedGridTile(1, 2),
+                          QuiltedGridTile(3, 2),
+                          QuiltedGridTile(2, 4),
+                          QuiltedGridTile(2, 2),
+                          QuiltedGridTile(2, 2),
+                          QuiltedGridTile(2, 2),
+                          QuiltedGridTile(3, 4),
+                          QuiltedGridTile(2, 2),
                         ],
-                      ));
+                      )));
                 } else {
                   return Center(
                     child: CircularProgressIndicator(),

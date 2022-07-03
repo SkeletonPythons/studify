@@ -13,98 +13,84 @@ import '../../models/flashcard_model.dart';
 enum CardState {
   FRONT,
   BACK,
-  CONTENT,
 }
 
-class OC extends GetxController {
+class OC extends GetxController with GetSingleTickerProviderStateMixin {
   final RxBool editEnabled = RxBool(false);
-  final RxBool fav = RxBool(false);
-
-  final RxDouble rotation = 0.0.obs;
 
   Rx<CardState> state = CardState.FRONT.obs;
 
-  late final Note note;
+  late AnimationController flipController;
 
-  void setNote(Note note) {
-    this.note = note;
-  }
+  late Animation<double> flipAnimation;
 
-  void deleteNote(Note note) async {
-    try {
-      await DB.instance.store
-          .collection('users')
-          .doc(Auth.instance.USER.uid)
-          .collection('flashcards')
-          .doc(note.id)
-          .delete();
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  void flipForward() {
-    rotation.value = 0.5 * pi;
-    switch (state.value) {
-      case CardState.FRONT:
-        state.value = CardState.BACK;
-        break;
-      case CardState.BACK:
-        state.value = CardState.CONTENT;
-        break;
-      case CardState.CONTENT:
-        state.value = CardState.FRONT;
-        break;
-    }
-    Future.delayed(const Duration(milliseconds: 500), () {
-      rotation.value = 0.0;
-    });
-  }
-
-  void flipBackwards() {
-    rotation.value = -0.5 * pi;
-    switch (state.value) {
-      case CardState.FRONT:
-        state.value = CardState.CONTENT;
-        break;
-      case CardState.BACK:
-        state.value = CardState.FRONT;
-        break;
-      case CardState.CONTENT:
-        state.value = CardState.BACK;
-        break;
-    }
-    Future.delayed(const Duration(milliseconds: 500), () {
-      rotation.value = 0.0;
-    });
-  }
+  RxDouble flipValue = 0.0.obs;
 
   void toggleEdit() {
     editEnabled.toggle();
   }
 
-  late TextEditingController frontController =
-      TextEditingController(text: note.front);
-  late TextEditingController backController =
-      TextEditingController(text: note.back);
-  late TextEditingController titleController =
-      TextEditingController(text: note.title);
-  late TextEditingController tagsController;
-  late TextEditingController contentController =
-      TextEditingController(text: note.content);
+  late TextEditingController frontController = TextEditingController();
+  late TextEditingController backController = TextEditingController();
+  late TextEditingController titleController = TextEditingController();
+  late TextEditingController tagsController = TextEditingController();
+  late TextEditingController contentController = TextEditingController();
 
   @override
   void onInit() {
+    flipController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    flipAnimation = TweenSequence(<TweenSequenceItem<double>>[
+      TweenSequenceItem<double>(
+        tween: Tween<double>(begin: 0, end: pi * 2)
+            .chain(CurveTween(curve: Curves.slowMiddle)),
+        weight: 50,
+      ),
+      TweenSequenceItem<double>(
+        tween: ConstantTween<double>(pi / 2),
+        weight: 50,
+      ),
+    ]).animate(flipController)
+      ..addListener(() {
+        flipValue.value = flipController.value;
+
+        debugPrint(flipController.value.toString());
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          update();
+        }
+      });
     super.onInit();
-    frontController = TextEditingController();
-    backController = TextEditingController();
-    titleController = TextEditingController();
-    tagsController = TextEditingController();
-    contentController = TextEditingController();
+  }
+
+  void onDrag(DragUpdateDetails deets) {
+    flipController.value += deets.primaryDelta! / 300;
+  }
+
+  void dragEnd() {
+    if (flipController.value > .5) {
+      flipController.forward(from: flipController.value);
+    } else {
+      flipController.reverse(from: flipController.value);
+    }
+  }
+
+  void flipFoward() {
+    flipController.forward().then((value) => state.value = CardState.BACK);
+  }
+
+  void flipBackward() {
+    flipController.reverse().then((value) => state.value = CardState.FRONT);
   }
 
   @override
   void onClose() {
+    tagsController.dispose();
+    contentController.dispose();
+    flipController.dispose();
     frontController.dispose();
     backController.dispose();
     titleController.dispose();
@@ -114,14 +100,9 @@ class OC extends GetxController {
   void toggleFav(Note note) async {
     note.isFav = !note.isFav;
     try {
-      await DB.instance.store
-          .collection('users')
-          .doc(Auth.instance.USER.uid)
-          .collection('flashcards')
-          .doc(note.id)
-          .update({
+      await DB.instance.notes.doc(note.id).update({
         'isFav': note.isFav,
-      }).then((value) => fav.toggle);
+      });
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -129,17 +110,15 @@ class OC extends GetxController {
 
   void onEditComplete(Note note) async {
     try {
-      await DB.instance.store
-          .collection('users')
-          .doc(Auth.instance.USER.uid)
-          .collection('flashcards')
-          .doc(note.id)
-          .update({
-        'front': note.front,
-        'back': note.back,
-        'title': note.title,
-        'content': note.content,
-      });
+      await DB.instance.notes.doc(note.id).update(note.toFirestore());
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void deleteNote(Note note) async {
+    try {
+      await DB.instance.notes.doc(note.id).delete();
     } catch (e) {
       debugPrint(e.toString());
     }
