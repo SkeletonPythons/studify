@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -86,6 +87,36 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
     flipController.reverse().then((value) => state.value = CardState.FRONT);
   }
 
+  void saveTag(Note note, String tag) async {
+    try {
+      await DB.instance.store
+          .collection('users')
+          .doc(Auth.instance.USER.uid)
+          .collection('notes')
+          .doc(note.id)
+          .update({
+        'tags': FieldValue.arrayUnion([tag])
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void deleteTag(Note note, String tag) async {
+    try {
+      await DB.instance.store
+          .collection('users')
+          .doc(Auth.instance.USER.uid)
+          .collection('notes')
+          .doc(note.id)
+          .update({
+        'tags': FieldValue.arrayRemove([tag])
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   void onClose() {
     tagsController.dispose();
@@ -98,19 +129,18 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
   }
 
   void toggleFav(Note note) async {
-    note.isFav = !note.isFav;
+    note.isFav.toggle();
     try {
-      await DB.instance.notes.doc(note.id).update({
-        'isFav': note.isFav,
-      });
+      await DB.instance.notes.doc(note.id).set(note, SetOptions(merge: true));
     } catch (e) {
       debugPrint(e.toString());
     }
+    update();
   }
 
   void onEditComplete(Note note) async {
     try {
-      await DB.instance.notes.doc(note.id).update(note.toFirestore());
+      await DB.instance.notes.doc(note.id).set(note, SetOptions(merge: true));
     } catch (e) {
       debugPrint(e.toString());
     }

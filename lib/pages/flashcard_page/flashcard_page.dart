@@ -28,14 +28,15 @@ class FlashcardPage extends StatelessWidget {
           width: Get.width,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 2.0),
-            child: StreamBuilder<QuerySnapshot<Note>>(
-              stream: DB.instance.notes.snapshots(),
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: controller.noteStream,
               builder: (_, fbNotes) {
                 if (fbNotes.hasData) {
                   controller.notes.clear();
                   for (var note in fbNotes.data!.docs) {
-                    controller.notes.add(note.data());
+                    controller.notes.add(Note.fromFirestore(note));
                   }
+
                   controller.numberOfTiles.value = controller.notes.length;
                   return Obx(() => GridView.custom(
                       clipBehavior: Clip.antiAlias,
@@ -54,9 +55,13 @@ class FlashcardPage extends StatelessWidget {
                                   VoidCallback openContainer) {
                                 return ClosedCard(
                                   index,
+                                  selectedCallback: (_) {},
                                   note: controller.notes[index],
                                   onTap: openContainer,
-                                  isSelected: false.obs,
+                                  isSelected:
+                                      controller.selectedList.contains(index)
+                                          ? true.obs
+                                          : false.obs,
                                 );
                               },
                               openBuilder: (BuildContext context,

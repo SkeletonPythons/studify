@@ -2,8 +2,10 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../../models/flashcard_model.dart';
 import '../../services/auth.dart';
@@ -13,6 +15,18 @@ import 'open_controller.dart';
 class FlashcardController extends GetxController
     with GetSingleTickerProviderStateMixin {
   RxList<Note> notes = <Note>[].obs;
+
+  late final Stream<QuerySnapshot<Map<String, dynamic>>> noteStream = DB
+      .instance.store
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .collection('notes')
+      .snapshots();
+
+  RxList selectedList = [].obs;
+
+  final Stream<QuerySnapshot<Note>> getNoteStream =
+      DB.instance.notes.snapshots();
 
   late RxInt numberOfTiles = notes.length.obs;
 
@@ -40,7 +54,7 @@ class FlashcardController extends GetxController
       bool isLearned = false}) {
     return Note(
       front: '',
-      title: '',
+      subject: '',
       content: '',
       back: '',
       tags: tags ?? [],

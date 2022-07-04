@@ -7,7 +7,7 @@ class AppUser {
     required this.email,
     this.photoUrl = 'photoUrl',
     Map<String, dynamic>? stats,
-    Map<String, bool>? settings,
+    Map<String, dynamic>? settings,
   })  : stats = stats ??
             {
               /// Statistics that will be synced to the database.
@@ -35,7 +35,7 @@ class AppUser {
   String? name;
   String email;
   String? photoUrl;
-  Map<String, bool>? settings;
+  Map<String, dynamic>? settings;
   Map<String, dynamic>? stats;
 
   factory AppUser.fromFirebase(DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -46,18 +46,17 @@ class AppUser {
       name: data?['name'],
       email: data?['email'],
       photoUrl: data?['photoUrl'],
-      settings:
-          data?['settings'] is Iterable ? Map.from(data?['settings']) : {},
-      stats: data?['stats'] is Iterable ? Map.from(data?['stats']) : {},
+      settings: data?['settings'],
+      stats: data?['stats'],
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      if (name != null) 'name': name,
-      if (photoUrl != null) 'photoUrl': photoUrl,
-      if (settings != null) 'settings': settings,
-      if (stats != null) 'stats': stats,
+      'name': name,
+      'photoUrl': photoUrl,
+      'settings': settings,
+      'stats': stats,
       'email': email,
       'uid': uid,
     };

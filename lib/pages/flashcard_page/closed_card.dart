@@ -8,20 +8,22 @@ import '../../../models/flashcard_model.dart';
 import '../../utils/consts/app_colors.dart';
 import 'flashcard_controller.dart';
 
-typedef SelectedCallback = int Function(int index);
+typedef SelectedCallback = Function(int);
 
 class ClosedCard extends StatelessWidget {
   const ClosedCard(
     this.index, {
     required this.note,
     required this.onTap,
+    required this.selectedCallback,
     required this.isSelected,
     Key? key,
   }) : super(key: key);
   final Note note;
   final VoidCallback onTap;
-  final RxBool isSelected;
   final int index;
+  final SelectedCallback selectedCallback;
+  final RxBool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +42,12 @@ class ClosedCard extends StatelessWidget {
               type: MaterialType.card,
               child: InkWell(
                 onTap: () => onTap(),
+                onLongPress: selectedCallback(index),
                 child: Center(
                   child: Column(
                     children: [
                       Text(
-                        note.title!,
+                        note.subject!,
                         style: GoogleFonts.ubuntu(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

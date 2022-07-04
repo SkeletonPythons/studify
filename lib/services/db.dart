@@ -57,20 +57,23 @@ class DB extends GetxService {
       .collection('notes')
       .doc(note.id)
       .withConverter(
-          fromFirestore: Note.fromFirestore,
+          fromFirestore: (snapshot, _) => Note.fromFirestore(snapshot),
           toFirestore: (Note note, _) => note.toFirestore());
 
-  CollectionReference<Note> get notes => store
+  CollectionReference<Note> notes = FirebaseFirestore.instance
       .collection('users')
       .doc(Auth.instance.USER.uid)
       .collection('notes')
-      .withConverter(
-          fromFirestore: Note.fromFirestore,
+      .withConverter<Note>(
+          fromFirestore: (snapshot, _) => Note.fromFirestore(snapshot),
           toFirestore: (Note note, _) => note.toFirestore());
 
-  DocumentReference<AppUser> get user =>
-      store.collection('users').doc(Auth.instance.USER.uid).withConverter(
-          fromFirestore: AppUser.fromFirebase,
+  DocumentReference<AppUser> user = FirebaseFirestore.instance
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .withConverter(
+          fromFirestore: ((snapshot, options) =>
+              AppUser.fromFirebase(snapshot, options)),
           toFirestore: (AppUser user, _) => user.toFirestore());
 
   CollectionReference get events => store

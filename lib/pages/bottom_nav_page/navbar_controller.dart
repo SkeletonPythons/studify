@@ -75,9 +75,6 @@ class NavBarController extends GetxController
   void onInit() {
     super.onInit();
     tabController = TabController(length: tabViews.length, vsync: this);
-    // tabController.addListener(() {
-    //   currentIndex.value = tabController.index;
-    //   update();
   }
 
   @override

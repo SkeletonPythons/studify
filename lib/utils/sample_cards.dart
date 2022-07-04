@@ -2,7 +2,7 @@ import '../models/flashcard_model.dart';
 
 List<Note> sample = [
   Note(
-    title: 'Note 1',
+    subject: 'Geography',
     content: 'This is the content of note 1',
     front: 'What is the capital of Alabama?',
     back: 'Montgomery',
@@ -12,7 +12,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 2',
+    subject: 'Geography',
     content: 'This is the content of note 2',
     front: 'What is the capital of Alaska?',
     back: 'Juneau',
@@ -22,7 +22,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 3',
+    subject: 'Geography',
     content: 'This is the content of note 3',
     front: 'What is the capital of Arizona?',
     back: 'Phoenix',
@@ -32,7 +32,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 4',
+    subject: 'Geography',
     content: 'This is the content of note 4',
     front: 'What is the capital of Arkansas?',
     back: 'Little Rock',
@@ -42,7 +42,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 5',
+    subject: 'Geography',
     content: 'This is the content of note 5',
     front: 'What is the capital of California?',
     back: 'Sacramento',
@@ -52,7 +52,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 6',
+    subject: 'Geography',
     content: 'This is the content of note 6',
     front: 'What is the capital of Colorado?',
     back: 'Denver',
@@ -62,7 +62,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 7',
+    subject: 'Geography',
     content: 'This is the content of note 7',
     front: 'What is the capital of Connecticut?',
     back: 'Hartford',
@@ -72,7 +72,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 8',
+    subject: 'Geography',
     content: 'This is the content of note 8',
     front: 'What is the capital of Delaware?',
     back: 'Dover',
@@ -82,7 +82,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 9',
+    subject: 'Geography',
     content: 'This is the content of note 9',
     front: 'What is the capital of Florida?',
     back: 'Tallahassee',
@@ -92,7 +92,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 10',
+    subject: 'Geography',
     content: 'This is the content of note 10',
     front: 'What is the capital of Georgia?',
     back: 'Atlanta',
@@ -102,7 +102,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 11',
+    subject: 'Geography',
     content: 'This is the content of note 11',
     front: 'What is the capital of Hawaii?',
     back: 'Honolulu',
@@ -112,7 +112,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 12',
+    subject: 'Geography',
     content: 'This is the content of note 12',
     front: 'What is the capital of Idaho?',
     back: 'Boise',
@@ -122,7 +122,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 13',
+    subject: 'Geography',
     content: 'This is the content of note 13',
     front: 'What is the capital of Illinois?',
     back: 'Springfield',
@@ -132,7 +132,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 14',
+    subject: 'Geography',
     content: 'This is the content of note 14',
     front: 'What is the capital of Indiana?',
     back: 'Indianapolis',
@@ -142,7 +142,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 15',
+    subject: 'Geography',
     content: 'This is the content of note 15',
     front: 'What is the capital of Iowa?',
     back: 'Des Moines',
@@ -152,7 +152,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 16',
+    subject: 'Geography',
     content: 'This is the content of note 16',
     front: 'What is the capital of Kansas?',
     back: 'Topeka',
@@ -162,7 +162,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 17',
+    subject: 'Geography',
     content: 'This is the content of note 17',
     front: 'What is the capital of Kentucky?',
     back: 'Frankfort',
@@ -172,7 +172,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 18',
+    subject: 'Geography',
     content: 'This is the content of note 18',
     front: 'What is the capital of Louisiana?',
     back: 'Baton Rouge',
@@ -182,7 +182,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 19',
+    subject: 'Geography',
     content: 'This is the content of note 19',
     front: 'What is the capital of Maine?',
     back: 'Augusta',
@@ -192,7 +192,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 20',
+    subject: 'Geography',
     content: 'This is the content of note 20',
     front: 'What is the capital of Maryland?',
     back: 'Annapolis',
@@ -202,7 +202,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 21',
+    subject: 'Geography',
     content: 'This is the content of note 21',
     front: 'What is the capital of Massachusetts?',
     back: 'Boston',
@@ -212,7 +212,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 22',
+    subject: 'Geography',
     content: 'This is the content of note 22',
     front: 'What is the capital of Michigan?',
     back: 'Lansing',
@@ -222,7 +222,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 23',
+    subject: 'Geography',
     content: 'This is the content of note 23',
     front: 'What is the capital of Minnesota?',
     back: 'St. Paul',
@@ -232,7 +232,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 24',
+    subject: 'Geography',
     content: 'This is the content of note 24',
     front: 'What is the capital of Mississippi?',
     back: 'Jackson',
@@ -242,7 +242,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 25',
+    subject: 'Geography',
     content: 'This is the content of note 25',
     front: 'What is the capital of Missouri?',
     back: 'Jefferson City',
@@ -252,7 +252,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 26',
+    subject: 'Geography',
     content: 'This is the content of note 26',
     front: 'What is the capital of Montana?',
     back: 'Helena',
@@ -262,7 +262,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 27',
+    subject: 'Geography',
     content: 'This is the content of note 27',
     front: 'What is the capital of Nebraska?',
     back: 'Lincoln',
@@ -272,7 +272,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 28',
+    subject: 'Geography',
     content: 'This is the content of note 28',
     front: 'What is the capital of Nevada?',
     back: 'Carson City',
@@ -282,7 +282,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 29',
+    subject: 'Geography',
     content: 'This is the content of note 29',
     front: 'What is the capital of New Hampshire?',
     back: 'Concord',
@@ -292,7 +292,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 30',
+    subject: 'Geography',
     content: 'This is the content of note 30',
     front: 'What is the capital of New Jersey?',
     back: 'Trenton',
@@ -302,7 +302,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 31',
+    subject: 'Geography',
     content: 'This is the content of note 31',
     front: 'What is the capital of New Mexico?',
     back: 'Santa Fe',
@@ -312,7 +312,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 32',
+    subject: 'Geography',
     content: 'This is the content of note 32',
     front: 'What is the capital of New York?',
     back: 'Albany',
@@ -322,7 +322,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 33',
+    subject: 'Geography',
     content: 'This is the content of note 33',
     front: 'What is the capital of North Carolina?',
     back: 'Raleigh',
@@ -332,7 +332,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 34',
+    subject: 'Geography',
     content: 'This is the content of note 34',
     front: 'What is the capital of North Dakota?',
     back: 'Bismarck',
@@ -342,7 +342,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 35',
+    subject: 'Geography',
     content: 'This is the content of note 35',
     front: 'What is the capital of Ohio?',
     back: 'Columbus',
@@ -352,7 +352,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 36',
+    subject: 'Geography',
     content: 'This is the content of note 36',
     front: 'What is the capital of Oklahoma?',
     back: 'Oklahoma City',
@@ -362,7 +362,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 37',
+    subject: 'Geography',
     content: 'This is the content of note 37',
     front: 'What is the capital of Oregon?',
     back: 'Salem',
@@ -372,7 +372,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 38',
+    subject: 'Geography',
     content: 'This is the content of note 38',
     front: 'What is the capital of Pennsylvania?',
     back: 'Harrisburg',
@@ -382,7 +382,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 39',
+    subject: 'Geography',
     content: 'This is the content of note 39',
     front: 'What is the capital of Rhode Island?',
     back: 'Providence',
@@ -392,7 +392,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 40',
+    subject: 'Geography',
     content: 'This is the content of note 40',
     front: 'What is the capital of South Carolina?',
     back: 'Columbia',
@@ -402,7 +402,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 41',
+    subject: 'Geography',
     content: 'This is the content of note 41',
     front: 'What is the capital of South Dakota?',
     back: 'Pierre',
@@ -412,7 +412,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 42',
+    subject: 'Geography',
     content: 'This is the content of note 42',
     front: 'What is the capital of Tennessee?',
     back: 'Nashville',
@@ -422,7 +422,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 43',
+    subject: 'Geography',
     content: 'This is the content of note 43',
     front: 'What is the capital of Texas?',
     back: 'Austin',
@@ -432,7 +432,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 44',
+    subject: 'Geography',
     content: 'This is the content of note 44',
     front: 'What is the capital of Utah?',
     back: 'Salt Lake City',
@@ -442,7 +442,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 45',
+    subject: 'Geography',
     content: 'This is the content of note 45',
     front: 'What is the capital of Vermont?',
     back: 'Montpelier',
@@ -452,7 +452,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 46',
+    subject: 'Geography',
     content: 'This is the content of note 46',
     front: 'What is the capital of Washington?',
     back: 'Seattle',
@@ -462,7 +462,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 47',
+    subject: 'Geography',
     content: 'This is the content of note 47',
     front: 'What is the capital of West Virginia?',
     back: 'Charleston',
@@ -472,7 +472,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 48',
+    subject: 'Geography',
     content: 'This is the content of note 48',
     front: 'What is the capital of Wisconsin?',
     back: 'Madison',
@@ -482,7 +482,7 @@ List<Note> sample = [
     isPinned: false,
   ),
   Note(
-    title: 'Note 49',
+    subject: 'Geography',
     content: 'This is the content of note 49',
     front: 'What is the capital of Wyoming?',
     back: 'Cheyenne',

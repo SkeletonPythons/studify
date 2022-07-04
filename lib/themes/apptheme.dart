@@ -100,14 +100,14 @@ const Map<int, Color> bkgnds = {
 };
 
 const Map<int, Color> acnts = {
-  1: Color(0xff1f295b),
-  2: Color(0xffce82c7),
-  3: Color(0xff8d5be9),
-  4: Color(0xff6371c0),
-  5: Color(0xff819dad),
+  1: Color.fromARGB(255, 173, 186, 255),
+  2: Color.fromARGB(255, 255, 52, 235),
+  3: Color.fromARGB(255, 60, 255, 77),
+  4: Color.fromARGB(255, 164, 178, 255),
+  5: Color.fromARGB(255, 117, 195, 240),
   6: Color(0xffEEB76B),
-  7: Color(0xff346751),
-  8: Color(0xff515585),
+  7: Color.fromARGB(255, 59, 206, 142),
+  8: Color.fromARGB(255, 255, 90, 48),
   9: Color(0xffE5A5FF),
   10: Color(0xffabcbbe)
 };

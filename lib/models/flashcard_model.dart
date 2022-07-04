@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:get/get.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,44 +8,43 @@ class Note {
   String? front;
   String id;
   String? content;
-  String? subject;
+  // String? subject;
   List<String>? tags;
-  String? title;
-  bool isFav;
-  bool isPinned;
-  bool isLearned;
+  String? subject;
+  RxBool isFav;
+  RxBool isPinned;
+  RxBool isLearned;
 
   Note({
     this.front = '',
     this.back = '',
     this.subject = 'none',
-    this.title = '',
-    this.isFav = false,
+    bool isFav = false,
     this.content = '',
     List<String>? tags,
-    this.isPinned = false,
-    this.isLearned = false,
+    bool isPinned = false,
+    bool isLearned = false,
     String? id,
   })  : id =
             id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString(),
-        tags = tags ?? [];
+        tags = tags ?? [],
+        isFav = isFav.obs,
+        isPinned = isPinned.obs,
+        isLearned = isLearned.obs;
 
-  factory Note.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
-      SnapshotOptions? options) {
-    final data = snapshot.data();
-    return Note(
-      id: snapshot.id,
-      front: data?['front'],
-      back: data?['back'],
-      subject: data?['subject'],
-      title: data?['title'],
-      isFav: data?['isFav'],
-      content: data?['content'],
-      tags: data?['tags'] is Iterable ? List.from(data?['tags']) : [],
-      isPinned: data?['isPinned'],
-      isLearned: data?['isLearned'],
-    );
-  }
+  Note.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) : this(
+          id: snapshot.id,
+          front: snapshot.data()!['front'] ?? '',
+          back: snapshot.data()!['back'] ?? '',
+          subject: snapshot.data()!['subject'] ?? '',
+          isFav: snapshot.data()!['isFav'] ?? false,
+          content: snapshot.data()!['content'] ?? '',
+          tags: List<String>.from(snapshot.data()!['tags']),
+          isPinned: snapshot.data()!['isPinned'] ?? false,
+          isLearned: snapshot.data()!['isLearned'] ?? false,
+        );
 
   static int pepper() => Random().nextInt(1000000);
 
@@ -53,12 +53,11 @@ class Note {
       if (front != null) 'front': front,
       if (back != null) 'back': back,
       if (subject != null) 'subject': subject,
-      if (title != null) 'title': title,
-      if (isFav != null) 'isFav': isFav,
+      'isFav': isFav.value,
       if (content != null) 'content': content,
       if (tags != null) 'tags': tags,
-      if (isPinned != null) 'isPinned': isPinned,
-      if (isLearned != null) 'isLearned': isLearned,
+      'isPinned': isPinned.value,
+      'isLearned': isLearned.value,
     };
   }
 
@@ -69,9 +68,8 @@ class Note {
         'subject': subject,
         'content': content,
         'tags': tags,
-        'title': title,
-        'isFav': isFav,
-        'isPinned': isPinned,
-        'isLearned': isLearned,
+        'isFav': isFav.value,
+        'isPinned': isPinned.value,
+        'isLearned': isLearned.value,
       };
 }

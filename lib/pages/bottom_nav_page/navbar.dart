@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../services/auth.dart';
 
+import '../../models/flashcard_model.dart';
 import '../../services/db.dart';
+import '../../themes/apptheme.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
 import '../calendar_page/calendar_page.dart';
@@ -16,7 +19,7 @@ import '../timers_page/timer_controllers/timer_controller.dart';
 import 'navbar_controller.dart';
 
 class NavBar extends StatelessWidget {
-  NavBar({Key? key}) : super(key: key);
+  const NavBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,40 @@ class NavBar extends StatelessWidget {
         builder: (_) {
           return SafeArea(
             child: Scaffold(
+              floatingActionButton: _.tabController.index == 3
+                  ? FloatingActionButton(
+                      backgroundColor: Colors.blueGrey[800],
+                      onPressed: () {
+                        Note newNote = Note(
+                          subject: 'new',
+                          front: 'F',
+                          back: 'B',
+                          isFav: false,
+                          isLearned: false,
+                          isPinned: false,
+                          content: '',
+                          tags: ['new_note'],
+                        );
+
+                        DB.instance.store
+                            .collection('users')
+                            .doc(Auth.instance.USER.uid)
+                            .collection('notes')
+                            .doc(newNote.id)
+                            .set({
+                          'subject': '',
+                          'body': '',
+                          'date': DateTime.now().toIso8601String(),
+                          'color': '#2f2f2f',
+                          'tags': [],
+                        }, SetOptions(merge: true));
+                      },
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    )
+                  : null,
               key: _.scaffoldKey,
               backgroundColor: kBackgroundDark,
               appBar: PreferredSize(
