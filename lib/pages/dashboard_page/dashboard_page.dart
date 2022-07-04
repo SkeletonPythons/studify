@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../services/auth.dart';
 
-import '../bottom_nav_page/home_controller.dart';
+import '../home_page/home_controller.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

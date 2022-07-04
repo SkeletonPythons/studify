@@ -78,7 +78,7 @@ class AppPages {
 class NavbarBinding implements Bindings {
   @override
   void dependencies() {
-    Get.put(NavBarController());
+    Get.put(NavBarController(), permanent: true);
     Get.put(TimerController(), permanent: true);
   }
 }

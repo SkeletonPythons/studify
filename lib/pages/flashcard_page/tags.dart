@@ -76,12 +76,24 @@ class NoteTags extends StatelessWidget {
             },
             child: Obx(() => TextField(
                   maxLines: 1,
+                  textInputAction: TextInputAction.done,
                   controller: controller..text = text.value,
+                  onEditingComplete: () {
+                    if (controller.text.isNotEmpty) {
+                      for (String word in controller.text.split(' ')) {
+                        if (word.isNotEmpty) {
+                          tags!.add(word);
+                          saveTag(word);
+                        }
+                      }
+                    }
+                  },
                   onChanged: (value) {
                     if (text.isEmpty) {
                     } else if (text.value.endsWith(' ')) {
                       saveTag(text.trim());
                       controller.clear();
+                      debugPrint('saving tag');
                     }
                   },
                   decoration: InputDecoration(

@@ -23,80 +23,111 @@ class FlashcardPage extends StatelessWidget {
     return GetBuilder<FlashcardController>(
       init: FlashcardController(),
       builder: (controller) => Center(
-        child: SizedBox(
-          height: Get.height,
-          width: Get.width,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 2.0),
-            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: controller.noteStream,
-              builder: (_, fbNotes) {
-                if (fbNotes.hasData) {
-                  controller.notes.clear();
-                  for (var note in fbNotes.data!.docs) {
-                    controller.notes.add(Note.fromFirestore(note));
-                  }
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            SizedBox(
+              height: Get.height,
+              width: Get.width,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 2.0),
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: controller.noteStream,
+                  builder: (_, fbNotes) {
+                    if (fbNotes.hasData) {
+                      controller.notes.clear();
+                      for (var note in fbNotes.data!.docs) {
+                        controller.notes.add(Note.fromFirestore(note));
+                      }
 
-                  controller.numberOfTiles.value = controller.notes.length;
-                  return Obx(() => GridView.custom(
-                      clipBehavior: Clip.antiAlias,
-                      childrenDelegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return OpenContainer(
-                              transitionDuration:
-                                  const Duration(milliseconds: 900),
-                              closedColor: kBackground,
-                              openColor: kBackgroundLight,
-                              transitionType:
-                                  ContainerTransitionType.fadeThrough,
-                              closedElevation: 0,
-                              openElevation: 0,
-                              closedBuilder: (BuildContext context,
-                                  VoidCallback openContainer) {
-                                return ClosedCard(
-                                  index,
-                                  selectedCallback: (_) {},
-                                  note: controller.notes[index],
-                                  onTap: openContainer,
-                                  isSelected:
-                                      controller.selectedList.contains(index)
+                      controller.numberOfTiles.value = controller.notes.length;
+                      return Obx(() => GridView.custom(
+                          clipBehavior: Clip.antiAlias,
+                          childrenDelegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return OpenContainer(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 900),
+                                  closedColor: kBackground,
+                                  openColor: kBackgroundLight,
+                                  transitionType:
+                                      ContainerTransitionType.fadeThrough,
+                                  closedElevation: 0,
+                                  openElevation: 0,
+                                  closedBuilder: (BuildContext context,
+                                      VoidCallback openContainer) {
+                                    return ClosedCard(
+                                      index,
+                                      selectedCallback: (_) {},
+                                      note: controller.notes[index],
+                                      onTap: openContainer,
+                                      isSelected: controller.selectedList
+                                              .contains(index)
                                           ? true.obs
                                           : false.obs,
-                                );
-                              },
-                              openBuilder: (BuildContext context,
-                                  VoidCallback closeContainer) {
-                                return OpenCard(
-                                  note: controller.notes[index],
-                                  callback: closeContainer,
-                                );
-                              });
-                        },
-                        childCount: controller.numberOfTiles.value - 1,
-                      ),
-                      gridDelegate: SliverQuiltedGridDelegate(
-                        crossAxisCount: 6,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 4,
-                        repeatPattern: QuiltedGridRepeatPattern.inverted,
-                        pattern: [
-                          QuiltedGridTile(3, 2),
-                          QuiltedGridTile(2, 4),
-                          QuiltedGridTile(2, 2),
-                          QuiltedGridTile(2, 2),
-                          QuiltedGridTile(2, 2),
-                          QuiltedGridTile(3, 4),
-                          QuiltedGridTile(2, 2),
-                        ],
-                      )));
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
+                                    );
+                                  },
+                                  openBuilder: (BuildContext context,
+                                      VoidCallback closeContainer) {
+                                    return OpenCard(
+                                      note: controller.notes[index],
+                                      callback: closeContainer,
+                                    );
+                                  });
+                            },
+                            childCount: controller.numberOfTiles.value - 1,
+                          ),
+                          gridDelegate: SliverQuiltedGridDelegate(
+                            crossAxisCount: 6,
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                            repeatPattern: QuiltedGridRepeatPattern.inverted,
+                            pattern: [
+                              QuiltedGridTile(3, 2),
+                              QuiltedGridTile(2, 4),
+                              QuiltedGridTile(2, 2),
+                              QuiltedGridTile(2, 2),
+                              QuiltedGridTile(2, 2),
+                              QuiltedGridTile(3, 4),
+                              QuiltedGridTile(2, 2),
+                            ],
+                          )));
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
             ),
-          ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              height: controller.menuHeight.value,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                width: Get.width * 0.2,
+                alignment: Alignment.center,
+                decoration: ShapeDecoration(
+                  color: Color(0xcc212121),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                    ),
+                  ),
+                ),
+                child: IconButton(
+                    onPressed: () {
+                      controller.animateMenu();
+                    },
+                    icon: AnimatedIcon(
+                        icon: AnimatedIcons.menu_arrow,
+                        progress: controller.iconAnimation,
+                        size: 50)),
+              ),
+            ),
+          ],
         ),
       ),
     );

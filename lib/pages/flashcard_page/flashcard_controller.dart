@@ -16,6 +16,32 @@ class FlashcardController extends GetxController
     with GetSingleTickerProviderStateMixin {
   RxList<Note> notes = <Note>[].obs;
 
+  late final AnimationController iconAnimationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 500),
+  );
+  late final Animation<double> iconAnimation = Tween<double>(
+    begin: 0.0,
+    end: 1.0,
+  ).animate(
+    CurvedAnimation(
+      parent: iconAnimationController,
+      curve: Curves.fastLinearToSlowEaseIn,
+    ),
+  );
+
+  RxDouble menuHeight = (Get.height * .1).obs;
+  RxBool menuOpen = false.obs;
+
+  void animateMenu() {
+    if (menuOpen.value) {
+      iconAnimationController.reverse();
+    } else {
+      iconAnimationController.forward();
+    }
+    menuOpen.value = !menuOpen.value;
+  }
+
   late final Stream<QuerySnapshot<Map<String, dynamic>>> noteStream = DB
       .instance.store
       .collection('users')

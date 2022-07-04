@@ -28,40 +28,6 @@ class NavBar extends StatelessWidget {
         builder: (_) {
           return SafeArea(
             child: Scaffold(
-              floatingActionButton: _.tabController.index == 3
-                  ? FloatingActionButton(
-                      backgroundColor: Colors.blueGrey[800],
-                      onPressed: () {
-                        Note newNote = Note(
-                          subject: 'new',
-                          front: 'F',
-                          back: 'B',
-                          isFav: false,
-                          isLearned: false,
-                          isPinned: false,
-                          content: '',
-                          tags: ['new_note'],
-                        );
-
-                        DB.instance.store
-                            .collection('users')
-                            .doc(Auth.instance.USER.uid)
-                            .collection('notes')
-                            .doc(newNote.id)
-                            .set({
-                          'subject': '',
-                          'body': '',
-                          'date': DateTime.now().toIso8601String(),
-                          'color': '#2f2f2f',
-                          'tags': [],
-                        }, SetOptions(merge: true));
-                      },
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                    )
-                  : null,
               key: _.scaffoldKey,
               backgroundColor: kBackgroundDark,
               appBar: PreferredSize(
