@@ -18,7 +18,12 @@ class DefaultAppBar extends StatelessWidget {
         centerTitle: true,
         title: Image.asset(
           logo,
+          filterQuality: FilterQuality.medium,
+          fit: BoxFit.contain,
+          scale: 0.2,
           height: 40,
+          cacheWidth: 442,
+          cacheHeight: 109,
         ),
         leading: IconButton(
           icon: Icon(

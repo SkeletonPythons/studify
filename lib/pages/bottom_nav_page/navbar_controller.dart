@@ -15,7 +15,7 @@ class NavBarController extends GetxController
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Rx<Widget> timerPage = Rx(TimerHomePage());
+  Rx<Widget> timerPage = Rx<Widget>(TimerHomePage());
 
   late RxList<Widget> tabViews = RxList([
     Dashboard(),

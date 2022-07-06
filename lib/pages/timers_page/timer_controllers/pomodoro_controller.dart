@@ -12,7 +12,6 @@ import 'timer_controller.dart';
 enum PomodoroStatus { running, paused, stopped, rest, cycleFinished }
 
 class PomodoroController extends GetxController {
-
   //Functionality variables
   RxInt workTime = 0.obs;
   RxInt restTime = 0.obs;
@@ -21,11 +20,11 @@ class PomodoroController extends GetxController {
   Rx<PomodoroStatus> currentPomodoroStatus = PomodoroStatus.running.obs;
 
 //Status Maps
-  Map<PomodoroStatus,String > displayStatus = {
-    PomodoroStatus.running:"Study time!",
+  Map<PomodoroStatus, String> displayStatus = {
+    PomodoroStatus.running: "Study time!",
     PomodoroStatus.paused: "Paused!",
-    PomodoroStatus.rest : "Time to relax, great job!",
-    PomodoroStatus.cycleFinished : "Cycle Complete!"
+    PomodoroStatus.rest: "Time to relax, great job!",
+    PomodoroStatus.cycleFinished: "Cycle Complete!"
   };
 
   Map<PomodoroStatus, Color> statusColors = {
@@ -71,9 +70,8 @@ class PomodoroController extends GetxController {
     );
   }
 
-  void StartPauseBtnPress()
-  {
-    switch(currentPomodoroStatus.value) {
+  void StartPauseBtnPress() {
+    switch (currentPomodoroStatus.value) {
       case PomodoroStatus.running:
         currentPomodoroStatus.value = PomodoroStatus.paused;
         pomodoroTimer.cancel();
@@ -83,11 +81,18 @@ class PomodoroController extends GetxController {
         currentPomodoroStatus.value = PomodoroStatus.running;
         StartPomodoro();
         break;
+      case PomodoroStatus.stopped:
+        break;
+      case PomodoroStatus.rest:
+        break;
+      case PomodoroStatus.cycleFinished:
+        break;
+      default:
+        break;
     }
   }
 
-  void StopBtnPress()
-  {
+  void StopBtnPress() {
     pomodoroTimer.cancel();
     timerController.isRunning.value = false;
     workTime.value = 0;
@@ -96,7 +101,6 @@ class PomodoroController extends GetxController {
     currentCycle.value = 0;
     currentPomodoroStatus.value = PomodoroStatus.stopped;
   }
-
 
   String FormatTime(int studyTimeInSeconds) {
     int minutes = workTime.value ~/ 60;

@@ -1,12 +1,17 @@
 // ignore_for_file: prefer_const_constructors
+// ignore_for_file:
 
 import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbols.dart';
 import '../../../models/flashcard_model.dart';
 import '../../../services/auth.dart';
 import '../../../services/db.dart';
@@ -22,114 +27,216 @@ class FlashcardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<FlashcardController>(
       init: FlashcardController(),
-      builder: (controller) => Center(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            SizedBox(
-              height: Get.height,
-              width: Get.width,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 2.0),
-                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  stream: controller.noteStream,
-                  builder: (_, fbNotes) {
-                    if (fbNotes.hasData) {
-                      controller.notes.clear();
-                      for (var note in fbNotes.data!.docs) {
-                        controller.notes.add(Note.fromFirestore(note));
-                      }
+      builder: (_) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(4, 10, 4, 0),
+          decoration: BoxDecoration(),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              StreamBuilder<QuerySnapshot<Note>>(
+                  stream: DB.instance.notes.snapshots(),
+                  builder: (__, snapshot) {
+                    // *********Build Method Begins Here**************
 
-                      controller.numberOfTiles.value = controller.notes.length;
-                      return Obx(() => GridView.custom(
-                          clipBehavior: Clip.antiAlias,
-                          childrenDelegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return OpenContainer(
-                                  transitionDuration:
-                                      const Duration(milliseconds: 900),
-                                  closedColor: kBackground,
-                                  openColor: kBackgroundLight,
-                                  transitionType:
-                                      ContainerTransitionType.fadeThrough,
-                                  closedElevation: 0,
-                                  openElevation: 0,
-                                  closedBuilder: (BuildContext context,
-                                      VoidCallback openContainer) {
-                                    return ClosedCard(
-                                      index,
-                                      selectedCallback: (_) {},
-                                      note: controller.notes[index],
-                                      onTap: openContainer,
-                                      isSelected: controller.selectedList
-                                              .contains(index)
-                                          ? true.obs
-                                          : false.obs,
-                                    );
-                                  },
-                                  openBuilder: (BuildContext context,
-                                      VoidCallback closeContainer) {
-                                    return OpenCard(
-                                      note: controller.notes[index],
-                                      callback: closeContainer,
-                                    );
-                                  });
-                            },
-                            childCount: controller.numberOfTiles.value - 1,
-                          ),
-                          gridDelegate: SliverQuiltedGridDelegate(
-                            crossAxisCount: 6,
-                            mainAxisSpacing: 4,
-                            crossAxisSpacing: 4,
-                            repeatPattern: QuiltedGridRepeatPattern.inverted,
-                            pattern: [
-                              QuiltedGridTile(3, 2),
-                              QuiltedGridTile(2, 4),
-                              QuiltedGridTile(2, 2),
-                              QuiltedGridTile(2, 2),
-                              QuiltedGridTile(2, 2),
-                              QuiltedGridTile(3, 4),
-                              QuiltedGridTile(2, 2),
+                    // This will execute if the stream encounters an error.
+                    if (snapshot.hasError) {
+                      debugPrint('stream: has error ${snapshot.error}');
+                      return SizedBox(
+                        height: Get.height,
+                        width: Get.width,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              FaIcon(FontAwesomeIcons.heartCrack,
+                                  size: 100, color: Colors.redAccent[100]),
+                              Text(
+                                'Error getting data!',
+                                style: GoogleFonts.architectsDaughter(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: kAccent,
+                                ),
+                              ),
                             ],
-                          )));
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
+                          ),
+                        ),
                       );
                     }
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              height: controller.menuHeight.value,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                width: Get.width * 0.2,
-                alignment: Alignment.center,
-                decoration: ShapeDecoration(
-                  color: Color(0xcc212121),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                    ),
-                  ),
-                ),
-                child: IconButton(
-                    onPressed: () {
-                      controller.animateMenu();
-                    },
-                    icon: AnimatedIcon(
-                        icon: AnimatedIcons.menu_arrow,
-                        progress: controller.iconAnimation,
-                        size: 50)),
-              ),
-            ),
-          ],
+
+                    // This will execute if the stream has data. This is the typical case.
+                    if (snapshot.hasData) {
+                      debugPrint('stream: has data');
+                      if (_.handleData(snapshot.data!)) {
+                        _.cards = RxList<Widget>(_.buildCards(__, _.notes));
+                        return FlashcardGrid(_, cards: _.cards);
+                      }
+                    }
+                    // This will execute if the stream is still loading data
+
+                    else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      debugPrint('stream: waiting');
+                    }
+
+                    return SizedBox(
+                      height: Get.height,
+                      width: Get.width,
+                      child: Center(
+                        child: Column(
+                          children: [
+                            CircularProgressIndicator.adaptive(),
+                            Text(
+                              'Loading...',
+                              style: GoogleFonts.architectsDaughter(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: kAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+              FCMenu(_),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class FlashcardGrid extends StatelessWidget {
+  const FlashcardGrid(this.controller, {required this.cards, Key? key})
+      : super(key: key);
+
+  final FlashcardController controller;
+  final List<Widget> cards;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Obx(
+        () => StaggeredGrid.count(
+          crossAxisCount: 6,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+          children: cards,
         ),
       ),
+    );
+  }
+}
+
+class FCMenu extends StatelessWidget {
+  const FCMenu(
+    this.controller, {
+    Key? key,
+  }) : super(key: key);
+
+  final FlashcardController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: Obx(() => AnimatedContainer(
+            height: controller.menuHeight.value,
+            duration: const Duration(milliseconds: 500),
+            width: Get.width * 0.2,
+            alignment: Alignment.center,
+            decoration: ShapeDecoration(
+              color: Color(0xcc212121),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                ),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    controller.animateMenu();
+                  },
+                  icon: Obx(
+                    () => AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        transitionBuilder: (child, animation) {
+                          return RotationTransition(
+                            turns: controller.iconAnimation,
+                            child: child,
+                          );
+                        },
+                        child: controller.menuOpen.value
+                            ? Icon(
+                                Icons.arrow_downward_sharp,
+                                size: 34,
+                              )
+                            : Icon(Icons.arrow_upward_sharp, size: 34)),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.visibility.value,
+                    child: Obx(() => Column(
+                          children: controller.menuOpen.value
+                              ? controller.menuWidgets
+                              : [],
+                        )),
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}
+
+class NoteCard extends StatelessWidget {
+  const NoteCard(
+    this.controller, {
+    required this.note,
+    required this.crossCell,
+    required this.mainCell,
+    Key? key,
+  }) : super(key: key);
+
+  final FlashcardController controller;
+  final int crossCell;
+  final int mainCell;
+  final Note note;
+
+  @override
+  Widget build(BuildContext context) {
+    return StaggeredGridTile.count(
+      crossAxisCellCount: crossCell,
+      mainAxisCellCount: mainCell,
+      child: OpenContainer(
+          transitionDuration: const Duration(milliseconds: 900),
+          closedColor: kBackground,
+          openColor: kBackgroundLight,
+          transitionType: ContainerTransitionType.fadeThrough,
+          closedElevation: 0,
+          openElevation: 0,
+          closedBuilder: (BuildContext context, VoidCallback openContainer) {
+            return ClosedCard(
+              note: note,
+              onTap: openContainer,
+              isSelected: false.obs,
+            );
+          },
+          openBuilder: (BuildContext context, VoidCallback closeContainer) {
+            return OpenCard(
+              note: note,
+              callback: closeContainer,
+            );
+          }),
     );
   }
 }

@@ -14,9 +14,12 @@ import 'flashcard_controller.dart';
 import 'open_controller.dart';
 import './tags.dart';
 
-class OpenCard extends GetWidget<OC> {
-  const OpenCard({required this.note, required this.callback, Key? key})
-      : super(key: key);
+class OpenCard extends StatelessWidget {
+  OpenCard({required this.note, required this.callback, Key? key})
+      : controller = OC(note),
+        super(key: key);
+
+  final OC controller;
 
   final VoidCallback callback;
   final Note note;

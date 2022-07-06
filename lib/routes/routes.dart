@@ -7,7 +7,6 @@ import '../pages/bottom_nav_page/navbar_controller.dart';
 import '../pages/calendar_page/add_event.dart';
 import '../pages/calendar_page/calendar_page.dart';
 import '../pages/dashboard_page/dashboard_page.dart';
-import '../pages/flashcard_page/flashcard_controller.dart';
 import '../pages/flashcard_page/open_controller.dart';
 import '../pages/login_page/login_page.dart';
 import '../pages/splash_page/splash_page.dart';
@@ -43,14 +42,17 @@ class AppPages {
       name: Routes.LOGIN,
       page: () => LoginPage(),
     ),
-    GetPage(name: Routes.NAVBAR, page: () => NavBar(), bindings: [
-      NavbarBinding(),
-      FlashcardBinding(),
-    ]),
+    GetPage(
+      name: Routes.NAVBAR,
+      page: () => NavBar(),
+      bindings: [
+        NavbarBinding(),
+        FlashcardBinding(),
+      ],
+    ),
     GetPage(
       name: Routes.DASH,
       page: () => Dashboard(),
-      binding: FlashcardBinding(),
     ),
     GetPage(
       name: Routes.TIMER,
@@ -86,7 +88,6 @@ class NavbarBinding implements Bindings {
 class FlashcardBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<FlashcardController>(() => FlashcardController());
-    Get.create<OC>(() => OC());
+    // Get.create<OC>(() => OC());
   }
 }

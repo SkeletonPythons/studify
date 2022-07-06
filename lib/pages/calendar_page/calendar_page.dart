@@ -47,6 +47,7 @@ class CalendarPageState extends State<CalendarPage>
 
     return SafeArea(
       child: Scaffold(
+        key: GlobalKey(),
         body: SizedBox(
           child: SingleChildScrollView(
             child: Column(children: [

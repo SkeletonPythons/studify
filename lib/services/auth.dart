@@ -30,7 +30,7 @@ class Auth extends GetxController {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  AppUser USER = AppUser(email: '', name: 'User', photoUrl: '', uid: '00000');
+  late AppUser USER = AppUser(email: '', name: 'User', photoUrl: '', uid: '');
 
   RxBool newUser = false.obs;
   RxBool isLoggedIn = false.obs;
@@ -41,7 +41,7 @@ class Auth extends GetxController {
     super.onReady();
     debugPrint('Auth onReady');
     _user = Rx<User?>(auth.currentUser);
-    _user.bindStream(auth.userChanges());
+    _user.bindStream(auth.authStateChanges());
     ever(_user, _gateKeeper);
   }
 
@@ -49,25 +49,25 @@ class Auth extends GetxController {
     USER
       ..email = auth.currentUser!.email!
       ..name = auth.currentUser!.displayName
-      ..photoUrl = auth.currentUser!.photoURL
+      ..photoUrl = auth.currentUser!.photoURL ?? ''
       ..uid = auth.currentUser!.uid;
   }
 
   _gateKeeper(User? user) async {
     LoadIndicator.ON();
     if (user != null) {
-      Get.put<DB>(DB(), permanent: true);
       updateUser();
+      Get.put<DB>(DB(), permanent: true);
       isLoggedIn.value = true;
       debugPrint('User is logged in');
       DB.instance.initDB();
-      await Future.delayed(const Duration(seconds: 3), () {
+      await Future.delayed(const Duration(seconds: 2), () {
         LoadIndicator.OFF();
         Get.offAllNamed(Routes.NAVBAR);
       });
     } else {
       debugPrint('User is not logged in');
-      LoadIndicator.OFF();
+
       Get.offAllNamed(Routes.LOGIN);
     }
   }
@@ -114,5 +114,6 @@ class Auth extends GetxController {
     await auth.signOut();
     isLoggedIn.value = false;
     DB.instance.store.clearPersistence();
+    Get.reset(clearRouteBindings: true);
   }
 }

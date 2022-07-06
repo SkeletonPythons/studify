@@ -19,56 +19,54 @@ import '../timers_page/timer_controllers/timer_controller.dart';
 import 'navbar_controller.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  NavBar({Key? key}) : super(key: key);
+
+  final NavBarController _ = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<NavBarController>(
-        initState: (_) {},
-        builder: (_) {
-          return SafeArea(
-            child: Scaffold(
-              key: _.scaffoldKey,
-              backgroundColor: kBackgroundDark,
-              appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(60.0),
-                  child: DefaultAppBar(
-                      () => _.scaffoldKey.currentState!.openDrawer())),
-              drawer: AppBarDrawer(),
-              body: Obx(() => TabBarView(
-                    controller: _.tabController,
-                    children: [
-                      Dashboard(),
-                      CalendarPage(),
-                      TimerController.instance.activeWidget.value,
-                      FlashcardPage(),
-                    ],
-                  )),
-              bottomNavigationBar: Material(
-                color: kBackgroundLight,
-                child: TabBar(
-                  unselectedLabelStyle: GoogleFonts.ubuntu(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: kAccent,
-                  ),
-                  automaticIndicatorColorAdjustment: false,
-                  enableFeedback: true,
-                  labelStyle: GoogleFonts.ubuntu(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: kAccent,
-                  ),
-                  controller: _.tabController,
-                  tabs: _.tabs,
-                  indicatorColor: kAccent,
-                  labelColor: kBackgroundLight2,
-                  unselectedLabelColor: kBackgroundLight,
-                ),
-              ),
+    return SafeArea(
+      child: Scaffold(
+        key: _.scaffoldKey,
+        backgroundColor: kBackgroundDark,
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60.0),
+            child:
+                DefaultAppBar(() => _.scaffoldKey.currentState!.openDrawer())),
+        drawer: AppBarDrawer(),
+        body: Obx(() => TabBarView(
+              controller: _.tabController,
+              children: [
+                Dashboard(),
+                CalendarPage(),
+                TimerController.instance.activeWidget.value,
+                FlashcardPage(),
+              ],
+            )),
+        bottomNavigationBar: Material(
+          color: kBackgroundLight,
+          child: TabBar(
+            unselectedLabelStyle: GoogleFonts.ubuntu(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: kAccent,
             ),
-          );
-        });
+            automaticIndicatorColorAdjustment: false,
+            enableFeedback: true,
+            labelStyle: GoogleFonts.ubuntu(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: kAccent,
+            ),
+            controller: _.tabController,
+            tabs: _.tabs,
+            indicatorColor: kAccent,
+            labelColor: kBackgroundLight2,
+            unselectedLabelColor: kBackgroundLight,
+          ),
+        ),
+      ),
+    );
   }
 }
 
