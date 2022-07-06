@@ -30,10 +30,13 @@ class PomodoroTimerState extends State<PomodoroTimer>
 
   TimerController timerController = Get.find<TimerController>();
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    int maxTime = int.parse(PomodoroSetUpState.workTimeController.text) * 60;
-    Rx<PomodoroStatus> currentStatus = pomodoroController.currentPomodoroStatus.value.obs;
+
     return Center(
       child: Stack(alignment: AlignmentDirectional.topCenter,children: [
         if (timerController.isRunning.value)
@@ -62,9 +65,9 @@ class PomodoroTimerState extends State<PomodoroTimer>
           child: Obx(
             () => SleekCircularSlider(
               //Obx makes widget listen for change
-              initialValue: pomodoroController.workTime.value.toDouble(),
+              initialValue: pomodoroController.DecideInitialSliderTimeValue(),
               min: 0,
-              max: maxTime.toDouble(),
+              max: pomodoroController.DecideMaxTime(),
               appearance: CircularSliderAppearance(
                 counterClockwise: true,
                 angleRange: 360,
@@ -87,7 +90,7 @@ class PomodoroTimerState extends State<PomodoroTimer>
                   child: Obx(
                     () => Text(
                       pomodoroController.FormatTime(
-                          pomodoroController.workTime.value),
+                          pomodoroController.DecideTimerDisplayValue()),
                       style: GoogleFonts.ubuntu(
                         color: Colors.white,
                         fontSize: 50,
