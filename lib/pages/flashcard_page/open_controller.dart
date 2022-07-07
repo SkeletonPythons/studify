@@ -177,7 +177,7 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
         });
   }
 
-  void toggleFav() {
+  void toggleFav(Note note) {
     note.isFav.toggle();
   }
 
@@ -185,7 +185,7 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
     // TODO: @TheAnonyMOST onEditComplete
   }
 
-  void deleteNote() async {
+  void deleteNote(Note note) async {
     await DB.instance.notes
         .doc(note.id)
         .delete()

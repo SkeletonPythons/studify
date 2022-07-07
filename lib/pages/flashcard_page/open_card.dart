@@ -27,7 +27,7 @@ class OpenCard extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.frontController.text = note.front ?? '';
     controller.backController.text = note.back ?? '';
-    controller.titleController.text = note.subject ?? '';
+    controller.subjectController.text = note.subject ?? '';
     controller.contentController.text = note.content ?? '';
 
     return SafeArea(
@@ -183,7 +183,7 @@ class OpenCard extends StatelessWidget {
                               ),
                             ),
                             enabled: controller.editEnabled.value,
-                            controller: controller.titleController,
+                            controller: controller.subjectController,
                           )),
                     ),
                   ),
