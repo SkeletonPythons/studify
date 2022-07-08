@@ -17,8 +17,16 @@ enum CardState {
 }
 
 class OC extends GetxController with GetSingleTickerProviderStateMixin {
-  OC(this.note);
-  Note note;
+  Note note = Note();
+
+  void setNote(Note note) {
+    this.note = note;
+  }
+
+  late TextEditingController bc;
+  late TextEditingController fc;
+  late TextEditingController sc;
+  late TextEditingController cc;
 
   /// Observable for the current card [subject] state.
   late RxString subject = note.subject!.obs;
@@ -55,30 +63,14 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
     editEnabled.toggle();
   }
 
-  /// Text Editing controller for the [Note.front] field.
-  late TextEditingController frontController;
-
-  /// Text Editing controller for the [Note.back] field.
-  late TextEditingController backController;
-
-  /// Text Editing controller for the [Note.subject] field.
-  late TextEditingController subjectController;
-
-  /// Text Editing controller for the [tag] field.
-  late TextEditingController tagsController;
-
-  /// Text Editing controller for the [Note.content] field.
-  late TextEditingController contentController;
-
   /// Override of the [onInit] method.
   @override
   void onInit() {
     /// Initialize the the text editing controllers.
-    frontController = TextEditingController(text: note.front);
-    backController = TextEditingController(text: note.back);
-    subjectController = TextEditingController(text: note.subject);
-    tagsController = TextEditingController();
-    contentController = TextEditingController(text: note.content);
+    fc = TextEditingController(text: note.front);
+    bc = TextEditingController(text: note.back);
+    sc = TextEditingController(text: note.subject);
+    cc = TextEditingController(text: note.content);
 
     /// Initialize the the animation controller.
     flipController = AnimationController(
@@ -144,16 +136,16 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
   /// Override of the [onClose] method.
   @override
   void onClose() {
-    tagsController.dispose();
-    contentController.dispose();
     flipController.dispose();
-    frontController.dispose();
-    backController.dispose();
-    subjectController.dispose();
+    fc.dispose();
+    bc.dispose();
+    sc.dispose();
+    cc.dispose();
+
     super.onClose();
   }
 
-  void addTagToLocalNote(String tag) {
+  void addTagToLocalnote(String tag) {
     note.tags!.addIf(() => !note.tags!.contains(tag), tag);
   }
 
@@ -181,11 +173,11 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
     note.isFav.toggle();
   }
 
-  void onEditComplete(Note note) async {
+  void onEditComplete() async {
     // TODO: @TheAnonyMOST onEditComplete
   }
 
-  void deleteNote() async {
+  void deletenote() async {
     await DB.instance.notes
         .doc(note.id)
         .delete()

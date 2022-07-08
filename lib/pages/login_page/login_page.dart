@@ -12,17 +12,19 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Obx(
-            () => AnimatedCrossFade(
-              firstChild: LoginScreen(Get.find<LoginController>()),
-              secondChild: RegisterScreenUI(Get.find<LoginController>()),
-              crossFadeState: _controller.xFadeState.value,
-              duration: const Duration(milliseconds: 500),
-              firstCurve: Curves.easeInCubic,
-              secondCurve: Curves.easeOutCubic,
-              sizeCurve: Curves.easeInOutCubicEmphasized,
+      body: Material(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Obx(
+              () => AnimatedCrossFade(
+                firstChild: LoginScreen(Get.find<LoginController>()),
+                secondChild: RegisterScreenUI(Get.find<LoginController>()),
+                crossFadeState: _controller.xFadeState.value,
+                duration: const Duration(milliseconds: 500),
+                firstCurve: Curves.easeInCubic,
+                secondCurve: Curves.easeOutCubic,
+                sizeCurve: Curves.easeInOutCubicEmphasized,
+              ),
             ),
           ),
         ),

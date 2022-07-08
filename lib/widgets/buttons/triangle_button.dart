@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:studify/utils/consts/app_colors.dart';
 
 class TrianglePainter extends CustomPainter {
   final Color strokeColor;
@@ -9,7 +10,7 @@ class TrianglePainter extends CustomPainter {
   final double strokeWidth;
 
   TrianglePainter(
-      {this.strokeColor = Colors.black,
+      {this.strokeColor = Colors.transparent,
       this.strokeWidth = 3,
       this.paintingStyle = PaintingStyle.stroke});
 
@@ -51,13 +52,14 @@ class TriangleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipPath(
       clipper: CustomClip(),
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: Clip.none,
       child: RawMaterialButton(
         fillColor: color,
         onPressed: onPressed,
         child: CustomPaint(
+          foregroundPainter: TrianglePainter(),
           painter: TrianglePainter(
-            strokeColor: Colors.blue,
+            strokeColor: Colors.grey[600]!,
             strokeWidth: 10,
             paintingStyle: PaintingStyle.fill,
           ),
@@ -78,13 +80,17 @@ class TriangleButton extends StatelessWidget {
 }
 
 class CustomClip extends CustomClipper<Path> {
+  Path myPath(double x, double y) {
+    return Path()
+      ..moveTo(1, 0)
+      ..lineTo(1, 1)
+      ..lineTo(0, 0)
+      ..close();
+  }
+
   @override
   Path getClip(Size size) {
-    return Path()
-      ..moveTo(0, size.height)
-      ..lineTo(size.width, size.height)
-      ..lineTo(size.width * .2, 0)
-      ..close();
+    return myPath(size.height, size.width);
   }
 
   @override

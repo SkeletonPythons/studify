@@ -32,7 +32,9 @@ class ClosedCard extends StatelessWidget {
         color: Color(0xff2f2f2f),
         type: MaterialType.card,
         child: InkWell(
-          onTap: () => onTap(),
+          onTap: () {
+            onTap();
+          },
           child: Center(
             child: Column(
               children: [

@@ -88,6 +88,6 @@ class NavbarBinding implements Bindings {
 class FlashcardBinding implements Bindings {
   @override
   void dependencies() {
-    // Get.create<OC>(() => OC());
+    Get.create<OC>(() => OC());
   }
 }
