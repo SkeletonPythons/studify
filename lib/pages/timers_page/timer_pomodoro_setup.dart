@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:studify/widgets/timer_widgets/timer_history.dart';
 
 import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
@@ -128,6 +129,13 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
               ),
               onPressed: () {},
             ),
+          ),
+          Positioned(
+            top: 340,
+            left: 205,
+            height: 60,
+            width: 60,
+            child: TimerHistory(),
           ),
         ],
       ),
