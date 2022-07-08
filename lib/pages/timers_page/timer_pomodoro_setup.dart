@@ -25,8 +25,8 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   static int workTime = 0;
 
   static TextEditingController workTimeController = TextEditingController();
-  TextEditingController restTimeController = TextEditingController();
-  TextEditingController cycleController = TextEditingController();
+  static TextEditingController restTimeController = TextEditingController();
+  static TextEditingController cycleController = TextEditingController();
   int numOfCycles = 1;
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController(), permanent: true);
@@ -106,7 +106,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   pomodoroController.workTime.value =
                       int.parse(workTimeController.text) * 60;
                   pomodoroController.restTime.value =
-                      int.parse(restTimeController.text);
+                      int.parse(restTimeController.text) * 60;
                   pomodoroController.totalCycles.value =
                       int.parse(cycleController.text);
                   timerController.isRunning.value = true;

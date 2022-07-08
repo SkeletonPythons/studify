@@ -169,7 +169,7 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
         });
   }
 
-  void toggleFav() {
+  void toggleFav(Note note) {
     note.isFav.toggle();
   }
 

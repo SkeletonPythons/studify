@@ -88,7 +88,8 @@ class _OpenCardState extends State<OpenCard> {
                                     : Icons.favorite_border,
                                 color: Colors.redAccent,
                               ),
-                              onPressed: () => controller.toggleFav())),
+                              onPressed: () =>
+                                  controller.toggleFav(widget.note))),
                         ),
                       ),
                       Obx(() => ElevatedButton(
