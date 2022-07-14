@@ -43,6 +43,37 @@ class _TimerHistoryState extends State<TimerHistory>
             ],
           ),
         ),
+        Expanded(
+          child: TabBarView(
+            controller: tabController,
+            children: [
+              Container(
+                color: kBackgroundDark,
+                child: Center(
+                  child: Text(
+                    'Favorites',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                color: kBackgroundDark,
+                child: Center(
+                  child: Text(
+                    'History',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
     ]);
   }
 }
