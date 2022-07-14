@@ -130,13 +130,10 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
               onPressed: () {},
             ),
           ),
-          Positioned(
-            top: 340,
-            left: 205,
-            height: 60,
-            width: 60,
-            child: TimerHistory(),
-          ),
+           Padding(
+             padding: const EdgeInsets.only(top: 350, left: 15, right: 15 ),
+             child: TimerHistory(),
+           ),
         ],
       ),
     );

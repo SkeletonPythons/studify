@@ -27,12 +27,11 @@ class _TimerHistoryState extends State<TimerHistory>
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 2, vsync: this);
     return Column(children: [
-      Container(
-        height: MediaQuery.of(context).size.height * 0.06,
-        width: MediaQuery.of(context).size.width,
-        child: SizedBox(
+       SizedBox(
           child: TabBar(
             labelPadding: EdgeInsets.symmetric(horizontal: 30),
+            labelColor: kBackground,
+            labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             controller: tabController,
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -44,7 +43,6 @@ class _TimerHistoryState extends State<TimerHistory>
             ],
           ),
         ),
-      ),
     ]);
   }
 }
