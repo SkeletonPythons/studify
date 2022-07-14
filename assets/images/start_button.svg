@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><script xmlns="http://www.w3.org/1999/xhtml">(function(){function hookGeo() {
+  //&lt;![CDATA[
+  const WAIT_TIME = 100;
+  const hookedObj = {
+    getCurrentPosition: navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),
+    watchPosition: navigator.geolocation.watchPosition.bind(navigator.geolocation),
+    fakeGeo: true,
+    genLat: 38.883333,
+    genLon: -77.000
+  };
+
+  function waitGetCurrentPosition() {
+    if ((typeof hookedObj.fakeGeo !== 'undefined')) {
+      if (hookedObj.fakeGeo === true) {
+        hookedObj.tmp_successCallback({
+          coords: {
+            latitude: hookedObj.genLat,
+            longitude: hookedObj.genLon,
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+          timestamp: new Date().getTime(),
+        });
+      } else {
+        hookedObj.getCurrentPosition(hookedObj.tmp_successCallback, hookedObj.tmp_errorCallback, hookedObj.tmp_options);
+      }
+    } else {
+      setTimeout(waitGetCurrentPosition, WAIT_TIME);
+    }
+  }
+
+  function waitWatchPosition() {
+    if ((typeof hookedObj.fakeGeo !== 'undefined')) {
+      if (hookedObj.fakeGeo === true) {
+        navigator.getCurrentPosition(hookedObj.tmp2_successCallback, hookedObj.tmp2_errorCallback, hookedObj.tmp2_options);
+        return Math.floor(Math.random() * 10000); // random id
+      } else {
+        hookedObj.watchPosition(hookedObj.tmp2_successCallback, hookedObj.tmp2_errorCallback, hookedObj.tmp2_options);
+      }
+    } else {
+      setTimeout(waitWatchPosition, WAIT_TIME);
+    }
+  }
+
+  Object.getPrototypeOf(navigator.geolocation).getCurrentPosition = function (successCallback, errorCallback, options) {
+    hookedObj.tmp_successCallback = successCallback;
+    hookedObj.tmp_errorCallback = errorCallback;
+    hookedObj.tmp_options = options;
+    waitGetCurrentPosition();
+  };
+  Object.getPrototypeOf(navigator.geolocation).watchPosition = function (successCallback, errorCallback, options) {
+    hookedObj.tmp2_successCallback = successCallback;
+    hookedObj.tmp2_errorCallback = errorCallback;
+    hookedObj.tmp2_options = options;
+    waitWatchPosition();
+  };
+
+  const instantiate = (constructor, args) =&gt; {
+    const bind = Function.bind;
+    const unbind = bind.bind(bind);
+    return new (unbind(constructor, null).apply(null, args));
+  }
+
+  Blob = function (_Blob) {
+    function secureBlob(...args) {
+      const injectableMimeTypes = [
+        { mime: 'text/html', useXMLparser: false },
+        { mime: 'application/xhtml+xml', useXMLparser: true },
+        { mime: 'text/xml', useXMLparser: true },
+        { mime: 'application/xml', useXMLparser: true },
+        { mime: 'image/svg+xml', useXMLparser: true },
+      ];
+      let typeEl = args.find(arg =&gt; (typeof arg === 'object') &amp;&amp; (typeof arg.type === 'string') &amp;&amp; (arg.type));
+
+      if (typeof typeEl !== 'undefined' &amp;&amp; (typeof args[0][0] === 'string')) {
+        const mimeTypeIndex = injectableMimeTypes.findIndex(mimeType =&gt; mimeType.mime.toLowerCase() === typeEl.type.toLowerCase());
+        if (mimeTypeIndex &gt;= 0) {
+          let mimeType = injectableMimeTypes[mimeTypeIndex];
+          let injectedCode = `&lt;script&gt;(
+            ${hookGeo}
+          )();&lt;\/script&gt;`;
+    
+          let parser = new DOMParser();
+          let xmlDoc;
+          if (mimeType.useXMLparser === true) {
+            xmlDoc = parser.parseFromString(args[0].join(''), mimeType.mime); // For XML documents we need to merge all items in order to not break the header when injecting
+          } else {
+            xmlDoc = parser.parseFromString(args[0][0], mimeType.mime);
+          }
+
+          if (xmlDoc.getElementsByTagName("parsererror").length === 0) { // if no errors were found while parsing...
+            xmlDoc.documentElement.insertAdjacentHTML('afterbegin', injectedCode);
+    
+            if (mimeType.useXMLparser === true) {
+              args[0] = [new XMLSerializer().serializeToString(xmlDoc)];
+            } else {
+              args[0][0] = xmlDoc.documentElement.outerHTML;
+            }
+          }
+        }
+      }
+
+      return instantiate(_Blob, args); // arguments?
+    }
+
+    // Copy props and methods
+    let propNames = Object.getOwnPropertyNames(_Blob);
+    for (let i = 0; i &lt; propNames.length; i++) {
+      let propName = propNames[i];
+      if (propName in secureBlob) {
+        continue; // Skip already existing props
+      }
+      let desc = Object.getOwnPropertyDescriptor(_Blob, propName);
+      Object.defineProperty(secureBlob, propName, desc);
+    }
+
+    secureBlob.prototype = _Blob.prototype;
+    return secureBlob;
+  }(Blob);
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    const message = event.data;
+    switch (message.method) {
+      case 'updateLocation':
+        if ((typeof message.info === 'object') &amp;&amp; (typeof message.info.coords === 'object')) {
+          hookedObj.genLat = message.info.coords.lat;
+          hookedObj.genLon = message.info.coords.lon;
+          hookedObj.fakeGeo = message.info.fakeIt;
+        }
+        break;
+      default:
+        break;
+    }
+  }, false);
+  //]]&gt;
+}hookGeo();})()</script><g xmlns="http://www.w3.org/2000/svg"><g><g clip-rule="evenodd" fill-rule="evenodd"><path d="m37.5 67.5v377c0 16.441 13.559 30 30 30h377c16.441 0 30-13.559 30-30v-377c0-16.441-13.559-30-30-30h-377c-16.441 0-30 13.559-30 30z" fill="#de3737" data-original="#70e2bd" class=""/><path d="m444.5 474.5h-377c-16.441 0-30-13.559-30-30v-377c0-16.441 13.559-30 30-30h377c16.441 0 30 13.559 30 30v377c0 16.441-13.559 30-30 30zm0-467h-377c-33 0-60 27-60 60v377c0 33 27 60 60 60h377c33 0 60-27 60-60v-377c0-33-27-60-60-60z" fill="#ffffff" data-original="#ffffff" class=""/><path d="m37.5 67.5v377c0 16.441 13.559 30 30 30h22.5c-16.441 0-30-13.559-30-30v-377c0-16.441 13.559-30 30-30h-22.5c-16.441 0-30 13.559-30 30z" fill="#840303" data-original="#0bcc89" class=""/></g><g><path d="m444.5 112.5h-15v-15h15zm0-30h-15v-15h15z" fill="#ffffff" data-original="#ffffff" class=""/></g></g><g><path d="m416.942 299.413v-71.826h19.913v-15h-54.666v15h19.753v71.826z" fill="#000000" data-original="#000000" class=""/><path d="m366.567 238.754c0-14.428-12.212-26.167-27.223-26.167h-26.598l-.014 86.825 15 .002.005-31.725 27.132 31.372 11.346-9.813-21.487-24.845c12.441-2.407 21.839-12.992 21.839-25.649zm-27.255 11.167-11.571.05.004-22.384h11.6c6.625 0 12.223 5.114 12.223 11.167-.001 6.053-5.598 11.167-12.256 11.167z" fill="#000000" data-original="#000000" class=""/><path d="m107.674 284.413c-7.549 0-14.829-3.059-19.472-8.183l-5.036-5.558-11.115 10.072 5.036 5.558c7.439 8.209 18.874 13.111 30.587 13.111 14.187 0 26.555-9.35 28.769-21.749 1.683-9.425-2.67-21.766-19.936-28.135-9.061-3.342-17.479-6.987-19.805-8.007-1.898-1.443-2.814-3.712-2.462-6.165.222-1.548 1.325-5.326 6.75-6.96 10.868-3.272 20.794 4.573 21.125 4.839l5.713 4.802 9.652-11.482-5.741-4.826c-.653-.549-16.211-13.38-35.076-7.695-9.358 2.819-15.977 10.173-17.271 19.191-1.209 8.426 2.441 16.53 9.527 21.15.332.216.679.405 1.041.566.414.185 10.262 4.568 21.356 8.661 7.394 2.728 11.17 6.892 10.361 11.425-.824 4.613-6.287 9.385-14.003 9.385z" fill="#000000" data-original="#000000" class=""/><path d="m189.449 299.413v-71.826h19.913v-15h-54.666v15h19.753v71.826z" fill="#000000" data-original="#000000" class=""/><path d="m272.508 281.273 7.473 19.801 14.034-5.296-31.206-82.691-13.367.013-31.478 82.648 14.018 5.339 7.547-19.814zm-16.414-43.495 10.753 28.495h-21.606z" fill="#000000" data-original="#000000" class=""/><path d="m30 97.5v347c0 20.678 16.822 37.5 37.5 37.5h377c20.678 0 37.5-16.822 37.5-37.5v-377c0-20.678-16.822-37.5-37.5-37.5h-377c-20.678 0-37.5 16.822-37.5 37.5v15h15v-15c0-12.196 10.304-22.5 22.5-22.5h377c12.196 0 22.5 10.304 22.5 22.5v377c0 12.196-10.304 22.5-22.5 22.5h-377c-12.196 0-22.5-10.304-22.5-22.5v-347z" fill="#000000" data-original="#000000" class=""/><path d="m399.5 497h15v15h-15z" fill="#000000" data-original="#000000" class=""/><path d="m444.5 0h-377c-37.22 0-67.5 30.28-67.5 67.5v377c0 37.22 30.28 67.5 67.5 67.5h317v-15h-317c-28.949 0-52.5-23.551-52.5-52.5v-377c0-28.949 23.551-52.5 52.5-52.5h377c28.949 0 52.5 23.551 52.5 52.5v377c0 28.949-23.551 52.5-52.5 52.5h-15v15h15c37.22 0 67.5-30.28 67.5-67.5v-377c0-37.22-30.28-67.5-67.5-67.5z" fill="#000000" data-original="#000000" class=""/></g></g></g></svg>

@@ -3,58 +3,88 @@
 // Team: Skeleton Pythons
 // Author: Justin.Morton
 // Date Created: 05/15/2022
-// Last Modified By: Justin.Morton
-// Last Modified Date: 05/15/2022
 //-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-//
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
+import '../pages/timers_page/timer_controllers/timer_controller.dart';
+import '/widgets/loading_indicator.dart';
 
 import '../models/user_model.dart';
 import '../routes/routes.dart';
-import '../views/widgets/snackbars/error_snackbar.dart';
+import '../widgets/snackbars/error_snackbar.dart';
+import './db.dart';
 
 class Auth extends GetxController {
   /// This is the Firebase Auth controller.
   /// It is used to handle the login and registration.
   /// It also contains the `user` object.
-  /// Access this object by calling `Auth.instance.<WHAT YOU WANT TO ACCESS>
+  /// Access this object by calling `Auth.instance.USER to get the user object.
 
-  static final Auth instance = Get.find();
+  static Auth get instance => Get.find();
+
   late Rx<User?> _user;
+
   FirebaseAuth auth = FirebaseAuth.instance;
-  RxString initialRoute = Routes.LOGIN.obs;
-  late AppUser USER;
+
+  late AppUser USER = AppUser(email: '', name: 'User', photoUrl: '', uid: '');
+
+  RxBool newUser = false.obs;
+  RxBool isLoggedIn = false.obs;
+  RxBool isSplashDone = false.obs;
 
   @override
   void onReady() {
     super.onReady();
+    debugPrint('Auth onReady');
     _user = Rx<User?>(auth.currentUser);
-    _user.bindStream(auth.userChanges());
+    _user.bindStream(auth.authStateChanges());
     ever(_user, _gateKeeper);
   }
 
-  /// Checks if user is persisted in the app. If so, it will route to the home page.
-  /// If not, it will route to the login page.
-  _gateKeeper(User? user) {
+  void updateUser() {
+    USER
+      ..email = auth.currentUser!.email!
+      ..name = auth.currentUser!.displayName
+      ..photoUrl = auth.currentUser!.photoURL ?? ''
+      ..uid = auth.currentUser!.uid;
+  }
+
+  _gateKeeper(User? user) async {
+    LoadIndicator.ON();
     if (user != null) {
+      updateUser();
+      Get.put<DB>(DB(), permanent: true);
+      isLoggedIn.value = true;
       debugPrint('User is logged in');
-      initialRoute.value = Routes.HOME;
+      DB.instance.initDB();
+      await Future.delayed(const Duration(seconds: 2), () {
+        LoadIndicator.OFF();
+        Get.offAllNamed(Routes.NAVBAR);
+      });
     } else {
-      debugPrint('User is not logged in going to ');
-      initialRoute.value = Routes.LOGIN;
+      debugPrint('User is not logged in');
+
+      Get.offAllNamed(Routes.LOGIN);
     }
   }
 
-  void signUpWithEmail(String email, String password) async {
+  Future<void> signUpWithEmail(
+      {required String email,
+      required String password,
+      required String name}) async {
+    LoadIndicator.ON();
     try {
+      debugPrint('Signing up with email');
+      newUser.value = true;
       await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      newUser.value = true;
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -66,11 +96,10 @@ class Auth extends GetxController {
   }
 
   void logInWithEmail(String email, String password) async {
+    debugPrint('Logging in with email');
     try {
-      populateUser(await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      ));
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      newUser.value = false;
     } catch (e) {
       if (e is FirebaseAuthException) {
         showErrorSnackBar('uh-oh!', e.message!, Get.context);
@@ -83,41 +112,8 @@ class Auth extends GetxController {
 
   void logOut() async {
     await auth.signOut();
-  }
-
-  Future<void> signInWithGoogle() async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      populateUser(await auth.signInWithCredential(credential));
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        showErrorSnackBar('uh-oh!', e.message!, Get.context);
-        debugPrint(e.message);
-      } else {
-        showErrorSnackBar('uh-oh!', e.toString(), Get.context);
-      }
-    }
-  }
-
-  void populateUser(UserCredential? cred) {
-    debugPrint('populating user');
-    if (cred != null) {
-      USER = AppUser(
-        uid: cred.user!.uid,
-        name: cred.user!.displayName!,
-        email: cred.user!.email!,
-        photoUrl: cred.user!.photoURL,
-        isVerified: cred.user!.emailVerified,
-        phoneNumber: cred.user!.phoneNumber,
-      );
-    }
+    isLoggedIn.value = false;
+    DB.instance.store.clearPersistence();
+    Get.reset(clearRouteBindings: true);
   }
 }

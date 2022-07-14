@@ -1,0 +1,31 @@
+
+Studify:
+  ☐ @critical Finish code for Flashcards @started(22-07-04 23:14)
+  ☐ @critical Finish code for Timers
+  ☐ @critical Finish code for Calendar
+  ☐ @critical Finish code for Dashboard
+
+Flashcards Page:
+  ✔ Add a new flashcard @done(22-07-04 23:13)
+  ✔ Edit a flashcard @done(22-07-04 23:13)
+  ✔ Delete a flashcard @done(22-07-06 03:17)
+  ✔ View all flashcards @done(22-07-06 03:17)
+  ✔ View a flashcard @done(22-07-06 03:18)
+
+Flashcard Page Menu Bar:
+  ☐ Create menu bar
+
+Flashcard Test Page:
+  ☐ Create test
+  ☐ Start test
+  ☐ Get Test Results
+  
+Timers Page:
+  ☐ @low Add todo items here
+
+Calendar Page:
+  ☐ @low Add todo items here
+
+Dashboard Page:
+  ☐ Gather Statistics about other pages
+  ☐ Create UI for Dashboard
