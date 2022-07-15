@@ -16,8 +16,8 @@ import '../../../models/flashcard_model.dart';
 import '../../../services/auth.dart';
 import '../../../services/db.dart';
 import '../../utils/consts/app_colors.dart';
-import './closed_card.dart';
-import './open_card.dart';
+import 'flashcard_widgets/closed_card.dart';
+import 'flashcard_widgets/open_card.dart';
 import 'flashcard_controller.dart';
 
 class FlashcardPage extends StatelessWidget {
@@ -194,49 +194,6 @@ class FCMenu extends StatelessWidget {
               ],
             ),
           )),
-    );
-  }
-}
-
-class NoteCard extends StatelessWidget {
-  const NoteCard(
-    this.controller, {
-    required this.note,
-    required this.crossCell,
-    required this.mainCell,
-    Key? key,
-  }) : super(key: key);
-
-  final FlashcardController controller;
-  final int crossCell;
-  final int mainCell;
-  final Note note;
-
-  @override
-  Widget build(BuildContext context) {
-    return StaggeredGridTile.count(
-      crossAxisCellCount: crossCell,
-      mainAxisCellCount: mainCell,
-      child: OpenContainer(
-          transitionDuration: const Duration(milliseconds: 900),
-          closedColor: kBackground,
-          openColor: kBackgroundLight,
-          transitionType: ContainerTransitionType.fadeThrough,
-          closedElevation: 0,
-          openElevation: 0,
-          closedBuilder: (BuildContext context, VoidCallback openContainer) {
-            return ClosedCard(
-              note: note,
-              onTap: openContainer,
-              isSelected: false.obs,
-            );
-          },
-          openBuilder: (BuildContext context, VoidCallback closeContainer) {
-            return OpenCard(
-              note: note,
-              callback: closeContainer,
-            );
-          }),
     );
   }
 }

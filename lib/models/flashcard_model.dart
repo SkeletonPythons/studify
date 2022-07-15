@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+import '../services/db.dart';
 
 class Note {
   String? back;
@@ -21,6 +24,23 @@ class Note {
     bool fav = false,
     this.content = '',
     List<String>? tags,
+    bool pinned = false,
+    bool learned = false,
+    String? id,
+  })  : id =
+            id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString(),
+        tags = tags ?? [],
+        isFav = RxBool(fav),
+        isPinned = RxBool(pinned),
+        isLearned = RxBool(learned);
+
+  Note.newLocal({
+    this.front = 'This is the front of your new flashcard',
+    this.back = 'This is the back of your new flashcard!',
+    this.subject = 'none',
+    bool fav = false,
+    this.content = '',
+    List<String>? tags = const ['new'],
     bool pinned = false,
     bool learned = false,
     String? id,
@@ -85,5 +105,13 @@ class Note {
   @override
   String toString() {
     return '\n>-------<>-------<\nID:\t\t$id\nSUBJECT:\t$subject\nFRONT:\t$front\nBACK:\t$back\nCONTENT:\t$content\nTAGS:\t${tags.toString()}\nFAV?:\t$isFav\nPINNED?:\t$isPinned\nLEARNED?:\t$isLearned\n>-------<>-------<\n';
+  }
+
+  /// Updates [this] in the database.
+  void update() async {
+    await DB.instance.notes
+        .doc(id)
+        .set(this, SetOptions(merge: true))
+        .catchError((e) => debugPrint('Error updating note: $e'));
   }
 }

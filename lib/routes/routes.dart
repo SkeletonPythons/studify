@@ -7,13 +7,14 @@ import '../pages/bottom_nav_page/navbar_controller.dart';
 import '../pages/calendar_page/add_event.dart';
 import '../pages/calendar_page/calendar_page.dart';
 import '../pages/dashboard_page/dashboard_page.dart';
-import '../pages/flashcard_page/open_controller.dart';
+import '../pages/flashcard_page/flashcard_widgets/open_controller.dart';
 import '../pages/login_page/login_page.dart';
 import '../pages/splash_page/splash_page.dart';
 import '../pages/timers_page/pomodoro.dart';
 import '../pages/timers_page/timer_controllers/timer_controller.dart';
 import '../pages/timers_page/timer_homepage.dart';
 import '../pages/timers_page/timer_pomodoro_setup.dart';
+import '../pages/flashcard_page/note_page.dart';
 
 abstract class Routes {
   static const String LOGIN = '/login';
@@ -25,7 +26,7 @@ abstract class Routes {
   static const String ADDEVENT = '/add_event';
   static const String POMODOROSETUP = '/pomodoro_setup';
   static const String POMODORO = '/pomodoro';
-  static const String ALT_HOME = '/alt_home';
+  static const String ALT_NOTES = '/alt_notes';
 }
 
 class AppPages {
@@ -73,6 +74,10 @@ class AppPages {
     GetPage(
       name: Routes.POMODORO,
       page: () => PomodoroTimer(),
+    ),
+    GetPage(
+      name: Routes.ALT_NOTES,
+      page: () => NotePage(),
     ),
   ];
 }

@@ -7,11 +7,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/widgets/buttons/triangle_button.dart';
 
-import '../../../models/flashcard_model.dart';
-import '../../utils/consts/app_colors.dart';
-import 'flashcard_controller.dart';
+import '../../../../models/flashcard_model.dart';
+import '../../../utils/consts/app_colors.dart';
+import '../flashcard_controller.dart';
 import 'open_controller.dart';
-import './tags.dart';
+import 'tags.dart';
 
 class OpenCard extends StatefulWidget {
   const OpenCard({required this.note, required this.callback, Key? key})
@@ -27,11 +27,36 @@ class OpenCard extends StatefulWidget {
 class _OpenCardState extends State<OpenCard> {
   late OC controller;
 
+  late Note originalNote;
+
+  bool get getDidchange => controller.note != originalNote;
+
   @override
   initState() {
     super.initState();
+    originalNote = widget.note;
     controller = Get.find<OC>();
     controller.setNote(widget.note);
+    controller.fc = TextEditingController(text: widget.note.front);
+    controller.bc = TextEditingController(text: widget.note.back);
+    controller.sc = TextEditingController(text: widget.note.subject);
+    controller.cc = TextEditingController(text: widget.note.content);
+  }
+
+  @override
+  void dispose() {
+    controller.fc.dispose();
+    controller.bc.dispose();
+    controller.sc.dispose();
+    controller.cc.dispose();
+
+    if (controller.note != originalNote) {
+      debugPrint('\n\ndid change\n\n');
+      widget.note.update();
+    } else {
+      debugPrint('\n\nnot changed\n\n');
+    }
+    super.dispose();
   }
 
   @override
@@ -165,40 +190,20 @@ class _OpenCardState extends State<OpenCard> {
                       color: kBackgroundLight2,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Obx(
-                      () => TextField(
-                        onChanged: (_) {
-                          controller.note.subject = controller.sc.text;
-                        },
-                        textAlignVertical: TextAlignVertical(y: -.95),
-                        clipBehavior: Clip.none,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'subject',
-                          labelStyle: GoogleFonts.neucha(
-                            fontSize: 20,
-                          ),
-                          constraints: BoxConstraints(
-                            maxWidth: Get.width * .9,
-                            maxHeight: Get.height * .07,
-                            minHeight: Get.height * .07,
-                            minWidth: Get.width * .9,
-                          ),
-                          contentPadding: const EdgeInsets.all(15),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.greenAccent,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: kAccent, width: 1)),
-                        ),
-                        enabled: controller.editEnabled.value,
-                        controller: controller.sc,
-                      ),
-                    ),
+                    // child: DropdownButton(
+                    //     onChanged: <dynamic>(_) {},
+                    //     items: <DropdownMenuItem<dynamic>>[
+                    //       DropdownMenuItem(
+                    //         child: Text(
+                    //           'Subject',
+                    //           style: TextStyle(
+                    //               color: kBackgroundDark,
+                    //               fontSize: Get.height * .03),
+                    //         ),
+                    //       ),
+                    // ]
+
+                    // )
                   ),
                   NoteTags(
                     note: widget.note,
@@ -228,6 +233,7 @@ class _OpenCardState extends State<OpenCard> {
                         ),
                         child: Stack(clipBehavior: Clip.none, children: [
                           Obx(() => controller.flipValue <= 0.5
+                              // !! Front of card ----------------------------------
                               ? TextField(
                                   onChanged: (value) =>
                                       widget.note.front = value,
@@ -270,6 +276,7 @@ class _OpenCardState extends State<OpenCard> {
                                   scaleX: -1,
                                   alignment: Alignment.center,
                                   child: TextField(
+                                    // !! Back of card ----------------------------------
                                     controller: controller.bc,
                                     onChanged: (_) {
                                       setState(() {
@@ -313,7 +320,7 @@ class _OpenCardState extends State<OpenCard> {
                                   ),
                                 )),
                           Positioned(
-                            right: -15,
+                            right: 0,
                             bottom: 0,
                             child: Transform.scale(
                               scaleX: -1,
@@ -355,7 +362,7 @@ class _OpenCardState extends State<OpenCard> {
                       () => TextField(
                         onChanged: (_) {
                           setState(() {
-                            widget.note.content = controller.bc.text;
+                            widget.note.content = controller.cc.text;
                           });
                         },
                         expands: true,

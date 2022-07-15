@@ -8,9 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../models/flashcard_model.dart';
-import '../../themes/apptheme.dart';
-import '../../utils/consts/app_colors.dart';
+import '../../../models/flashcard_model.dart';
+import '../../../themes/apptheme.dart';
+import '../../../utils/consts/app_colors.dart';
 
 class NoteTags extends StatefulWidget {
   const NoteTags({required this.note, required this.enabled, Key? key})

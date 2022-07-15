@@ -11,6 +11,7 @@ import '../../models/flashcard_model.dart';
 import '../../services/auth.dart';
 import '../../services/db.dart';
 import './flashcard_page.dart';
+import 'flashcard_widgets/note_card.dart';
 
 /// This is the controller for [FlashcardPage]. It handles the logic for the
 /// the [Streambuilder] as well as for the custom menubar displayed on the
@@ -155,7 +156,7 @@ class FlashcardController extends GetxController
     // ignore: no_leading_underscores_for_local_identifiers
     List<NoteCard> _cards = [];
     for (Note note in notes) {
-      _cards.add(_cardBuilder(note));
+      // _cards.add(_cardBuilder(note));
     }
     return _cards;
   }
@@ -166,7 +167,7 @@ class FlashcardController extends GetxController
   int crossCellRemaining = 6;
 
   /// Method to build a [NoteCard] widget.
-  NoteCard _cardBuilder(Note note) {
+  Container _cardBuilder(Note note) {
     if (crossCellRemaining >= 4) {
       crossAxisHelper = rng.nextInt(4) + 1;
     } else if (crossCellRemaining >= 3) {
@@ -179,13 +180,13 @@ class FlashcardController extends GetxController
       crossAxisHelper = 2;
     }
     crossCellRemaining -= crossAxisHelper;
-    NoteCard card =
-        NoteCard(this, note: note, crossCell: crossAxisHelper, mainCell: 3);
+
+    // NoteCard(this, note: note, crossCell: crossAxisHelper, mainCell: 3);
     crossCellRemaining -= crossAxisHelper;
     if (crossCellRemaining <= 0) {
       crossCellRemaining = 6;
     }
-    return card;
+    return Container();
   }
 
   /// List of [Widget]s for the menu of the [FlashcardPage].

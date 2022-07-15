@@ -6,10 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../services/auth.dart';
-import '../../services/db.dart';
+import '../../../services/auth.dart';
+import '../../../services/db.dart';
 
-import '../../models/flashcard_model.dart';
+import '../../../models/flashcard_model.dart';
 
 enum CardState {
   FRONT,
@@ -67,10 +67,6 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
   @override
   void onInit() {
     /// Initialize the the text editing controllers.
-    fc = TextEditingController(text: note.front);
-    bc = TextEditingController(text: note.back);
-    sc = TextEditingController(text: note.subject);
-    cc = TextEditingController(text: note.content);
 
     /// Initialize the the animation controller.
     flipController = AnimationController(
@@ -137,10 +133,6 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
   @override
   void onClose() {
     flipController.dispose();
-    fc.dispose();
-    bc.dispose();
-    sc.dispose();
-    cc.dispose();
 
     super.onClose();
   }
@@ -149,8 +141,11 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
     note.tags!.addIf(() => !note.tags!.contains(tag), tag);
   }
 
-  void onUpdate(TextEditingController tec, String val) {
-    // TODO: @TheAnonyMOST - onUpdate.
+  void saveToDB() async {
+    debugPrint('\nSaving to DB\n');
+    await DB.instance.notes.doc(note.id).update(note.toJson()).catchError((e) {
+      debugPrint(e.toString());
+    });
   }
 
   void deleteTag(String tag) async {
@@ -171,10 +166,6 @@ class OC extends GetxController with GetSingleTickerProviderStateMixin {
 
   void toggleFav(Note note) {
     note.isFav.toggle();
-  }
-
-  void onEditComplete() async {
-    // TODO: @TheAnonyMOST onEditComplete
   }
 
   void deletenote() async {
