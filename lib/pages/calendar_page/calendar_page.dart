@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors, unused_field
+// ignore_for_file: prefer_const_constructors, unused_field, unnecessary_null_comparison
 // import 'package:get/get.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../../../routes/routes.dart';
-import '../../pages/calendar_page/calendar_controller.dart';
+import '../calendar_page/calendar_controller.dart';
 import '../../models/calendar_model.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -19,11 +20,17 @@ class CalendarPageState extends State<CalendarPage>
   late Map<DateTime, List<Event>> _selectedEvents;
   final CalendarController _calendarController =
       Get.put<CalendarController>(CalendarController());
+  final EventController _eventController =
+      Get.put<EventController>(EventController());
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _todayDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
+  late Map<DateTime, DateTime> _selectedDays;
 
-  final TextEditingController _eventController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController eventController = TextEditingController();
 
   @override
   void initState() {
@@ -32,7 +39,12 @@ class CalendarPageState extends State<CalendarPage>
   }
 
   List<Event> _getEventsFromDay(DateTime date) {
-    return _selectedEvents[date] ?? [];
+    _calendarController.addNewEvenToList(_calendarController.events);
+    return _calendarController.events.where((event) {
+      return event.startDate?.month == date.month &&
+          event.startDate?.day == date.day &&
+          event.startDate?.year == date.year;
+    }).toList();
   }
 
   @override
@@ -47,7 +59,6 @@ class CalendarPageState extends State<CalendarPage>
 
     return SafeArea(
       child: Scaffold(
-        key: GlobalKey(),
         body: SizedBox(
           child: SingleChildScrollView(
             child: Column(children: [
@@ -131,7 +142,12 @@ class CalendarPageState extends State<CalendarPage>
                     //subtitle: Text(event.description, maxLines: 2),
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () {},
+                      onPressed: () {
+                        _eventController.deleteEvent(event);
+                        setState(() {
+                          _selectedEvents.remove(event);
+                        });
+                      },
                     ),
                     onLongPress: () {},
                     contentPadding: const EdgeInsets.all(4.0),
@@ -140,111 +156,154 @@ class CalendarPageState extends State<CalendarPage>
           ),
         ),
         floatingActionButton: FloatingActionButton.small(
-            backgroundColor: const Color(0xfff44336),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.ADDEVENT);
-            },
-
-            /* onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) => SingleChildScrollView(
-                        child: AlertDialog(
-                          title: const Text("Add Event"),
-                          content: FormBuilder(
-                            child: Column(
-                              children: [
-                                FormBuilderTextField(
-                                  name: "Event Title",
-                                  decoration: InputDecoration(
-                                    labelText: "Event Title",
-                                    hintText: "Name of the event",
-                                  ),
-                                  controller: _eventController,
-                                ),
-                                FormBuilderTextField(
-                                  name: "Description",
-                                  maxLines: 5,
-                                  minLines: 1,
-                                  decoration: InputDecoration(
-                                    labelText: "Description",
-                                    hintText: "Description of the event",
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(Icons.short_text),
-                                  ),
-                                ),
-                                Divider(),
-                                FormBuilderSwitch(
-                                  name: 'All Day',
-                                  title: Text('All Day'),
-                                  initialValue: false,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                                Divider(),
-                                FormBuilderDateTimePicker(
-                                  name: "Date",
-                                  decoration: InputDecoration(
-                                    labelText: "Date",
-                                    floatingLabelStyle: TextStyle(
-                                        color: const Color(0xfff44336),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(Icons.calendar_today),
-                                  ),
-                                  initialValue: DateTime.now(),
-                                  initialTime: TimeOfDay.now(),
-                                  inputType: InputType.date,
-                                  initialDate: _selectedDay,
-                                  format: DateFormat("EEEE, MMMM dd, yyyy"),
-                                ),
-                              ],
+          backgroundColor: const Color(0xfff44336),
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => SingleChildScrollView(
+              child: AlertDialog(
+                title: const Text("Add Event"),
+                content: FormBuilder(
+                  child: Column(
+                    children: [
+                      FormBuilderTextField(
+                        name: "Event Title",
+                        decoration: InputDecoration(
+                          labelText: "Event Title",
+                          hintText: "Name of the event",
+                        ),
+                        controller: _titleController,
+                      ),
+                      FormBuilderTextField(
+                        name: "Description",
+                        maxLines: 5,
+                        minLines: 1,
+                        decoration: InputDecoration(
+                          labelText: "Description",
+                          hintText: "Description of the event",
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.short_text),
+                        ),
+                        controller: _descriptionController,
+                      ),
+                      Divider(),
+                      FormBuilderSwitch(
+                        name: 'All Day',
+                        title: Text('All Day'),
+                        initialValue: false,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          value;
+                          _calendarController.toggleAllDay(Event(
+                              title: _calendarController.newEvent.title,
+                              startDate: _calendarController.newEvent.startDate,
+                              endDate: _calendarController.newEvent.endDate));
+                        },
+                      ),
+                      Divider(),
+                      FormBuilderDateRangePicker(
+                        name: 'date_range',
+                        decoration: InputDecoration(
+                          labelText: 'Date Range',
+                          hintText: 'Select Date Range',
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.date_range),
+                        ),
+                        initialValue: DateTimeRange(
+                          start: DateTime.now(),
+                          end: DateTime.now(),
+                        ),
+                        format: DateFormat("EEEE, MMMM dd, yyyy"),
+                        firstDate: DateTime(1970),
+                        lastDate: DateTime(3000),
+                      ),
+                      Divider(),
+                      FormBuilderDateTimePicker(
+                        name: "Date",
+                        decoration: InputDecoration(
+                          labelText: "Date",
+                          floatingLabelStyle: TextStyle(
+                              color: const Color(0xfff44336),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.timer),
+                        ),
+                        initialTime: TimeOfDay.now(),
+                        inputType: InputType.time,
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: const Text("Save"),
+                    onPressed: () {
+                      if (eventController.text.isEmpty) {
+                      } else {
+                        if (_selectedEvents[_selectedDays] != null) {
+                          _selectedEvents[_selectedDays]?.add(
+                            _eventController.saveEvent(
+                              _calendarController.createEvent(
+                                  endDate: _calendarController.newEvent.endDate,
+                                  startDate:
+                                      _calendarController.newEvent.startDate,
+                                  title: _calendarController.newEvent.title,
+                                  description:
+                                      '${_calendarController.newEvent.description}',
+                                  isAllDay: false),
                             ),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: const Text("Cancel"),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                            TextButton(
-                              child: const Text("Save"),
-                              onPressed: () {
-                                if (_eventController.text.isEmpty) {
-                                } else {
-                                  if (_selectedEvents[_selectedDay] != null) {
-                                    _selectedEvents[_selectedDay]?.add(
-                                      Event(
-                                          title: _eventController.text,
-                                          description: _eventController.text,
+                            /* Event(
+                                          title: _titleController.text,
+                                          description: _descriptionController
+                                              .text,
                                           startDate: _selectedDay,
                                           endDate: _selectedDay,
-                                          location: _eventController.text,
-                                          isAllDay: false),
-                                    );
-                                  } else {
-                                    _selectedEvents[_selectedDay] = [
-                                      Event(
-                                          title: _eventController.text,
-                                          description: _eventController.text,
-                                          startDate: _selectedDay,
-                                          endDate: _selectedDay,
-                                          location: _eventController.text,
-                                          isAllDay: false),
-                                    ];
-                                  }
-                                }
-                                Navigator.pop(context);
-                                _eventController.clear();
-                                setState(() {});
-                                return;
-                              },
-                            )
-                          ],
-                        ),*/
-            child: const Icon(Icons.add)),
+                                          location: _locationController.text,
+                                          isAllDay: false), */
+                          );
+                        } else {
+                          _selectedEvents[_selectedDay] = [
+                            Event(
+                                title: _titleController.text,
+                                description: _descriptionController.text,
+                                startDate: _selectedDay,
+                                endDate: _selectedDay,
+                                location: _locationController.text,
+                                isAllDay: false),
+                            _eventController.saveEvent(
+                              _calendarController.createEvent(
+                                  endDate: _calendarController.newEvent.endDate,
+                                  startDate:
+                                      _calendarController.newEvent.startDate,
+                                  title: _calendarController.newEvent.title,
+                                  description:
+                                      '${_calendarController.newEvent.description}',
+                                  isAllDay: false),
+                            ),
+                          ];
+                        }
+                      }
+                      Navigator.pop(context);
+                      _titleController.clear();
+                      _descriptionController.clear();
+                      _locationController.clear();
+                      setState(() {});
+                      return;
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '../pages/bottom_nav_page/navbar.dart';
 import '../pages/bottom_nav_page/navbar_controller.dart';
-import '../pages/calendar_page/add_event.dart';
 import '../pages/calendar_page/calendar_page.dart';
 import '../pages/dashboard_page/dashboard_page.dart';
 import '../pages/flashcard_page/flashcard_widgets/open_controller.dart';
@@ -62,10 +61,6 @@ class AppPages {
     GetPage(
       name: Routes.CALENDAR,
       page: () => CalendarPage(),
-    ),
-    GetPage(
-      name: Routes.ADDEVENT,
-      page: () => AddEvent(),
     ),
     GetPage(
       name: Routes.POMODOROSETUP,

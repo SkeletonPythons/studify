@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Event {
   String title;
   String? description;
@@ -25,15 +23,6 @@ class Event {
         endDate = map['endDate'],
         location = map['location'],
         isAllDay = map['isAllDay'];
-
-  Event.fromDoc({required DocumentSnapshot snapshot})
-      : id = snapshot.id,
-        title = snapshot['title'],
-        description = snapshot['description'],
-        startDate = snapshot['startDate'],
-        endDate = snapshot['endDate'],
-        location = snapshot['location'],
-        isAllDay = snapshot['isAllDay'];
 
   Map<String, dynamic> toMap() {
     return {
