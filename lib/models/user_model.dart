@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import '../services/db.dart';
 
 class AppUser {
   AppUser({
@@ -8,6 +10,7 @@ class AppUser {
     this.photoUrl = 'photoUrl',
     Map<String, dynamic>? stats,
     Map<String, dynamic>? settings,
+    List<String>? subjects,
   })  : stats = stats ??
             {
               /// Statistics that will be synced to the database.
@@ -29,7 +32,8 @@ class AppUser {
         settings = settings ??
             {
               'isVerified': false,
-            };
+            },
+        subjects = subjects ?? [];
 
   String uid;
   String? name;
@@ -37,6 +41,7 @@ class AppUser {
   String? photoUrl;
   Map<String, dynamic>? settings;
   Map<String, dynamic>? stats;
+  List<String>? subjects;
 
   factory AppUser.fromFirebase(DocumentSnapshot<Map<String, dynamic>> snapshot,
       SnapshotOptions? options) {
@@ -48,6 +53,7 @@ class AppUser {
       photoUrl: data?['photoUrl'],
       settings: data?['settings'],
       stats: data?['stats'],
+      subjects: data?['subjects'],
     );
   }
 
@@ -59,6 +65,7 @@ class AppUser {
       'stats': stats,
       'email': email,
       'uid': uid,
+      'subjects': subjects,
     };
   }
 
@@ -69,6 +76,7 @@ class AppUser {
         'photoUrl': photoUrl,
         'settings': settings,
         'stats': stats,
+        'subjects': subjects,
       };
 
   AppUser.fromJson(Map<String, dynamic> json)
@@ -77,5 +85,12 @@ class AppUser {
         email = json['email'],
         photoUrl = json['photoUrl'],
         settings = json['settings'],
+        subjects = json['subjects'],
         stats = json['stats'];
+
+  void update() async {
+    await DB.instance.user.set(this, SetOptions(merge: true)).catchError((e) {
+      debugPrint('error updating user: $e');
+    });
+  }
 }

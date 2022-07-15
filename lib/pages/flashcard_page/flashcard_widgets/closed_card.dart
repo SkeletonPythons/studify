@@ -7,9 +7,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../models/flashcard_model.dart';
-import '../../utils/consts/app_colors.dart';
-import 'flashcard_controller.dart';
+import '../../../../models/flashcard_model.dart';
+import '../../../utils/consts/app_colors.dart';
+import '../flashcard_controller.dart';
 
 class ClosedCard extends StatelessWidget {
   const ClosedCard({
@@ -36,31 +36,18 @@ class ClosedCard extends StatelessWidget {
             onTap();
           },
           child: Center(
-            child: Column(
-              children: [
-                Text(
-                  note.subject!,
-                  style: GoogleFonts.ubuntu(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: kAccent,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+              child: Text(
+                note.front!,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.fade,
+                softWrap: true,
+                style: GoogleFonts.mPlus1Code(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
                 ),
-                Divider(
-                  thickness: 2,
-                ),
-                Text(
-                  note.front!,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.fade,
-                  softWrap: true,
-                  style: GoogleFonts.ubuntu(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

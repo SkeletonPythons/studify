@@ -4,42 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 
-class TrianglePainter extends CustomPainter {
-  final Color strokeColor;
-  final PaintingStyle paintingStyle;
-  final double strokeWidth;
-
-  TrianglePainter(
-      {this.strokeColor = Colors.transparent,
-      this.strokeWidth = 3,
-      this.paintingStyle = PaintingStyle.stroke});
-
+class MyCustomClipper extends CustomClipper<Path> {
   @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = strokeColor
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..style = paintingStyle;
+  Path getClip(Size size) {
+    double rad = 10;
 
-    canvas.drawPath(getTrianglePath(size.width, size.height), paint);
-  }
-
-  Path getTrianglePath(double x, double y) {
-    return Path()
+    Path path = Path()
       ..moveTo(0, 0)
-      ..lineTo(x, y)
-      ..lineTo(x * .2, y)
-      ..conicTo(0, y, 0, y * .8, 1)
+      ..lineTo(0, size.height - rad)
+      ..arcToPoint(Offset(rad, size.height),
+          radius: Radius.circular(rad), clockwise: false)
+      ..lineTo(size.width, size.height)
       ..close();
+
+    return path;
   }
 
   @override
-  bool shouldRepaint(TrianglePainter oldDelegate) {
-    return oldDelegate.strokeColor != strokeColor ||
-        oldDelegate.paintingStyle != paintingStyle ||
-        oldDelegate.strokeWidth != strokeWidth;
-  }
+  bool shouldReclip(CustomClipper<Path> oldClipper) => oldClipper != this;
 }
 
 class TriangleButton extends StatelessWidget {
@@ -51,48 +33,18 @@ class TriangleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipPath(
-      clipper: CustomClip(),
-      clipBehavior: Clip.none,
-      child: RawMaterialButton(
-        fillColor: color,
-        onPressed: onPressed,
-        child: CustomPaint(
-          foregroundPainter: TrianglePainter(),
-          painter: TrianglePainter(
-            strokeColor: Colors.grey[600]!,
-            strokeWidth: 10,
-            paintingStyle: PaintingStyle.fill,
-          ),
-          child: Container(
-            clipBehavior: Clip.hardEdge,
-            height: 60,
-            width: 60,
-            alignment: const Alignment(-.6, .6),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: icon ?? const Icon(FontAwesomeIcons.plus),
-          ),
+      clipBehavior: Clip.hardEdge,
+      clipper: MyCustomClipper(),
+      child: SizedBox(
+        height: 60,
+        width: 60,
+        child: ElevatedButton.icon(
+          style: ButtonStyle(alignment: Alignment(-1, .8)),
+          icon: icon!,
+          onPressed: onPressed,
+          label: SizedBox.shrink(),
         ),
       ),
     );
   }
-}
-
-class CustomClip extends CustomClipper<Path> {
-  Path myPath(double x, double y) {
-    return Path()
-      ..moveTo(1, 0)
-      ..lineTo(1, 1)
-      ..lineTo(0, 0)
-      ..close();
-  }
-
-  @override
-  Path getClip(Size size) {
-    return myPath(size.height, size.width);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/routes/routes.dart';
 
 import '../../../services/auth.dart';
 
@@ -14,6 +15,7 @@ import '../../widgets/app_bar.dart';
 import '../calendar_page/calendar_page.dart';
 import '../dashboard_page/dashboard_page.dart';
 import '../flashcard_page/flashcard_page.dart';
+import '../flashcard_page/note_page.dart';
 import '../timers_page/timer_controllers/timer_controller.dart';
 
 import 'navbar_controller.dart';
@@ -40,7 +42,7 @@ class NavBar extends StatelessWidget {
                 Dashboard(),
                 CalendarPage(),
                 TimerController.instance.activeWidget.value,
-                FlashcardPage(),
+                NotePage(),
               ],
             )),
         bottomNavigationBar: Material(
@@ -151,6 +153,11 @@ class AppBarDrawer extends StatelessWidget {
               }
             },
           ),
+          ListTile(
+              title: Text('alt notes'),
+              onTap: () {
+                Get.toNamed(Routes.ALT_NOTES);
+              }),
         ],
       ),
     );

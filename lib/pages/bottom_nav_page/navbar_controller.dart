@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../calendar_page/calendar_page.dart';
 import '../dashboard_page/dashboard_page.dart';
-import '../flashcard_page/flashcard_page.dart';
+import '../flashcard_page/note_page.dart';
 import '../timers_page/timer_homepage.dart';
 
 class NavBarController extends GetxController
@@ -21,7 +21,7 @@ class NavBarController extends GetxController
     Dashboard(),
     CalendarPage(),
     timerPage.value,
-    FlashcardPage(),
+    NotePage(),
   ]);
 
   final List<Widget> tabs = [
