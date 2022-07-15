@@ -177,6 +177,8 @@ class NotePageController extends GetxController {
     for (String subject in subjects) {
       slivers.add(
         SliverAppBar(
+          floating: true,
+          pinned: true,
           automaticallyImplyLeading: false,
           flexibleSpace: FlexibleSpaceBar(
             collapseMode: CollapseMode.pin,
@@ -225,7 +227,7 @@ class NotePageController extends GetxController {
           delegate: SliverChildListDelegate(childs),
           // ignore: prefer_const_constructors
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: 3,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
           ),

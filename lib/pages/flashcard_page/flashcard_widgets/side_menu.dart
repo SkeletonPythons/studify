@@ -58,14 +58,18 @@ class FCMenu extends StatelessWidget {
                   )),
               Obx(
                 () => Visibility(
-                  visible: controller.menuOpen.value ? true : false,
-                  child: Obx(
-                    () => Column(
-                      children: controller.menuOpen.value
-                          ? controller.menuWidgets
-                          : [],
-                    ),
-                  ),
+                  visible: controller.menuOpen.value,
+                  child: Obx(() => AnimatedOpacity(
+                        opacity: controller.opacity.value,
+                        duration: const Duration(milliseconds: 500),
+                        child: Obx(
+                          () => Column(
+                            children: controller.menuOpen.value
+                                ? controller.menuWidgets
+                                : [],
+                          ),
+                        ),
+                      )),
                 ),
               )
             ],
@@ -99,30 +103,35 @@ class SideMenuController extends GetxController
   late Animation<double> iconAnimation;
 
   final RxDouble menuHeight = (Get.height * 0.1).obs;
+
   final menuOpen = false.obs;
+
   final menuWidgets = <Widget>[
-    ElevatedButton.icon(
-        onPressed: () {
-          Note newNote = Note.newLocal();
-          DB.instance.notes
-              .doc(newNote.id)
-              .set(newNote, SetOptions(merge: true));
-        },
-        icon: Icon(Icons.add),
-        label: Text('Add'))
+    IconButton(
+      onPressed: () {
+        Note newNote = Note.newLocal();
+        DB.instance.notes.doc(newNote.id).set(newNote, SetOptions(merge: true));
+      },
+      icon: Icon(Icons.add),
+    )
   ].obs;
+
   final visibility = false.obs;
+
   final RxDouble angle = 0.0.obs;
+
   void toggleMenu() {
     debugPrint('iconAnimation.value: ${iconAnimation.value}');
     if (menuOpen.value) {
       menuHeight.value = Get.height * 0.1;
-      visibility.value = false;
+      opacity.value = 0;
       animationController.reverse();
     } else {
       menuHeight.value = Get.height * .3;
-      animationController.forward().then((value) => visibility.value = true);
+      animationController.forward().then((value) => opacity.value = 1);
     }
     menuOpen.toggle();
   }
+
+  RxDouble opacity = 0.0.obs;
 }

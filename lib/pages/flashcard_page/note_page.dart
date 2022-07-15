@@ -18,7 +18,6 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
       height: Get.height,
       width: Get.width,
       decoration: BoxDecoration(
@@ -36,26 +35,31 @@ class _NotePageState extends State<NotePage> {
       ),
       child: GetBuilder<NotePageController>(
         init: Get.put(NotePageController()),
-        initState: (_) {},
         builder: (_) {
           return Stack(children: [
-            GetBuilder<NotePageController>(
-              init: Get.find(),
-              initState: (_) {},
-              builder: (_) {
-                return CustomScrollView(
-                  controller: _.scrollController,
-                  shrinkWrap: true,
-                  slivers: [
-                    ..._.slivers,
-                    ...[SliverFillRemaining()],
-                  ],
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+              child: GetBuilder<NotePageController>(
+                init: Get.find(),
+                builder: (_) {
+                  return CustomScrollView(
+                    controller: _.scrollController,
+                    shrinkWrap: true,
+                    slivers: [
+                      ..._.slivers,
+                      ...[
+                        SliverToBoxAdapter(
+                            child: SizedBox(
+                          height: 8,
+                        ))
+                      ],
+                    ],
+                  );
+                },
+              ),
             ),
             GetBuilder<NotePageController>(
               init: Get.find(),
-              initState: (_) {},
               builder: (_) {
                 return FCMenu();
               },
