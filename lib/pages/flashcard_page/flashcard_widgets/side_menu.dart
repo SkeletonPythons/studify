@@ -113,7 +113,12 @@ class SideMenuController extends GetxController
         DB.instance.notes.doc(newNote.id).set(newNote, SetOptions(merge: true));
       },
       icon: Icon(Icons.add),
-    )
+    ),
+    IconButton(
+        icon: FaIcon(FontAwesomeIcons.checkDouble),
+        onPressed: () {
+          Get.snackbar("title", "message");
+        }),
   ].obs;
 
   final visibility = false.obs;
