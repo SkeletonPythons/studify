@@ -27,53 +27,85 @@ class _TimerHistoryState extends State<TimerHistory>
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 2, vsync: this);
     return Column(children: [
-       SizedBox(
-          child: TabBar(
-            labelPadding: EdgeInsets.symmetric(horizontal: 30),
-            labelColor: kBackground,
-            labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            controller: tabController,
-            indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.redAccent,
+      SizedBox(
+        child: TabBar(
+          labelPadding: EdgeInsets.symmetric(horizontal: 30),
+          labelColor: kBackground,
+          labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          controller: tabController,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.redAccent,
+          ),
+          tabs: [
+            Tab(text: 'Favorites'),
+            Tab(text: 'History'),
+          ],
+        ),
+      ),
+      Expanded(
+        child: TabBarView(
+          controller: tabController,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      enabled: true,
+                      onTap: () {
+                        Get.snackbar('hello', 'message');
+                      },
+                      title: Text('Pomodoro'),
+                      subtitle:
+                          Text('${today.day}/${today.month}/${today.year}'),
+                      trailing: Text('${today.hour}:${today.minute}'),
+                    );
+                  },
+                ),
+              ),
             ),
-            tabs: [
-              Tab(text: 'Favorites'),
-              Tab(text: 'History'),
-            ],
-          ),
-        ),
-        Expanded(
-          child: TabBarView(
-            controller: tabController,
-            children: [
-              Container(
-                color: kBackgroundDark,
-                child: Center(
-                  child: Text(
-                    'Favorites',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
               ),
-              Container(
-                color: kBackgroundDark,
-                child: Center(
-                  child: Text(
-                    'History',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              child: Center(
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      enabled: true,
+                      onTap: () {
+                        Get.snackbar('hello', 'clicking this will make a new timer');
+                      },
+                      title: Text('Pomodoro'),
+                      subtitle:
+                          Text('${today.day}/${today.month}/${today.year}'),
+                      trailing: Text('${today.hour}:${today.minute}'),
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     ]);
   }
 }

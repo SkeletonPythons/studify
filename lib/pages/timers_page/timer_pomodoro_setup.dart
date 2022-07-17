@@ -131,7 +131,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             ),
           ),
            Padding(
-             padding: const EdgeInsets.only(top: 350, left: 15, right: 15 ),
+             padding: const EdgeInsets.only(top: 340, left: 15, right: 15 ),
              child: TimerHistory(),
            ),
         ],
