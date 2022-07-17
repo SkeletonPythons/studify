@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../models/flashcard_model.dart';
 import '../../../utils/consts/app_colors.dart';
 import './closed_card.dart';
-import '../flashcard_controller.dart';
 import '../note_controller.dart';
 import 'open_card.dart';
 
@@ -24,7 +23,7 @@ class NoteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return (OpenContainer(
       transitionDuration: const Duration(milliseconds: 900),
-      closedColor: kBackground,
+      closedColor: Colors.transparent,
       openColor: kBackgroundLight,
       transitionType: ContainerTransitionType.fadeThrough,
       closedElevation: 0,

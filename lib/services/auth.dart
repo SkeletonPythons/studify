@@ -1,18 +1,17 @@
-//-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-//
+// ---
 // App: Studify
 // Team: Skeleton Pythons
 // Author: Justin.Morton
 // Date Created: 05/15/2022
-//-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-//
+// ---
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-import '../pages/timers_page/timer_controllers/timer_controller.dart';
-import '/widgets/loading_indicator.dart';
-
+import '../widgets/loading_indicator.dart';
 import '../models/user_model.dart';
 import '../routes/routes.dart';
 import '../widgets/snackbars/error_snackbar.dart';
@@ -67,8 +66,7 @@ class Auth extends GetxController {
       });
     } else {
       debugPrint('User is not logged in');
-
-      Get.offAllNamed(Routes.LOGIN);
+      Get.offAndToNamed(Routes.LOGIN);
     }
   }
 
@@ -110,10 +108,45 @@ class Auth extends GetxController {
     }
   }
 
-  void logOut() async {
+  Future<User?> logInWithGoogle() async {
+    debugPrint('Logging in with google');
+    User? user;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+      final AuthCredential authCredential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken);
+
+      // Getting users credential
+
+      try {
+        UserCredential result = await auth.signInWithCredential(authCredential);
+        user = result.user;
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          // handle the error here
+        } else if (e.code == 'invalid-credential') {
+          // handle the error here
+
+        }
+      } catch (e) {
+        if (e is FirebaseAuthException) {
+          showErrorSnackBar('uh-oh!', e.message!, Get.context);
+          debugPrint(e.message);
+        } else {
+          showErrorSnackBar('uh-oh!', e.toString(), Get.context);
+        }
+      }
+    }
+    return user;
+  }
+
+  void logout() async {
     await auth.signOut();
     isLoggedIn.value = false;
-    DB.instance.store.clearPersistence();
-    Get.reset(clearRouteBindings: true);
   }
 }

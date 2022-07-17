@@ -34,7 +34,7 @@ class DB extends GetxService {
 
   RxBool isNewUser = RxBool(false);
 
-  /// Saves the sample cards to the database only if the database is empty.
+  /// Saves the sample cards to the database only if the user is new.
   void populateWithSampleNotes() async {
     await store
         .collection('users')

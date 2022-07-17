@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import '../../models/flashcard_model.dart';
 import '../../services/auth.dart';
 import '../../services/db.dart';
-import './flashcard_page.dart';
-import 'flashcard_widgets/note_card.dart';
+import '../OLD/flashcard_page.dart';
+// import 'flashcard_widgets/note_card.dart';
 
 /// This is the controller for [FlashcardPage]. It handles the logic for the
 /// the [Streambuilder] as well as for the custom menubar displayed on the
@@ -25,7 +25,7 @@ class FlashcardController extends GetxController
   RxList<Note> notes = <Note>[].obs;
 
   /// List of [NoteCard] widgets for use in the [FlashcardPage].
-  RxList<Widget> cards = <NoteCard>[].obs;
+  // RxList<Widget> cards = <NoteCard>[].obs;
 
   /// List of [Note] objects that are selected.
   RxList selectedList = [].obs;
@@ -152,71 +152,70 @@ class FlashcardController extends GetxController
   }
 
   /// Method to rebuild the [cards] list.
-  List<NoteCard> buildCards(BuildContext context, List<Note> notes) {
-    // ignore: no_leading_underscores_for_local_identifiers
-    List<NoteCard> _cards = [];
-    for (Note note in notes) {
-      // _cards.add(_cardBuilder(note));
-    }
-    return _cards;
+  // List<NoteCard> buildCards(BuildContext context, List<Note> notes) {
+  // ignore: no_leading_underscores_for_local_identifiers
+  // List<NoteCard> _cards = [];
+  // for (Note note in notes) {
+  // _cards.add(_cardBuilder(note));
+  // }
+  // return _cards;
+}
+
+/// Random number generator to help with [_cardBuilder].
+Random rng = Random(DateTime.now().microsecondsSinceEpoch);
+int crossAxisHelper = 0;
+int crossCellRemaining = 6;
+
+/// Method to build a [NoteCard] widget.
+Container _cardBuilder(Note note) {
+  if (crossCellRemaining >= 4) {
+    crossAxisHelper = rng.nextInt(4) + 1;
+  } else if (crossCellRemaining >= 3) {
+    crossAxisHelper = rng.nextInt(3) + 1;
+  } else {
+    crossAxisHelper = crossCellRemaining;
   }
 
-  /// Random number generator to help with [_cardBuilder].
-  Random rng = Random(DateTime.now().microsecondsSinceEpoch);
-  int crossAxisHelper = 0;
-  int crossCellRemaining = 6;
-
-  /// Method to build a [NoteCard] widget.
-  Container _cardBuilder(Note note) {
-    if (crossCellRemaining >= 4) {
-      crossAxisHelper = rng.nextInt(4) + 1;
-    } else if (crossCellRemaining >= 3) {
-      crossAxisHelper = rng.nextInt(3) + 1;
-    } else {
-      crossAxisHelper = crossCellRemaining;
-    }
-
-    if (crossAxisHelper == 1) {
-      crossAxisHelper = 2;
-    }
-    crossCellRemaining -= crossAxisHelper;
-
-    // NoteCard(this, note: note, crossCell: crossAxisHelper, mainCell: 3);
-    crossCellRemaining -= crossAxisHelper;
-    if (crossCellRemaining <= 0) {
-      crossCellRemaining = 6;
-    }
-    return Container();
+  if (crossAxisHelper == 1) {
+    crossAxisHelper = 2;
   }
+  crossCellRemaining -= crossAxisHelper;
 
-  /// List of [Widget]s for the menu of the [FlashcardPage].
-  late final RxList<Widget> menuWidgets = <Widget>[
-    Icon(
-      Icons.checklist_rtl,
-      size: 34,
+  // NoteCard(this, note: note, crossCell: crossAxisHelper, mainCell: 3);
+  crossCellRemaining -= crossAxisHelper;
+  if (crossCellRemaining <= 0) {
+    crossCellRemaining = 6;
+  }
+  return Container();
+}
+
+/// List of [Widget]s for the menu of the [FlashcardPage].
+late final RxList<Widget> menuWidgets = <Widget>[
+  Icon(
+    Icons.checklist_rtl,
+    size: 34,
+  ),
+  Text(
+    '}',
+    style: TextStyle(
+      fontSize: 18,
+      color: Colors.white,
     ),
-    Text(
-      '${selectedList.length}',
-      style: TextStyle(
-        fontSize: 18,
-        color: Colors.white,
-      ),
-    ),
-  ].obs;
+  ),
+].obs;
 
-  /// Get list of [Note] objects with the same [Note.subject].
-  List<Note> getNotesBySubject(List<Note> allNotes, String subject) {
-    return allNotes.where((element) => element.subject == subject).toList();
-  }
+/// Get list of [Note] objects with the same [Note.subject].
+List<Note> getNotesBySubject(List<Note> allNotes, String subject) {
+  return allNotes.where((element) => element.subject == subject).toList();
+}
 
-  /// Get list of all [Note.subject]s.
-  List<String> getSubjects(List<Note> allNotes) {
-    List<String> subjects = [];
-    for (Note note in allNotes) {
-      if (!subjects.contains(note.subject)) {
-        subjects.add(note.subject!);
-      }
+/// Get list of all [Note.subject]s.
+List<String> getSubjects(List<Note> allNotes) {
+  List<String> subjects = [];
+  for (Note note in allNotes) {
+    if (!subjects.contains(note.subject)) {
+      subjects.add(note.subject!);
     }
-    return subjects;
   }
+  return subjects;
 }

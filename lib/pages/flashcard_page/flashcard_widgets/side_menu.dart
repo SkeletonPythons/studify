@@ -28,7 +28,7 @@ class FCMenu extends StatelessWidget {
         () => AnimatedContainer(
           height: controller.menuHeight.value,
           duration: const Duration(milliseconds: 500),
-          width: Get.width * 0.25,
+          width: Get.width * 0.2,
           alignment: Alignment.center,
           decoration: ShapeDecoration(
             color: Color(0xcc212121),
@@ -38,41 +38,43 @@ class FCMenu extends StatelessWidget {
               ),
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Obx(() => Transform.rotate(
-                    angle: controller.angle.value,
-                    child: IconButton(
-                      icon: FaIcon(
-                        FontAwesomeIcons.angleUp,
-                        size: 40,
-                      ),
-                      color: kAccent,
-                      onPressed: () {
-                        debugPrint('togglep');
-                        controller.toggleMenu();
-                      },
-                    ),
-                  )),
-              Obx(
-                () => Visibility(
-                  visible: controller.menuOpen.value,
-                  child: Obx(() => AnimatedOpacity(
-                        opacity: controller.opacity.value,
-                        duration: const Duration(milliseconds: 500),
-                        child: Obx(
-                          () => Column(
-                            children: controller.menuOpen.value
-                                ? controller.menuWidgets
-                                : [],
-                          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(() => Transform.rotate(
+                      angle: controller.angle.value,
+                      child: IconButton(
+                        icon: FaIcon(
+                          FontAwesomeIcons.angleUp,
+                          size: 40,
                         ),
-                      )),
-                ),
-              )
-            ],
+                        color: kAccent,
+                        onPressed: () {
+                          debugPrint('togglep');
+                          controller.toggleMenu();
+                        },
+                      ),
+                    )),
+                Obx(
+                  () => Visibility(
+                    visible: controller.menuOpen.value,
+                    child: Obx(() => AnimatedOpacity(
+                          opacity: controller.opacity.value,
+                          duration: const Duration(milliseconds: 500),
+                          child: Obx(
+                            () => Column(
+                              children: controller.menuOpen.value
+                                  ? controller.menuWidgets
+                                  : [],
+                            ),
+                          ),
+                        )),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -112,13 +114,19 @@ class SideMenuController extends GetxController
         Note newNote = Note.newLocal();
         DB.instance.notes.doc(newNote.id).set(newNote, SetOptions(merge: true));
       },
-      icon: Icon(Icons.add),
+      icon: Icon(Icons.add, size: 30),
     ),
     IconButton(
-        icon: FaIcon(FontAwesomeIcons.checkDouble),
+        icon: FaIcon(FontAwesomeIcons.checkDouble, size: 30),
         onPressed: () {
           Get.snackbar("title", "message");
         }),
+    IconButton(
+      icon: FaIcon(FontAwesomeIcons.school, size: 30),
+      onPressed: () {
+        Get.snackbar("title", "message");
+      },
+    ),
   ].obs;
 
   final visibility = false.obs;

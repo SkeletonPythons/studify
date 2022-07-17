@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:studify/pages/flashcard_page/flashcard_widgets/open_card.dart';
 import 'package:studify/utils/consts/app_colors.dart';
+import 'dart:math' as math;
 
 import '../../models/flashcard_model.dart';
 import '../../services/auth.dart';
@@ -14,28 +13,13 @@ import 'flashcard_widgets/note_card.dart';
 class NotePageController extends GetxController {
   final Stream<QuerySnapshot<Note>> noteStream = DB.instance.notes.snapshots();
 
-  RxList<Note> notes = <Note>[].obs;
   RxList<Widget> slivers = <Widget>[].obs;
-
-  List<String> get subjects {
-    List<String> subjects = [];
-    for (Note note in notes) {
-      if (note.subject == null || note.subject == '') {
-        continue;
-      }
-      if (!subjects.contains(note.subject)) {
-        subjects.add(note.subject!);
-      }
-    }
-    return subjects;
-  }
+  RxMap<String, List<Note>> noteMap = <String, List<Note>>{}.obs;
 
   @override
   void onReady() {
     super.onReady();
     debugPrint('NoteController/ready');
-
-    debugPrint(notes.toString());
   }
 
   @override
@@ -60,6 +44,7 @@ class NotePageController extends GetxController {
   void handleData(QuerySnapshot<Note> snap) {
     debugPrint('handleData');
     if (snap.docChanges.isEmpty) {
+      debugPrint('handleData/empty');
       return;
     } else if (snap.docs.isNotEmpty) {
       debugPrint('handleData/notEmpty');
@@ -93,7 +78,7 @@ class NotePageController extends GetxController {
           break;
       }
     }
-    slivers = buildSlivers.obs;
+    slivers.value = buildSlivers();
     update();
   }
 
@@ -103,11 +88,10 @@ class NotePageController extends GetxController {
     if (subject == '') {
       throw ('Subject cannot be empty.');
     }
-    if (subjects.contains(subject)) {
+    if (noteMap.containsKey(subject)) {
       throw ('Subject already exists.');
     }
-    Auth.instance.USER.subjects!.add(subject);
-    Auth.instance.USER.update();
+    noteMap[subject] = <Note>[];
   }
 
   /// Adds a new [Note] to the database.
@@ -139,8 +123,8 @@ class NotePageController extends GetxController {
 
   /// Method to remove a [Note] object to the [notes] list.
   bool removeNoteLocal(Note note) {
-    if (notes.any((element) => element.id == note.id)) {
-      notes.removeWhere((element) => element.id == note.id);
+    if (noteMap[note.subject]!.any((element) => element.id == note.id)) {
+      noteMap[note.subject]!.removeWhere((element) => element.id == note.id);
       return true;
     }
     return false;
@@ -148,11 +132,12 @@ class NotePageController extends GetxController {
 
   /// Method to add a [Note] object to the [notes] list.
   bool addNoteLocal(Note note) {
-    if (!notes.any((element) => element.id == note.id)) {
-      notes.add(note);
+    if (!noteMap.containsKey(note.subject)) {
+      noteMap[note.subject ?? 'no subject'] = <Note>[];
+    }
+    if (!noteMap[note.subject]!.any((element) => element.id == note.id)) {
+      noteMap[note.subject]!.add(note);
       return true;
-    } else if (notes.any((element) => element.id == note.id)) {
-      throw ('NoteController/addNoteLocal: Note already exists.');
     } else {
       return false;
     }
@@ -160,10 +145,11 @@ class NotePageController extends GetxController {
 
   /// Method to update a [Note] object in the [notes] list.
   bool updateNoteLocal(Note note) {
-    if (notes.any((element) => element.id == note.id)) {
-      int index = notes.indexWhere((note) => note.id == note.id);
-      notes.removeAt(index);
-      notes.insert(index, note);
+    if (noteMap[note.subject]!.any((element) => element.id == note.id)) {
+      int index = noteMap[note.subject]!
+          .indexWhere((noteElement) => note.id == noteElement.id);
+      noteMap[note.subject]!.removeAt(index);
+      noteMap[note.subject]!.insert(index, note);
       return true;
     } else {
       return false;
@@ -172,68 +158,175 @@ class NotePageController extends GetxController {
 
   ScrollController scrollController = ScrollController();
 
-  List<Widget> get buildSlivers {
-    List<Widget> slivers = [];
-    for (String subject in subjects) {
-      slivers.add(
-        SliverAppBar(
-          floating: true,
-          pinned: true,
-          automaticallyImplyLeading: false,
-          flexibleSpace: FlexibleSpaceBar(
-            collapseMode: CollapseMode.pin,
-            background: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.blue,
-                    Colors.blue[900]!,
-                  ],
-                ),
-              ),
-              child: InkWell(
-                onTap: () {},
-                child: Container(
-                  alignment: Alignment.center,
-                ),
-              ),
+  SliverPersistentHeader makeHeader(String headerText) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 60.0,
+        maxHeight: 200.0,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0x11212121),
+                Color(0xdd212121),
+                Color(0xff212121),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            title: Text(subject),
-            centerTitle: true,
-            expandedTitleScale: 2,
+            color: Color(0xdd212121),
+          ),
+          child: Center(
+            child: Text(
+              headerText,
+              style: GoogleFonts.ubuntu(fontSize: 20, color: kAccent),
+            ),
           ),
         ),
-      );
-      slivers.add(SliverToBoxAdapter(
-        child: SizedBox(
-          height: Get.height * 0.01,
+      ),
+    );
+  }
+
+  NoteCard makeNoteCard(Note note) {
+    return NoteCard(this, note: note);
+  }
+
+  List<Widget> buildSlivers() {
+    List<Widget> slivers = <Widget>[];
+    int ind = 0;
+    for (String subject in noteMap.keys) {
+      slivers.add(makeHeader(subject));
+      slivers.add(SliverGrid(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => makeNoteCard(noteMap[subject]![index]),
+          childCount: noteMap[subject]!.length,
         ),
       ));
-      List<Widget> childs = [];
-      for (Note note in notes) {
-        if (note.subject == subject) {
-          childs.add(
-            Material(
-                borderRadius: BorderRadius.circular(Get.height * 0.02),
-                type: MaterialType.card,
-                child: NoteCard(this, note: note)),
-          );
-        }
-      }
-      slivers.add(
-        SliverGrid(
-          delegate: SliverChildListDelegate(childs),
-          // ignore: prefer_const_constructors
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-          ),
-        ),
-      );
     }
     return slivers;
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => math.max(maxHeight, minHeight);
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
+  }
+}
+
+class CollapsingList extends StatelessWidget {
+  const CollapsingList({Key? key}) : super(key: key);
+
+  SliverPersistentHeader makeHeader(String headerText) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 60.0,
+        maxHeight: 200.0,
+        child: GestureDetector(
+          child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [kBackground, kBackgroundLight3],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight),
+              ),
+              child: Center(child: Text(headerText))),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        makeHeader('Header Section 1'),
+        SliverGrid.count(
+          crossAxisCount: 3,
+          children: [
+            Container(color: Colors.red, height: 150.0),
+            Container(color: Colors.purple, height: 150.0),
+            Container(color: Colors.green, height: 150.0),
+            Container(color: Colors.orange, height: 150.0),
+            Container(color: Colors.yellow, height: 150.0),
+            Container(color: Colors.pink, height: 150.0),
+            Container(color: Colors.cyan, height: 150.0),
+            Container(color: Colors.indigo, height: 150.0),
+            Container(color: Colors.blue, height: 150.0),
+          ],
+        ),
+        makeHeader('Header Section 2'),
+        SliverFixedExtentList(
+          itemExtent: 150.0,
+          delegate: SliverChildListDelegate(
+            [
+              Container(color: Colors.red),
+              Container(color: Colors.purple),
+              Container(color: Colors.green),
+              Container(color: Colors.orange),
+              Container(color: Colors.yellow),
+            ],
+          ),
+        ),
+        makeHeader('Header Section 3'),
+        SliverGrid(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200.0,
+            mainAxisSpacing: 10.0,
+            crossAxisSpacing: 10.0,
+            childAspectRatio: 4.0,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return Container(
+                alignment: Alignment.center,
+                color: Colors.teal[100 * (index % 9)],
+                child: Text('grid item $index'),
+              );
+            },
+            childCount: 20,
+          ),
+        ),
+        makeHeader('Header Section 4'),
+        // Yes, this could also be a SliverFixedExtentList. Writing
+        // this way just for an example of SliverList construction.
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              Container(color: Colors.pink, height: 150.0),
+              Container(color: Colors.cyan, height: 150.0),
+              Container(color: Colors.indigo, height: 150.0),
+              Container(color: Colors.blue, height: 150.0),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

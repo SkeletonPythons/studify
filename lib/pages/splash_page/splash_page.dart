@@ -22,7 +22,7 @@ class SplashPage extends StatelessWidget {
     return Material(
       child: Center(
         child: RiveAnimation.asset(
-          'assets/animations/splash.riv',
+          'assets/animations/splash-v2.riv',
           animations: const ['Animation 1'],
           controllers: [controller.rive],
           antialiasing: true,

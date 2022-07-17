@@ -114,13 +114,12 @@ class LoginScreen extends StatelessWidget {
                   controller.login(controller.emailController.text.trim(),
                       controller.passwordController.text.trim());
                 },
-                child: const Text('Sign in'),
+                child: Text('Sign in with email/password',
+                    style: GoogleFonts.roboto().copyWith(fontSize: 18)),
               ),
             ),
-            GoogleSignInButton(
-                clientId: clientID,
-                auth: Auth.instance.auth,
-                action: AuthAction.signIn),
+            const SizedBox(height: 20),
+            const CustomGoogleButton(action: AuthAction.signIn)
           ],
         ),
       ),
@@ -194,7 +193,6 @@ class RegisterScreenUI extends StatelessWidget {
                 width: Get.width * 0.8,
                 // Display name field
                 child: Form(
-                  key: controller.formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
@@ -323,13 +321,65 @@ class RegisterScreenUI extends StatelessWidget {
                 height: Get.height * 0.05,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (controller.formKey.currentState!.validate()) {
+                    String? emailError = controller
+                        .validateEmail(controller.emailController.text);
+                    String? passError = controller
+                        .validatePassword(controller.passwordController.text);
+                    String? nameError =
+                        controller.validateName(controller.nameController.text);
+                    String? confirmError = controller.validateConfirmPassword(
+                        controller.confirmPasswordController.text);
+                    if (emailError == null &&
+                        passError == null &&
+                        nameError == null &&
+                        confirmError == null) {
                       controller.register(
                         controller.name.value,
                         controller.email.value,
                         controller.password.value,
                         controller.confirmPassword.value,
                       );
+                    } else {
+                      if (emailError != null) {
+                        Get.snackbar(
+                          'Error',
+                          emailError,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 2),
+                        );
+                      }
+                      if (passError != null) {
+                        Get.snackbar(
+                          'Error',
+                          passError,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 2),
+                        );
+                      }
+                      if (nameError != null) {
+                        Get.snackbar(
+                          'Error',
+                          nameError,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 2),
+                        );
+                      }
+                      if (confirmError != null) {
+                        Get.snackbar(
+                          'Error',
+                          confirmError,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(seconds: 2),
+                        );
+                      }
                     }
                   },
                   child: Text(
@@ -345,12 +395,91 @@ class RegisterScreenUI extends StatelessWidget {
                 color: kAccent,
                 thickness: 3,
               ),
-              GoogleSignInButton(
-                clientId: clientID,
-                auth: Auth.instance.auth,
+              const SizedBox(height: 20),
+              const CustomGoogleButton(
                 action: AuthAction.signUp,
               ),
             ]),
+      ),
+    );
+  }
+}
+
+enum BtnState { normal, disabled, focused, pressed }
+
+class CustomGoogleButton extends StatefulWidget {
+  const CustomGoogleButton({required this.action, Key? key}) : super(key: key);
+
+  final AuthAction action;
+
+  @override
+  State<CustomGoogleButton> createState() => _CustomGoogleButtonState();
+}
+
+class _CustomGoogleButtonState extends State<CustomGoogleButton> {
+  Rx<BtnState> btnState = BtnState.normal.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height * 0.05,
+      width: Get.width,
+      padding: const EdgeInsets.all(0),
+      child: ElevatedButton(
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+            backgroundColor:
+                MaterialStateProperty.all(const Color(0xff4285f4))),
+        onHover: (value) {
+          if (value) {
+            btnState.value = BtnState.focused;
+          } else {
+            btnState.value = BtnState.normal;
+          }
+        },
+        onPressed: () async {
+          if (btnState.value == BtnState.normal) {
+            btnState.value = BtnState.pressed;
+            Future.delayed(
+              const Duration(milliseconds: 100),
+              () {
+                btnState.value = BtnState.normal;
+              },
+            );
+          }
+          await Auth.instance.logInWithGoogle();
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadiusDirectional.only(
+                    topStart: Radius.circular(5),
+                    bottomStart: Radius.circular(5)),
+              ),
+              child: Image.asset(btnState.value == BtnState.disabled
+                  ? 'assets/images/g.png'
+                  : btnState.value == BtnState.focused
+                      ? 'assets/images/g.png'
+                      : btnState.value == BtnState.pressed
+                          ? 'assets/images/g.png'
+                          : 'assets/images/g.png'),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              widget.action == AuthAction.signIn
+                  ? 'Sign in with Google!'
+                  : 'Register with Google!',
+              style: GoogleFonts.roboto().copyWith(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

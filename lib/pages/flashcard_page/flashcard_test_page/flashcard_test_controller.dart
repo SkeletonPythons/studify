@@ -4,8 +4,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:studify/utils/consts/app_colors.dart';
 
+import '../../../utils/consts/app_colors.dart';
 import '../../../models/flashcard_model.dart';
 import '../../../services/db.dart';
 
@@ -13,8 +13,9 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
   List<Note> notes = <Note>[];
   List<String?> questions = [];
   List<String?> answers = [];
-  String subj = 'all';
+  String subj = '';
   int timer = 10;
+  RxBool subjectSet = false.obs;
 
   @override
   void onInit() {

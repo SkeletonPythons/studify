@@ -16,8 +16,8 @@ import '../../../models/flashcard_model.dart';
 import '../../../services/auth.dart';
 import '../../../services/db.dart';
 import '../../utils/consts/app_colors.dart';
-import 'flashcard_widgets/closed_card.dart';
-import 'flashcard_widgets/open_card.dart';
+import '../flashcard_page/flashcard_widgets/closed_card.dart';
+import '../flashcard_page/flashcard_widgets/open_card.dart';
 import 'flashcard_controller.dart';
 
 class FlashcardPage extends StatelessWidget {
@@ -68,8 +68,8 @@ class FlashcardPage extends StatelessWidget {
                     if (snapshot.hasData) {
                       debugPrint('stream: has data');
                       if (_.handleData(snapshot.data!)) {
-                        _.cards = RxList<Widget>(_.buildCards(__, _.notes));
-                        return FlashcardGrid(_, cards: _.cards);
+                        // _.cards = RxList<Widget>(_.buildCards(__, _.notes));
+                        // return FlashcardGrid(_, cards: _.cards);
                       }
                     }
                     // This will execute if the stream is still loading data
@@ -185,9 +185,9 @@ class FCMenu extends StatelessWidget {
                   () => Visibility(
                     visible: controller.visibility.value,
                     child: Obx(() => Column(
-                          children: controller.menuOpen.value
-                              ? controller.menuWidgets
-                              : [],
+                          children:
+                              // ? controller.menuWidgets
+                              const [],
                         )),
                   ),
                 ),

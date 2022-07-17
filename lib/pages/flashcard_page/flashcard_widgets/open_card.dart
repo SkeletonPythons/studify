@@ -9,7 +9,6 @@ import 'package:studify/widgets/buttons/triangle_button.dart';
 
 import '../../../../models/flashcard_model.dart';
 import '../../../utils/consts/app_colors.dart';
-import '../flashcard_controller.dart';
 import 'open_controller.dart';
 import 'tags.dart';
 
@@ -190,20 +189,43 @@ class _OpenCardState extends State<OpenCard> {
                       color: kBackgroundLight2,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    // child: DropdownButton(
-                    //     onChanged: <dynamic>(_) {},
-                    //     items: <DropdownMenuItem<dynamic>>[
-                    //       DropdownMenuItem(
-                    //         child: Text(
-                    //           'Subject',
-                    //           style: TextStyle(
-                    //               color: kBackgroundDark,
-                    //               fontSize: Get.height * .03),
-                    //         ),
-                    //       ),
-                    // ]
-
-                    // )
+                    child: Obx(() => TextField(
+                          onChanged: (value) => widget.note.subject = value,
+                          expands: false,
+                          clipBehavior: Clip.none,
+                          maxLines: 1,
+                          minLines: 1,
+                          textAlign: TextAlign.start,
+                          textAlignVertical: TextAlignVertical(y: -.95),
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kAccent,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xff444444),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'subject',
+                            labelStyle: GoogleFonts.neucha(
+                              fontSize: 20,
+                            ),
+                            contentPadding: const EdgeInsets.all(15),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.greenAccent,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          enabled: controller.editEnabled.value,
+                          controller: controller.sc,
+                        )),
                   ),
                   NoteTags(
                     note: widget.note,
@@ -228,6 +250,7 @@ class _OpenCardState extends State<OpenCard> {
                           ..rotateY(controller.flipValue.value * pi),
                         transformAlignment: Alignment.center,
                         decoration: BoxDecoration(
+                          boxShadow: kElevationToShadow[6],
                           color: kBackgroundLight2,
                           borderRadius: BorderRadius.circular(10),
                         ),

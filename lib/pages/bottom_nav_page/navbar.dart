@@ -14,7 +14,7 @@ import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
 import '../calendar_page/calendar_page.dart';
 import '../dashboard_page/dashboard_page.dart';
-import '../flashcard_page/flashcard_page.dart';
+import '../OLD/flashcard_page.dart';
 import '../flashcard_page/note_page.dart';
 import '../timers_page/timer_controllers/timer_controller.dart';
 
@@ -130,7 +130,7 @@ class AppBarDrawer extends StatelessWidget {
               Icons.exit_to_app,
             ),
             title: Text('Logout'),
-            onTap: () => Auth.instance.logOut(),
+            onTap: () => Auth.instance.logout(),
           ),
           AboutWidget(),
           Divider(
@@ -142,22 +142,24 @@ class AppBarDrawer extends StatelessWidget {
               Icons.note_add_outlined,
             ),
             title: Text('Add Sample FLashcards'),
-            onTap: () {
-              try {
-                DB.instance.populateWithSampleNotes();
-                Get.snackbar('Success!',
-                    'Sample flashcards added!\nPLEASE USE SPARRINGLY! It will cost money if we do too many writes/reads!',
-                    duration: Duration(seconds: 5));
-              } catch (e) {
-                Get.snackbar('Error!', 'Something went wrong!');
+            onTap: () async {
+              if (Auth.instance.USER.settings?['newUser'] == true ||
+                  Auth.instance.USER.settings?['newUser'] == null) {
+                Auth.instance.USER.settings!['newUser'] = false;
+                try {
+                  await DB.instance.user
+                      .update({'settings': Auth.instance.USER.settings!});
+                  DB.instance.populateWithSampleNotes();
+                  Get.snackbar('Success!', 'Sample flashcards added!',
+                      duration: Duration(seconds: 5));
+                } catch (e) {
+                  Get.snackbar('Error!', 'Something went wrong!');
+                }
+              } else {
+                Get.snackbar('Error!', 'You already added sample flashcards!');
               }
             },
           ),
-          ListTile(
-              title: Text('alt notes'),
-              onTap: () {
-                Get.toNamed(Routes.ALT_NOTES);
-              }),
         ],
       ),
     );

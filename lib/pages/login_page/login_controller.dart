@@ -12,7 +12,7 @@ const String clientID =
     '620545516658-21ug7j0bajvrmlm7heht0lo5egmtdn7g.apps.googleusercontent.com';
 
 class LoginController extends GetxController {
-  GlobalKey<FormState> formKey = GlobalKey();
+
 
   String? val(String? value) {
     if (value == null || value.isEmpty) {
@@ -27,6 +27,9 @@ class LoginController extends GetxController {
     debugPrint('LoginController onInit');
     Get.put<Auth>(Auth(), permanent: true);
   }
+
+  @override
+  void onClose() {}
 
   @override
   void dispose() {
