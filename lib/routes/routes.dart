@@ -6,6 +6,7 @@ import '../pages/bottom_nav_page/navbar.dart';
 import '../pages/bottom_nav_page/navbar_controller.dart';
 import '../pages/calendar_page/calendar_page.dart';
 import '../pages/dashboard_page/dashboard_page.dart';
+import '../pages/flashcard_page/flashcard_test_page/flashcard_test_page.dart';
 import '../pages/flashcard_page/flashcard_widgets/open_controller.dart';
 import '../pages/login_page/login_page.dart';
 import '../pages/splash_page/splash_page.dart';
@@ -26,6 +27,7 @@ abstract class Routes {
   static const String POMODOROSETUP = '/pomodoro_setup';
   static const String POMODORO = '/pomodoro';
   static const String ALT_NOTES = '/alt_notes';
+  static const String TEST = '/test';
 }
 
 class AppPages {
@@ -74,6 +76,10 @@ class AppPages {
       name: Routes.ALT_NOTES,
       page: () => NotePage(),
     ),
+    // GetPage(
+    //   name: Routes.TEST,
+    //   page: () => TestPage(),
+    // ),
   ];
 }
 

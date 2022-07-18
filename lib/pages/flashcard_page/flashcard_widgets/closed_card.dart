@@ -15,11 +15,13 @@ class ClosedCard extends StatelessWidget {
     required this.note,
     required this.onTap,
     required this.isSelected,
+    required this.selectionEnabled,
     Key? key,
   }) : super(key: key);
   final Note note;
   final VoidCallback onTap;
   final RxBool isSelected;
+  final RxBool selectionEnabled;
 
   @override
   Widget build(BuildContext context) {

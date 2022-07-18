@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 
+import 'flashcard_test_page/flashcard_test_page.dart';
 import 'flashcard_widgets/side_menu.dart';
 import 'note_controller.dart';
 
@@ -61,7 +62,7 @@ class _NotePageState extends State<NotePage> {
             GetBuilder<NotePageController>(
               init: Get.find(),
               builder: (_) {
-                return FCMenu();
+                return FCMenu(() => Get.to(TestPage(notes: _.noteMap)));
               },
             ),
           ]);

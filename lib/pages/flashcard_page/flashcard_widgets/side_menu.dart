@@ -12,12 +12,16 @@ import '../../../models/flashcard_model.dart';
 import '../../../services/db.dart';
 import '../note_controller.dart';
 
+typedef TestStart = void Function();
+
 class FCMenu extends StatelessWidget {
-  FCMenu({
+  FCMenu(
+    this.startTest, {
     Key? key,
   }) : super(key: key);
 
   SideMenuController controller = Get.put(SideMenuController());
+  TestStart startTest;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,29 @@ class FCMenu extends StatelessWidget {
                           child: Obx(
                             () => Column(
                               children: controller.menuOpen.value
-                                  ? controller.menuWidgets
+                                  ? [
+                                      IconButton(
+                                        onPressed: () {
+                                          Note newNote = Note.newLocal();
+                                          DB.instance.notes.doc(newNote.id).set(
+                                              newNote, SetOptions(merge: true));
+                                        },
+                                        icon: Icon(Icons.add, size: 30),
+                                      ),
+                                      IconButton(
+                                          icon: FaIcon(
+                                              FontAwesomeIcons.checkDouble,
+                                              size: 30),
+                                          onPressed: () {
+                                            Get.snackbar("title", "message");
+                                          }),
+                                      IconButton(
+                                        icon: FaIcon(
+                                            FontAwesomeIcons.schoolFlag,
+                                            size: 30),
+                                        onPressed: () => startTest(),
+                                      ),
+                                    ]
                                   : [],
                             ),
                           ),
@@ -107,27 +133,6 @@ class SideMenuController extends GetxController
   final RxDouble menuHeight = (Get.height * 0.1).obs;
 
   final menuOpen = false.obs;
-
-  final menuWidgets = <Widget>[
-    IconButton(
-      onPressed: () {
-        Note newNote = Note.newLocal();
-        DB.instance.notes.doc(newNote.id).set(newNote, SetOptions(merge: true));
-      },
-      icon: Icon(Icons.add, size: 30),
-    ),
-    IconButton(
-        icon: FaIcon(FontAwesomeIcons.checkDouble, size: 30),
-        onPressed: () {
-          Get.snackbar("title", "message");
-        }),
-    IconButton(
-      icon: FaIcon(FontAwesomeIcons.school, size: 30),
-      onPressed: () {
-        Get.snackbar("title", "message");
-      },
-    ),
-  ].obs;
 
   final visibility = false.obs;
 

@@ -8,7 +8,7 @@ import '../../../services/auth.dart';
 import '../../../services/db.dart';
 
 class CalendarController extends GetxController {
-  late final Event newEvent;
+  late final Event newEvent = Event(title: '', description: '');
   List<Event> events = <Event>[].obs;
 
   Event createEvent({
