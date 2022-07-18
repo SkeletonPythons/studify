@@ -42,6 +42,7 @@ class PomodoroController extends GetxController {
 
   //History variables
   List<PomodoroHistory> pomodoroHistory = [];
+  List<PomodoroHistory> pomodoroFavorites = [];
   late Timer pomodoroTimer;
 
   //Controllers
@@ -58,7 +59,7 @@ class PomodoroController extends GetxController {
     pomodoroHistoryController.addTimerToDatabase(pomodoroHistory.last);
     pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     pomodoroHistory.forEach((PomodoroHistory history) => print(history.toString()));
-    
+
     const oneSecond = Duration(
       seconds: 1,
     );
