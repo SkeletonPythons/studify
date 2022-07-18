@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class PomodoroHistory {
   DateTime dateTime;
   int timeStudied;
@@ -10,7 +12,10 @@ class PomodoroHistory {
     required this.timeStudied,
     required this.timeRested,
     required this.cycles,
-  }) : id = dateTime.millisecondsSinceEpoch.toString();
+    String? id,
+  }) : id = id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString();
+
+  static int pepper() => Random().nextInt(50);
 
   Map<String, dynamic> toJson() => {
         'dateTime': dateTime.millisecondsSinceEpoch,

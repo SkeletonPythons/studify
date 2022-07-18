@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:studify/models/pomodoro_models/pomodoro_history.dart';
+import 'package:studify/pages/timers_page/timer_controllers/pomodoro_history_controller.dart';
 import 'package:studify/utils/consts/app_colors.dart';
+
+import '../../pages/timers_page/timer_controllers/pomodoro_controller.dart';
 
 class TimerHistory extends StatefulWidget {
   const TimerHistory({
     Key? key,
   }) : super(key: key);
-
-  //final PomodoroHistory pomodoroHistory;
-  //final bool isDifferentDay;
 
   @override
   State<TimerHistory> createState() => _TimerHistoryState();
@@ -22,6 +22,7 @@ class TimerHistory extends StatefulWidget {
 class _TimerHistoryState extends State<TimerHistory>
     with TickerProviderStateMixin {
   DateTime today = DateTime.now();
+  PomodoroController pomodoroController = Get.find<PomodoroController>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _TimerHistoryState extends State<TimerHistory>
               ),
               child: Center(
                 child: ListView.builder(
-                  itemCount: 10,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
                     return ListTile(
                       enabled: true,
@@ -87,17 +88,17 @@ class _TimerHistoryState extends State<TimerHistory>
               ),
               child: Center(
                 child: ListView.builder(
-                  itemCount: 10,
+                  itemCount: pomodoroController.pomodoroHistory.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       enabled: true,
                       onTap: () {
                         Get.snackbar('hello', 'clicking this will make a new timer');
                       },
-                      title: Text('Pomodoro'),
+                      title: Text('${(pomodoroController.pomodoroHistory[index].timeStudied)~/60} Study ${(pomodoroController.pomodoroHistory[index].timeRested)~/60} Rest'),
                       subtitle:
-                          Text('${today.day}/${today.month}/${today.year}'),
-                      trailing: Text('${today.hour}:${today.minute}'),
+                          Text('${pomodoroController.pomodoroHistory[index].cycles} Cycles'),
+                      trailing: Text('${pomodoroController.pomodoroHistory[index].dateTime.month}/${pomodoroController.pomodoroHistory[index].dateTime.day}/${pomodoroController.pomodoroHistory[index].dateTime.year}'),
                     );
                   },
                 ),

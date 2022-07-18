@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:studify/pages/timers_page/timer_controllers/pomodoro_history_controllerV2.dart';
 import 'package:studify/pages/timers_page/timer_pomodoro_setup.dart';
 
 import '../../../models/pomodoro_models/pomodoro_history.dart';
@@ -46,14 +47,18 @@ class PomodoroController extends GetxController {
   //Controllers
   late TimerController timerController =
       Get.put<TimerController>(TimerController());
-  PomodoroHistoryController pomodoroHistoryController =
-      Get.put<PomodoroHistoryController>(PomodoroHistoryController());
+  HistoryControllerV2 pomodoroHistoryController =
+      Get.put<HistoryControllerV2>(HistoryControllerV2());
 
   // Functions
   void StartPomodoro() {
     currentPomodoroStatus.value = PomodoroStatus.running;
     currentCycle.value = 0;
-
+    pomodoroHistory.add(pomodoroHistoryController.SaveNewHistoryItem(workTime.value, restTime.value, totalCycles.value));
+    pomodoroHistoryController.addTimerToDatabase(pomodoroHistory.last);
+    pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    pomodoroHistory.forEach((PomodoroHistory history) => print(history.toString()));
+    
     const oneSecond = Duration(
       seconds: 1,
     );
@@ -63,13 +68,7 @@ class PomodoroController extends GetxController {
         if (workTime.value <= 1 && currentCycle.value == totalCycles.value) {
           pomodoroTimer.cancel();
           currentPomodoroStatus.value = PomodoroStatus.finished;
-          pomodoroHistory = pomodoroHistoryController.read('pomodoroHistory');
-          pomodoroHistory.add(PomodoroHistory(
-              dateTime: DateTime.now(),
-              timeStudied: workTime.value,
-              timeRested: restTime.value,
-              cycles: totalCycles.value));
-          pomodoroHistoryController.save('pomodoroHistory', pomodoroHistory);
+
         } else if (currentPomodoroStatus.value == PomodoroStatus.running){
             workTime.value--;
             if(workTime.value == 0){
