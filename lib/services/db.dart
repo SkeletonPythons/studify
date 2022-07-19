@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:studify/models/pomodoro_models/history_model.dart';
 
 import '../models/user_model.dart';
 import '../utils/sample_cards.dart';
@@ -85,7 +86,7 @@ class DB extends GetxService {
       .collection('events');
 
   /// Shortcut to access [timers] collection.
-  CollectionReference get timers => store
+  CollectionReference<Map<String, dynamic>> get timers => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
       .collection('timers');

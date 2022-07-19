@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import '../../../models/pomodoro_models/pomodoro_history.dart';
+import 'package:googleapis/cloudsearch/v1.dart';
+import '../../../models/pomodoro_models/history_model.dart';
+import '../../../services/auth.dart';
 import '../../../services/db.dart';
 
-class HistoryControllerV2 extends GetxController {
+class HistoryController extends GetxController {
   List<String>? list = [];
   List<PomodoroHistory>? pomodoroHistory = [];
 
@@ -15,11 +18,9 @@ class HistoryControllerV2 extends GetxController {
     return newHistoryItem;
   }
 
-  void addTimerToDatabase(PomodoroHistory historyItem) async {
-    print('Adding timer to database');
-    await DB.instance.timers.doc(historyItem.id).set(historyItem).catchError((e) {
-      print('\n\nerror adding timer: $e\n\n');
-    });
+  Future addTimerToDatabase(PomodoroHistory historyItem) async {
+    await DB.instance.timers.doc(historyItem.id).set(historyItem.toFirestore(), SetOptions(merge: true));
+    print('timer added to database');
   }
 
 

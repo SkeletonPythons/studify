@@ -4,8 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:studify/models/pomodoro_models/pomodoro_history.dart';
-import 'package:studify/pages/timers_page/timer_controllers/pomodoro_history_controller.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 
 import '../../pages/timers_page/timer_controllers/pomodoro_controller.dart';

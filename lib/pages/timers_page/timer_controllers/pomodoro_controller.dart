@@ -4,25 +4,25 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:studify/pages/timers_page/timer_controllers/pomodoro_history_controllerV2.dart';
+import 'package:studify/pages/timers_page/timer_controllers/history_controller.dart';
 import 'package:studify/pages/timers_page/timer_pomodoro_setup.dart';
 
-import '../../../models/pomodoro_models/pomodoro_history.dart';
+import '../../../models/pomodoro_models/history_model.dart';
+import '../../../services/db.dart';
 import '../pomodoro.dart';
-import 'pomodoro_history_controller.dart';
 import 'timer_controller.dart';
 
 enum PomodoroStatus { running, pausedWork, pausedRest, resting, finished, cycleFinished }
 
 class PomodoroController extends GetxController {
-  //Functionality variables
+  ///Functionality variables
   RxInt workTime = 0.obs;
   RxInt restTime = 0.obs;
   RxInt totalCycles = 0.obs;
   RxInt currentCycle = 0.obs;
   Rx<PomodoroStatus> currentPomodoroStatus = PomodoroStatus.running.obs;
 
-//Status Maps
+///Status Maps
   Map<PomodoroStatus, String> displayStatus = {
     PomodoroStatus.running: "Study time!",
     PomodoroStatus.pausedWork: "Paused!",
@@ -40,26 +40,32 @@ class PomodoroController extends GetxController {
     PomodoroStatus.resting: Colors.blue
   };
 
-  //History variables
+  ///History variables
   List<PomodoroHistory> pomodoroHistory = [];
   List<PomodoroHistory> pomodoroFavorites = [];
   late Timer pomodoroTimer;
 
-  //Controllers
+  ///Controllers
   late TimerController timerController =
       Get.put<TimerController>(TimerController());
-  HistoryControllerV2 pomodoroHistoryController =
-      Get.put<HistoryControllerV2>(HistoryControllerV2());
+  HistoryController pomodoroHistoryController =
+      Get.put<HistoryController>(HistoryController());
 
-  // Functions
+  /// Functions
   void StartPomodoro() {
     currentPomodoroStatus.value = PomodoroStatus.running;
     currentCycle.value = 0;
-    pomodoroHistory.add(pomodoroHistoryController.SaveNewHistoryItem(workTime.value, restTime.value, totalCycles.value));
-    pomodoroHistoryController.addTimerToDatabase(pomodoroHistory.last);
-    pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    pomodoroHistory.forEach((PomodoroHistory history) => print(history.toString()));
 
+    ///Saving timer to local history
+    pomodoroHistory.add(pomodoroHistoryController.SaveNewHistoryItem(
+        workTime.value,
+        restTime.value,
+        totalCycles.value));
+
+    pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    //pomodoroHistory.forEach((PomodoroHistory history) => print(history.toString()));
+
+    ///Timer functionality
     const oneSecond = Duration(
       seconds: 1,
     );
@@ -82,7 +88,6 @@ class PomodoroController extends GetxController {
               SwitchToWork();
             }
           }
-
       },
     );
   }
