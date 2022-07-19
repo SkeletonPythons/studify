@@ -140,6 +140,8 @@ class _TestPageState extends State<TestPage> {
                             width: Get.width * 0.9,
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.easeInOut,
+                            transform: Matrix4.translationValues(0, 0, 0),
+                            transformAlignment: Alignment.center,
                             child: Center(
                               child: Obx(
                                 () => Text(

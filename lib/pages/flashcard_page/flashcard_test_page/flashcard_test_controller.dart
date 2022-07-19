@@ -187,7 +187,8 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
   void setSubject(String subject) {
     subj = subject;
     subjectSet.value = true;
-    questions = notes[subject]?.map((note) => note.front).toList() ?? [];
+    questions = notes[subject]?.map((note) => note.front).toList() ?? []
+      ..shuffle();
     answers = notes[subject]?.map((note) => note.back).toList() ?? [];
   }
 
