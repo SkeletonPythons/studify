@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:studify/pages/timers_page/timer_controllers/history_controller.dart';
 import 'package:studify/widgets/timer_widgets/timer_history.dart';
-
+import '../../models/pomodoro_models/history_model.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/timer_widgets/number_fields.dart';
 import 'pomodoro.dart';
 import 'timer_controllers/pomodoro_controller.dart';
-import 'timer_controllers/pomodoro_history_controller.dart';
 import 'timer_controllers/timer_controller.dart';
 
 class PomodoroSetUp extends StatefulWidget {
@@ -22,19 +22,20 @@ class PomodoroSetUp extends StatefulWidget {
 
 class PomodoroSetUpState extends State<PomodoroSetUp>
     with SingleTickerProviderStateMixin {
-  //variables
   static int workTime = 0;
 
+  /// text editing controllers for the number fields on the set up page
   static TextEditingController workTimeController = TextEditingController();
   static TextEditingController restTimeController = TextEditingController();
   static TextEditingController cycleController = TextEditingController();
   int numOfCycles = 1;
+
+  /// controllers
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController(), permanent: true);
 
-  PomodoroHistoryController pomodoroHistoryController =
-      Get.put<PomodoroHistoryController>(PomodoroHistoryController(),
-          permanent: true);
+  HistoryController pomodoroHistoryController =
+      Get.put<HistoryController>(HistoryController(), permanent: true);
 
   TimerController timerController = Get.find<TimerController>();
 
@@ -112,9 +113,20 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                       int.parse(cycleController.text);
                   timerController.isRunning.value = true;
                   pomodoroController.StartPomodoro();
-                  timerController.setActiveWidget(
-                      PomodoroTimer()); // updates navbar screens if Pomodoro timer active
-                  //Routes to navbar which will display updated screens & index
+
+                  /// add the new pomodoro to the database
+                  final newTimer = Pomodoro(
+                      dateTime: DateTime.now(),
+                      timeStudied: int.parse(workTimeController.text),
+                      timeRested: int.parse(restTimeController.text),
+                      cycles: int.parse(cycleController.text));
+                  pomodoroHistoryController.addTimerToDatabase(newTimer);
+
+                  ///set the active page to the timer
+                  timerController.setActiveWidget(PomodoroTimer());
+
+                  /// updates navbar screens if Pomodoro timer active
+                  ///Routes to navbar which will display updated screens & index
                   Get.back();
                 }),
           ),
@@ -130,10 +142,10 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
               onPressed: () {},
             ),
           ),
-           Padding(
-             padding: const EdgeInsets.only(top: 340, left: 15, right: 15 ),
-             child: TimerHistory(),
-           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 340, left: 15, right: 15),
+            child: TimerHistory(),
+          ),
         ],
       ),
     );

@@ -15,6 +15,7 @@ class NotePageController extends GetxController {
 
   RxList<Widget> slivers = <Widget>[].obs;
   RxMap<String, List<Note>> noteMap = <String, List<Note>>{}.obs;
+  RxBool selectionEnabled = false.obs;
 
   @override
   void onReady() {

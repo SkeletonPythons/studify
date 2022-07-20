@@ -21,7 +21,7 @@ class NoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (OpenContainer(
+    return OpenContainer(
       transitionDuration: const Duration(milliseconds: 900),
       closedColor: Colors.transparent,
       openColor: kBackgroundLight,
@@ -33,6 +33,7 @@ class NoteCard extends StatelessWidget {
           note: note,
           onTap: openContainer,
           isSelected: false.obs,
+          selectionEnabled: controller.selectionEnabled,
         );
       },
       openBuilder: (BuildContext context, VoidCallback closeContainer) {
@@ -41,6 +42,6 @@ class NoteCard extends StatelessWidget {
           callback: closeContainer,
         );
       },
-    ));
+    );
   }
 }

@@ -8,6 +8,8 @@ Rx<ThemeData> currentTheme = themeOne.obs;
 
 Rx<TextStyle> currentStyle = textStyleOne.obs;
 
+Rx<Color> accentColor = Rx<Color>(kAccent);
+
 final ThemeData themeOne = ThemeData.dark().copyWith(
   primaryColor: kPrimary,
   backgroundColor: kBackground,
@@ -109,7 +111,8 @@ const Map<int, Color> acnts = {
   7: Color.fromARGB(255, 59, 206, 142),
   8: Color.fromARGB(255, 255, 90, 48),
   9: Color(0xffE5A5FF),
-  10: Color(0xffabcbbe)
+  10: Color(0xffabcbbe),
+  11: Colors.redAccent,
 };
 
 const Map<int, Color> brdrs = {

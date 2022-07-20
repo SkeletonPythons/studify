@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../services/auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../themes/apptheme.dart';
+import '../../utils/consts/app_colors.dart';
+import '../../../services/auth.dart';
 import '../home_page/home_controller.dart';
 
 class Dashboard extends StatefulWidget {
@@ -16,10 +19,37 @@ class DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (Auth.instance.USER.photoUrl == null ||
-        Auth.instance.USER.photoUrl == '') {
-    } else {}
-
-    return Container();
+    return SafeArea(
+      child: AnimatedContainer(
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+          decoration: BoxDecoration(
+            color: kBackground,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: const [
+                kBackgroundLight2,
+                kBackgroundLight,
+              ],
+            ),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                  left: 20,
+                  top: 20,
+                  child: Text(
+                    'Dashboard',
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                      color: accentColor.value,
+                    ),
+                  )),
+            ],
+          )),
+    );
   }
 }
