@@ -2,14 +2,14 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PomodoroHistory {
+class Pomodoro {
   DateTime dateTime;
   int timeStudied;
   int timeRested;
   int cycles;
   String id;
 
-  PomodoroHistory({
+  Pomodoro({
     required this.dateTime,
     required this.timeStudied,
     required this.timeRested,
@@ -19,7 +19,7 @@ class PomodoroHistory {
 
   static int pepper() => Random().nextInt(50);
 
-  PomodoroHistory.newLocal({
+  Pomodoro.newLocal({
     required this.dateTime,
     required this.timeStudied,
     required this.timeRested,
@@ -27,7 +27,7 @@ class PomodoroHistory {
     String? id,
   }) : id = id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString();
 
-  PomodoroHistory.fromFirestore(
+  Pomodoro.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   )   : id = snapshot.id,
         dateTime = snapshot.data()!['dateTime'] ?? DateTime.now(),
@@ -35,12 +35,12 @@ class PomodoroHistory {
         timeRested = snapshot.data()!['timeRested'] ?? 0,
         cycles = snapshot.data()!['cycles'] ?? 0;
 
-  PomodoroHistory.fromJson(Map<String, dynamic> json)
+  Pomodoro.fromJson(Map<String, dynamic> json)
       : dateTime = DateTime.fromMicrosecondsSinceEpoch(json['dateTime']),
         timeStudied = json['timeStudied'],
         timeRested = json['timeRested'],
         cycles = json['cycles'],
-        id = json['id'] ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString();
+        id = json['id'] ;
 
   Map<String, dynamic> toFirestore() {
     return {

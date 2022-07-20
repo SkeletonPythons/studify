@@ -85,11 +85,17 @@ class DB extends GetxService {
       .doc(Auth.instance.USER.uid)
       .collection('events');
 
-  /// Shortcut to access [timers] collection.
-  CollectionReference<Map<String, dynamic>> get timers => store
+  /// Shortcut to access [timerHistory] collection.
+  CollectionReference<Map<String, dynamic>> get timerHistory => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
-      .collection('timers');
+      .collection('timerHistory');
+
+  /// Shortcut to access [timerFavorites] collection.
+  CollectionReference<Map<String, dynamic>> get timerFavorites => store
+      .collection('users')
+      .doc(Auth.instance.USER.uid)
+      .collection('timerFavorites');
 
   void initDB() async {
     /// This function is used to initialize the database.

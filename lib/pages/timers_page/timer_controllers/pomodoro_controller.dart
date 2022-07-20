@@ -41,8 +41,8 @@ class PomodoroController extends GetxController {
   };
 
   ///History variables
-  List<PomodoroHistory> pomodoroHistory = [];
-  List<PomodoroHistory> pomodoroFavorites = [];
+  List<Pomodoro> pomodoroHistory = [];
+  List<Pomodoro> pomodoroFavorites = [];
   late Timer pomodoroTimer;
 
   ///Controllers

@@ -33,4 +33,5 @@ class TimerController extends GetxController {
   void setActiveWidget(Widget widget) {
     activeWidget.value = widget;
   }
+
 }

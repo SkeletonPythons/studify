@@ -115,7 +115,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   timerController.isRunning.value = true;
                   pomodoroController.StartPomodoro();
                   /// add the new pomodoro to the database
-                  final newTimer = PomodoroHistory(
+                  final newTimer = Pomodoro(
                       dateTime: DateTime.now(),
                       timeStudied: int.parse(workTimeController.text),
                       timeRested: int.parse(restTimeController.text),

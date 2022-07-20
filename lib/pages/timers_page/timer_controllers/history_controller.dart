@@ -7,10 +7,10 @@ import '../../../services/db.dart';
 
 class HistoryController extends GetxController {
   List<String>? list = [];
-  List<PomodoroHistory>? pomodoroHistory = [];
+  List<Pomodoro>? pomodoroHistory = [];
 
-  PomodoroHistory SaveNewHistoryItem(int workTime, int restTime, int totalCycles) {
-    PomodoroHistory newHistoryItem = PomodoroHistory(
+  Pomodoro SaveNewHistoryItem(int workTime, int restTime, int totalCycles) {
+    Pomodoro newHistoryItem = Pomodoro(
         dateTime: DateTime.now(),
         timeStudied: workTime,
         timeRested: restTime,
@@ -18,8 +18,8 @@ class HistoryController extends GetxController {
     return newHistoryItem;
   }
 
-  Future addTimerToDatabase(PomodoroHistory historyItem) async {
-    await DB.instance.timers.doc(historyItem.id).set(historyItem.toFirestore(), SetOptions(merge: true));
+  Future addTimerToDatabase(Pomodoro historyItem) async {
+    await DB.instance.timerHistory.doc(historyItem.id).set(historyItem.toFirestore(), SetOptions(merge: true));
     print('timer added to database');
   }
 
