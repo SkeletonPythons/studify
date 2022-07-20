@@ -16,7 +16,7 @@ class CalendarController extends GetxController {
       location: '',
       isAllDay: false);
 
-  late final Event newEvent = Event(title: '', description: '');
+  late final Event _newEvent = Event(title: '', description: '');
 
   List<Event> events = <Event>[].obs;
 
