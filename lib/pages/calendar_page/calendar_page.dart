@@ -39,17 +39,7 @@ class CalendarPageState extends State<CalendarPage>
 
   List<Event> _getEventsFromDay(DateTime date) {
     _calendarController.addNewEvenToList(_calendarController.events);
-    return _calendarController.events.where((event) {
-      return event.startDate?.month == date.month &&
-          event.startDate?.day == date.day &&
-          event.startDate?.year == date.year;
-    }).toList();
-  }
-
-  @override
-  void dispose() {
-    _eventController.dispose();
-    super.dispose();
+    return _calendarController.events.
   }
 
   @override
@@ -159,6 +149,7 @@ class CalendarPageState extends State<CalendarPage>
           onPressed: () => showDialog(
             context: context,
             builder: (context) => SingleChildScrollView(
+              // ignore: sort_child_properties_last
               child: AlertDialog(
                 title: const Text("Add Event"),
                 content: FormBuilder(
@@ -202,7 +193,7 @@ class CalendarPageState extends State<CalendarPage>
                         },
                       ),
                       Divider(),
-                      FormBuilderDateRangePicker(
+                      FormBuilderDateTimePicker(
                         name: 'date_range',
                         decoration: InputDecoration(
                           labelText: 'Date Range',
@@ -210,14 +201,8 @@ class CalendarPageState extends State<CalendarPage>
                           border: InputBorder.none,
                           prefixIcon: Icon(Icons.date_range),
                         ),
-                        initialValue: DateTimeRange(
-                          start: DateTime.now(),
-                          end: DateTime.now(),
+                        initialValue: DateTime.now(),
                         ),
-                        format: DateFormat("EEEE, MMMM dd, yyyy"),
-                        firstDate: DateTime(1970),
-                        lastDate: DateTime(3000),
-                      ),
                       Divider(),
                       FormBuilderDateTimePicker(
                         name: "Date",
