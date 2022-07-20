@@ -48,31 +48,11 @@ class PomodoroController extends GetxController {
   };
 
   /// Get a list of timerFavorites from the database
-  Future<RxList<Pomodoro>> get pomodoros async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    List<Pomodoro> _pomodoros = [];
-    await DB.instance.timerFavorites.get().then(((value) {
-      for (var doc in value.docs) {
-        _pomodoros.add(Pomodoro.fromFirestore(doc));
-      }
-    })).catchError((error) {
-      debugPrint(error);
-    });
-    return _pomodoros.obs;
-  }
+  RxList<Pomodoro> get pomodoros => <Pomodoro>[].obs;
 
   /// Get a list of timerFavorites from the database
-  Future<RxList<Pomodoro>> get history async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    List<Pomodoro> _pomodoros = [];
-    await DB.instance.timerFavorites.get().then(((value) {
-      for (var doc in value.docs) {
-        _pomodoros.add(Pomodoro.fromFirestore(doc));
-      }
-    })).catchError((error) {
-      debugPrint(error);
-    });
-    return _pomodoros.obs;
+  RxList<Pomodoro> get history {
+    return <Pomodoro>[].obs;
   }
 
   static PomodoroController get instance => Get.find();
@@ -80,8 +60,8 @@ class PomodoroController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    pomodoroFavorites = await pomodoros;
-    pomodoroHistory = await history;
+    pomodoroFavorites = pomodoros;
+    pomodoroHistory = history;
   }
 
   @override
@@ -111,7 +91,9 @@ class PomodoroController extends GetxController {
     //workTime.value, restTime.value, totalCycles.value));
 
     pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    //pomodoroHistory.forEach((PomodoroHistory history) => print(history.toString()));
+    for (var history in pomodoroHistory) {
+      debugPrint(history.toString());
+    }
 
     ///Timer functionality
     const oneSecond = Duration(

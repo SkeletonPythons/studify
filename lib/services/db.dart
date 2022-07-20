@@ -86,16 +86,22 @@ class DB extends GetxService {
       .collection('events');
 
   /// Shortcut to access [timerHistory] collection.
-  CollectionReference<Map<String, dynamic>> get timerHistory => store
+  CollectionReference<Pomodoro> get timerHistory => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
-      .collection('timerHistory');
+      .collection('timerHistory')
+      .withConverter(
+          fromFirestore: (_, __) => Pomodoro.fromFirestore(_),
+          toFirestore: (Pomodoro pomodoro, _) => pomodoro.toFirestore());
 
   /// Shortcut to access [timerFavorites] collection.
-  CollectionReference<Map<String, dynamic>> get timerFavorites => store
+  CollectionReference<Pomodoro> get timerFavorites => store
       .collection('users')
       .doc(Auth.instance.USER.uid)
-      .collection('timerFavorites');
+      .collection('timerFavorites')
+      .withConverter(
+          fromFirestore: (_, __) => Pomodoro.fromFirestore(_),
+          toFirestore: (Pomodoro pomodoro, _) => pomodoro.toFirestore());
 
   void initDB() async {
     /// This function is used to initialize the database.

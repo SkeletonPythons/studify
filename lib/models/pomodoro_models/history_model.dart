@@ -30,17 +30,17 @@ class Pomodoro {
   Pomodoro.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   )   : id = snapshot.id,
-        dateTime = snapshot.data()!['dateTime'] ?? DateTime.now(),
+        dateTime = snapshot.data()!['dateTime'].toDate(),
         timeStudied = snapshot.data()!['timeStudied'] ?? 0,
         timeRested = snapshot.data()!['timeRested'] ?? 0,
         cycles = snapshot.data()!['cycles'] ?? 0;
 
   Pomodoro.fromJson(Map<String, dynamic> json)
-      : dateTime = DateTime.fromMicrosecondsSinceEpoch(json['dateTime']),
+      : dateTime = json['dateTime'].toDate() ?? DateTime.now(),
         timeStudied = json['timeStudied'],
         timeRested = json['timeRested'],
         cycles = json['cycles'],
-        id = json['id'] ;
+        id = json['id'];
 
   Map<String, dynamic> toFirestore() {
     return {

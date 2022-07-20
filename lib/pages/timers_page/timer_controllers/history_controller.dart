@@ -19,10 +19,9 @@ class HistoryController extends GetxController {
   }
 
   Future addTimerToDatabase(Pomodoro historyItem) async {
-    await DB.instance.timerHistory.doc(historyItem.id).set(historyItem.toFirestore(), SetOptions(merge: true));
+    await DB.instance.timerHistory
+        .doc(historyItem.id)
+        .set(historyItem, SetOptions(merge: true));
     print('timer added to database');
   }
-
-
-
 }
