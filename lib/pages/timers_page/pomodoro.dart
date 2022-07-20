@@ -5,13 +5,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'package:studify/pages/timers_page/timer_controllers/history_controller.dart';
 import 'package:studify/pages/timers_page/timer_homepage.dart';
 
 import '../../widgets/timer_widgets/pomodoro_cycle_progress_icons.dart';
 import 'timer_controllers/pomodoro_controller.dart';
-import 'timer_controllers/pomodoro_history_controller.dart';
 import 'timer_controllers/timer_controller.dart';
-import 'timer_pomodoro_setup.dart';
+
 
 class PomodoroTimer extends StatefulWidget {
   const PomodoroTimer({Key? key}) : super(key: key);
@@ -25,14 +25,10 @@ class PomodoroTimerState extends State<PomodoroTimer>
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController());
 
-  PomodoroHistoryController pomodoroHistoryController =
-      Get.find<PomodoroHistoryController>();
+  HistoryController historyController =
+      Get.find<HistoryController>();
 
   TimerController timerController = Get.find<TimerController>();
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
