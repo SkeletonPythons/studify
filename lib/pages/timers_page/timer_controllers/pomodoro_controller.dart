@@ -86,14 +86,7 @@ class PomodoroController extends GetxController {
     currentPomodoroStatus.value = PomodoroStatus.running;
     currentCycle.value = 0;
 
-    ///Saving timer to local history
-    //pomodoroHistory.add(pomodoroHistoryController.SaveNewHistoryItem(
-    //workTime.value, restTime.value, totalCycles.value));
-
     pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-    for (var history in pomodoroHistory) {
-      debugPrint(history.toString());
-    }
 
     ///Timer functionality
     const oneSecond = Duration(

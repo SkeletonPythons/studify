@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:studify/pages/timers_page/timer_controllers/history_controller.dart';
-import 'package:studify/widgets/timer_widgets/timer_history.dart';
+import 'package:studify/widgets/timer_widgets/history_and_favorites_TabBar.dart';
 import '../../models/pomodoro_models/history_model.dart';
+import '../../services/db.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/timer_widgets/number_fields.dart';
@@ -120,7 +121,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                       timeStudied: int.parse(workTimeController.text),
                       timeRested: int.parse(restTimeController.text),
                       cycles: int.parse(cycleController.text));
-                  pomodoroHistoryController.addTimerToDatabase(newTimer);
+                  pomodoroHistoryController.addTimerToDatabase(newTimer, DB.instance.timerHistory);
 
                   ///set the active page to the timer
                   timerController.setActiveWidget(PomodoroTimer());
