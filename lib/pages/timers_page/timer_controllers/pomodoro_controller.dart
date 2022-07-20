@@ -86,7 +86,7 @@ class PomodoroController extends GetxController {
     currentPomodoroStatus.value = PomodoroStatus.running;
     currentCycle.value = 0;
 
-    pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
 
     ///Timer functionality
     const oneSecond = Duration(
@@ -169,7 +169,9 @@ class PomodoroController extends GetxController {
   double DecideInitialSliderTimeValue() {
     if (currentPomodoroStatus.value == PomodoroStatus.running ||
         currentPomodoroStatus.value == PomodoroStatus.pausedWork) {
+      debugPrint (workTime.value.toString());
       return workTime.value.toDouble();
+
     } else if (currentPomodoroStatus.value == PomodoroStatus.resting ||
         currentPomodoroStatus.value == PomodoroStatus.pausedRest) {
       return restTime.value.toDouble();

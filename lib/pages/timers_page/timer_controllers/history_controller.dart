@@ -12,9 +12,9 @@ class HistoryController extends GetxController {
   Pomodoro SaveNewHistoryItem(int workTime, int restTime, int totalCycles) {
     Pomodoro newHistoryItem = Pomodoro(
         dateTime: DateTime.now(),
-        timeStudied: workTime,
-        timeRested: restTime,
-        cycles: totalCycles);
+        workTime: workTime,
+        restTime: restTime,
+        totalCycles: totalCycles);
     return newHistoryItem;
   }
 

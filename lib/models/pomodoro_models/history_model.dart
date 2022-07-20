@@ -4,16 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Pomodoro {
   DateTime dateTime;
-  int timeStudied;
-  int timeRested;
-  int cycles;
+  int workTime;
+  int restTime;
+  int totalCycles;
   String id;
 
   Pomodoro({
     required this.dateTime,
-    required this.timeStudied,
-    required this.timeRested,
-    required this.cycles,
+    required this.workTime,
+    required this.restTime,
+    required this.totalCycles,
     String? id,
   }) : id = id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString();
 
@@ -21,9 +21,9 @@ class Pomodoro {
 
   Pomodoro.newLocal({
     required this.dateTime,
-    required this.timeStudied,
-    required this.timeRested,
-    required this.cycles,
+    required this.workTime,
+    required this.restTime,
+    required this.totalCycles,
     String? id,
   }) : id = id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString();
 
@@ -31,40 +31,40 @@ class Pomodoro {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   )   : id = snapshot.id,
         dateTime = snapshot.data()!['dateTime'].toDate(),
-        timeStudied = snapshot.data()!['timeStudied'] ?? 0,
-        timeRested = snapshot.data()!['timeRested'] ?? 0,
-        cycles = snapshot.data()!['cycles'] ?? 0;
+        workTime = snapshot.data()!['timeStudied'] ?? 0,
+        restTime = snapshot.data()!['timeRested'] ?? 0,
+        totalCycles = snapshot.data()!['cycles'] ?? 0;
 
   Pomodoro.fromJson(Map<String, dynamic> json)
       : dateTime = json['dateTime'].toDate() ?? DateTime.now(),
-        timeStudied = json['timeStudied'],
-        timeRested = json['timeRested'],
-        cycles = json['cycles'],
+        workTime = json['timeStudied'],
+        restTime = json['timeRested'],
+        totalCycles = json['cycles'],
         id = json['id'];
 
   Map<String, dynamic> toFirestore() {
     return {
       'dateTime': dateTime,
-      'timeStudied': timeStudied,
-      'timeRested': timeRested,
-      'cycles': cycles,
+      'timeStudied': workTime,
+      'timeRested': restTime,
+      'cycles': totalCycles,
     };
   }
 
   Map<String, dynamic> toJson() => {
         'dateTime': dateTime.millisecondsSinceEpoch,
-        'timeStudied': timeStudied,
-        'timeRested': timeRested,
-        'cycles': cycles,
+        'timeStudied': workTime,
+        'timeRested': restTime,
+        'cycles': totalCycles,
         'id': id,
       };
 
   @override
   String toString() {
     return "\n\ndateTime:${dateTime.toIso8601String()},"
-        "\n timeStudied: ${timeStudied.toString()},"
-        " \n timeRested: ${timeRested.toString()}, "
-        "\n cycles: ${cycles.toString()}, "
+        "\n timeStudied: ${workTime.toString()},"
+        " \n timeRested: ${restTime.toString()}, "
+        "\n cycles: ${totalCycles.toString()}, "
         "\n,\n";
   }
 }

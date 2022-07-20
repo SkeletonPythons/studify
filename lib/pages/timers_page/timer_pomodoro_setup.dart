@@ -118,9 +118,9 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   /// add the new pomodoro to the database
                   final newTimer = Pomodoro(
                       dateTime: DateTime.now(),
-                      timeStudied: int.parse(workTimeController.text),
-                      timeRested: int.parse(restTimeController.text),
-                      cycles: int.parse(cycleController.text));
+                      workTime: int.parse(workTimeController.text),
+                      restTime: int.parse(restTimeController.text),
+                      totalCycles: int.parse(cycleController.text));
                   pomodoroHistoryController.addTimerToDatabase(newTimer, DB.instance.timerHistory);
 
                   ///set the active page to the timer
@@ -140,7 +140,15 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
               icon: SvgPicture.asset(
                 'assets/images/bookmark3.svg',
               ),
-              onPressed: () {},
+              onPressed: () {
+                final newTimer = Pomodoro(
+                    dateTime: DateTime.now(),
+                    workTime: int.parse(workTimeController.text),
+                    restTime: int.parse(restTimeController.text),
+                    totalCycles: int.parse(cycleController.text));
+                pomodoroHistoryController.addTimerToDatabase(newTimer, DB.instance.timerFavorites);
+                Get.snackbar('Timer Added', 'your timer has been added to favorites!');
+              },
             ),
           ),
           Padding(
