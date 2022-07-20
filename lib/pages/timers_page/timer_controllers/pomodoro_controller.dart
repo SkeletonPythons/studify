@@ -12,7 +12,14 @@ import '../../../services/db.dart';
 import '../pomodoro.dart';
 import 'timer_controller.dart';
 
-enum PomodoroStatus { running, pausedWork, pausedRest, resting, finished, cycleFinished }
+enum PomodoroStatus {
+  running,
+  pausedWork,
+  pausedRest,
+  resting,
+  finished,
+  cycleFinished
+}
 
 class PomodoroController extends GetxController {
   ///Functionality variables
@@ -22,7 +29,7 @@ class PomodoroController extends GetxController {
   RxInt currentCycle = 0.obs;
   Rx<PomodoroStatus> currentPomodoroStatus = PomodoroStatus.running.obs;
 
-///Status Maps
+  ///Status Maps
   Map<PomodoroStatus, String> displayStatus = {
     PomodoroStatus.running: "Study time!",
     PomodoroStatus.pausedWork: "Paused!",
@@ -40,9 +47,52 @@ class PomodoroController extends GetxController {
     PomodoroStatus.resting: Colors.blue
   };
 
+  /// Get a list of timerFavorites from the database
+  Future<RxList<Pomodoro>> get pomodoros async {
+    // ignore: no_leading_underscores_for_local_identifiers
+    List<Pomodoro> _pomodoros = [];
+    await DB.instance.timerFavorites.get().then(((value) {
+      for (var doc in value.docs) {
+        _pomodoros.add(Pomodoro.fromFirestore(doc));
+      }
+    })).catchError((error) {
+      debugPrint(error);
+    });
+    return _pomodoros.obs;
+  }
+
+  /// Get a list of timerFavorites from the database
+  Future<RxList<Pomodoro>> get history async {
+    // ignore: no_leading_underscores_for_local_identifiers
+    List<Pomodoro> _pomodoros = [];
+    await DB.instance.timerFavorites.get().then(((value) {
+      for (var doc in value.docs) {
+        _pomodoros.add(Pomodoro.fromFirestore(doc));
+      }
+    })).catchError((error) {
+      debugPrint(error);
+    });
+    return _pomodoros.obs;
+  }
+
+  static PomodoroController get instance => Get.find();
+
+  @override
+  void onInit() async {
+    super.onInit();
+    pomodoroFavorites = await pomodoros;
+    pomodoroHistory = await history;
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    debugPrint('pomodoroController/onReady');
+  }
+
   ///History variables
-  List<Pomodoro> pomodoroHistory = [];
-  List<Pomodoro> pomodoroFavorites = [];
+  RxList<Pomodoro> pomodoroHistory = <Pomodoro>[].obs;
+  RxList<Pomodoro> pomodoroFavorites = <Pomodoro>[].obs;
   late Timer pomodoroTimer;
 
   ///Controllers
@@ -57,10 +107,8 @@ class PomodoroController extends GetxController {
     currentCycle.value = 0;
 
     ///Saving timer to local history
-    pomodoroHistory.add(pomodoroHistoryController.SaveNewHistoryItem(
-        workTime.value,
-        restTime.value,
-        totalCycles.value));
+    //pomodoroHistory.add(pomodoroHistoryController.SaveNewHistoryItem(
+    //workTime.value, restTime.value, totalCycles.value));
 
     pomodoroHistory.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     //pomodoroHistory.forEach((PomodoroHistory history) => print(history.toString()));
@@ -75,19 +123,18 @@ class PomodoroController extends GetxController {
         if (workTime.value <= 1 && currentCycle.value == totalCycles.value) {
           pomodoroTimer.cancel();
           currentPomodoroStatus.value = PomodoroStatus.finished;
-
-        } else if (currentPomodoroStatus.value == PomodoroStatus.running){
-            workTime.value--;
-            if(workTime.value == 0){
-              SwitchToRest();
-            }
-        } else if (currentPomodoroStatus.value == PomodoroStatus.resting){
-            restTime.value--;
-            if(restTime.value == 0){
-              UpdateCycles();
-              SwitchToWork();
-            }
+        } else if (currentPomodoroStatus.value == PomodoroStatus.running) {
+          workTime.value--;
+          if (workTime.value == 0) {
+            SwitchToRest();
           }
+        } else if (currentPomodoroStatus.value == PomodoroStatus.resting) {
+          restTime.value--;
+          if (restTime.value == 0) {
+            UpdateCycles();
+            SwitchToWork();
+          }
+        }
       },
     );
   }
@@ -118,50 +165,40 @@ class PomodoroController extends GetxController {
     }
   }
 
-  int DecideTimerDisplayValue()
-  {
-    if(currentPomodoroStatus.value == PomodoroStatus.running || currentPomodoroStatus.value == PomodoroStatus.pausedWork)
-    {
+  int DecideTimerDisplayValue() {
+    if (currentPomodoroStatus.value == PomodoroStatus.running ||
+        currentPomodoroStatus.value == PomodoroStatus.pausedWork) {
       return workTime.value;
-    }
-    else if(currentPomodoroStatus.value == PomodoroStatus.resting || currentPomodoroStatus.value == PomodoroStatus.pausedRest)
-    {
+    } else if (currentPomodoroStatus.value == PomodoroStatus.resting ||
+        currentPomodoroStatus.value == PomodoroStatus.pausedRest) {
       return restTime.value;
-    }
-    else
-    {
+    } else {
       return 0;
     }
   }
 
-  double DecideMaxTime()
-  {
-    if(currentPomodoroStatus.value == PomodoroStatus.running || currentPomodoroStatus.value == PomodoroStatus.pausedWork)
-    {
-      return (int.parse(PomodoroSetUpState.workTimeController.text) * 60).toDouble();
-    }
-    else if(currentPomodoroStatus.value == PomodoroStatus.resting || currentPomodoroStatus.value == PomodoroStatus.pausedRest)
-    {
-      return (int.parse(PomodoroSetUpState.restTimeController.text) * 60).toDouble();
-    }
-    else
-    {
+  double DecideMaxTime() {
+    if (currentPomodoroStatus.value == PomodoroStatus.running ||
+        currentPomodoroStatus.value == PomodoroStatus.pausedWork) {
+      return (int.parse(PomodoroSetUpState.workTimeController.text) * 60)
+          .toDouble();
+    } else if (currentPomodoroStatus.value == PomodoroStatus.resting ||
+        currentPomodoroStatus.value == PomodoroStatus.pausedRest) {
+      return (int.parse(PomodoroSetUpState.restTimeController.text) * 60)
+          .toDouble();
+    } else {
       return 0.0;
     }
   }
 
-  double DecideInitialSliderTimeValue()
-  {
-    if(currentPomodoroStatus.value == PomodoroStatus.running || currentPomodoroStatus.value == PomodoroStatus.pausedWork)
-    {
+  double DecideInitialSliderTimeValue() {
+    if (currentPomodoroStatus.value == PomodoroStatus.running ||
+        currentPomodoroStatus.value == PomodoroStatus.pausedWork) {
       return workTime.value.toDouble();
-    }
-    else if(currentPomodoroStatus.value == PomodoroStatus.resting || currentPomodoroStatus.value == PomodoroStatus.pausedRest)
-    {
+    } else if (currentPomodoroStatus.value == PomodoroStatus.resting ||
+        currentPomodoroStatus.value == PomodoroStatus.pausedRest) {
       return restTime.value.toDouble();
-    }
-    else
-    {
+    } else {
       return 0.0;
     }
   }
@@ -173,10 +210,8 @@ class PomodoroController extends GetxController {
     PomodoroSetUpState.cycleController.clear();
   }
 
-  void SwitchToRest()
-  {
-    if(workTime.value < 1 && currentCycle.value < totalCycles.value)
-    {
+  void SwitchToRest() {
+    if (workTime.value < 1 && currentCycle.value < totalCycles.value) {
       print('switching to rest');
       print('initial value: ${DecideInitialSliderTimeValue()}');
       print('worktime.value: ${workTime.value}');
@@ -185,27 +220,21 @@ class PomodoroController extends GetxController {
       print('total cycles: ${totalCycles.value}');
       print('max time: ${DecideMaxTime()}');
       currentPomodoroStatus.value = PomodoroStatus.resting;
-      if(currentCycle.value != totalCycles.value -1)
-        {
-          ResetWorkTime();
-          print('reset worktime.value: ${workTime.value}');
-        }
-
+      if (currentCycle.value != totalCycles.value - 1) {
+        ResetWorkTime();
+        print('reset worktime.value: ${workTime.value}');
+      }
     }
   }
 
-  void UpdateCycles()
-  {
-    if(currentCycle.value < totalCycles.value)
-      {
-        currentCycle++;
-        print('cycle increased');
-      }
-
+  void UpdateCycles() {
+    if (currentCycle.value < totalCycles.value) {
+      currentCycle++;
+      print('cycle increased');
+    }
   }
 
-  void SwitchToWork()
-  {
+  void SwitchToWork() {
     print('switching to work');
     print('initial value: ${DecideInitialSliderTimeValue()}');
     print('worktime.value: ${workTime.value}');
@@ -213,27 +242,21 @@ class PomodoroController extends GetxController {
     print('current cycle: ${currentCycle.value}');
     print('total cycles: ${totalCycles.value}');
     print('max time: ${DecideMaxTime()}');
-    if(restTime.value < 1 && currentCycle.value < totalCycles.value)
-    {
-      if(currentCycle.value != totalCycles.value) {
+    if (restTime.value < 1 && currentCycle.value < totalCycles.value) {
+      if (currentCycle.value != totalCycles.value) {
         currentPomodoroStatus.value = PomodoroStatus.running;
         ResetRestTime();
         print('reset resttime.value: ${restTime.value}');
       }
-
     }
   }
 
-  void ResetRestTime()
-  {
-    restTime.value =
-        int.parse(PomodoroSetUpState.restTimeController.text) * 60;
+  void ResetRestTime() {
+    restTime.value = int.parse(PomodoroSetUpState.restTimeController.text) * 60;
   }
 
-  void ResetWorkTime()
-  {
-    workTime.value =
-        int.parse(PomodoroSetUpState.workTimeController.text) * 60;
+  void ResetWorkTime() {
+    workTime.value = int.parse(PomodoroSetUpState.workTimeController.text) * 60;
   }
 
   String FormatTime(int timeInSeconds) {

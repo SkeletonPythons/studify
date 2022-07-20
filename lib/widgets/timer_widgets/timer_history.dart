@@ -58,23 +58,27 @@ class _TimerHistoryState extends State<TimerHistory>
               ),
               child: Center(
                 child: Obx(
-                      () => ListView.builder(
-                    itemCount: pomodoroController.pomodoroFavorites.length.obs.value,
+                  () => ListView.builder(
+                    itemCount:
+                        pomodoroController.pomodoroFavorites.length.obs.value,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        enabled: true,
-                        onTap: () {
-                          Get.snackbar('hello', 'message');
-                        },
-                        onLongPress: () {
-                          pomodoroController.pomodoroFavorites.removeAt(index);
-                        },
-                        title: Text('${(pomodoroController.pomodoroFavorites[index].timeStudied)~/60} Study ${(pomodoroController.pomodoroFavorites[index].timeRested)~/60} Rest'),
-                        subtitle:
-                        Text('${pomodoroController.pomodoroFavorites[index].cycles} Cycles\nLong press to remove from favorites'),
-                        isThreeLine: true,
-                        trailing: Text('${pomodoroController.pomodoroFavorites[index].dateTime.month}/${pomodoroController.pomodoroFavorites[index].dateTime.day}/${pomodoroController.pomodoroFavorites[index].dateTime.year}'),
-                      );
+                      return Obx(() => ListTile(
+                            enabled: true,
+                            onTap: () {
+                              Get.snackbar('hello', 'message');
+                            },
+                            onLongPress: () {
+                              pomodoroController.pomodoroFavorites
+                                  .removeAt(index);
+                            },
+                            title: Text(
+                                '${(pomodoroController.pomodoroFavorites[index].timeStudied) ~/ 60} Study ${(pomodoroController.pomodoroFavorites[index].timeRested) ~/ 60} Rest'),
+                            subtitle: Text(
+                                '${pomodoroController.pomodoroFavorites[index].cycles} Cycles\nLong press to remove from favorites'),
+                            isThreeLine: true,
+                            trailing: Text(
+                                '${pomodoroController.pomodoroFavorites[index].dateTime.month}/${pomodoroController.pomodoroFavorites[index].dateTime.day}/${pomodoroController.pomodoroFavorites[index].dateTime.year}'),
+                          ));
                     },
                   ),
                 ),
@@ -97,17 +101,22 @@ class _TimerHistoryState extends State<TimerHistory>
                     return ListTile(
                       enabled: true,
                       onTap: () {
-                        Get.snackbar('hello', 'clicking this will make a new timer');
+                        Get.snackbar(
+                            'hello', 'clicking this will make a new timer');
                       },
                       onLongPress: () {
-                        pomodoroController.pomodoroFavorites.add(pomodoroController.pomodoroHistory[index]);
-                        Get.snackbar('New Favorite Timer', 'Timer successfully added to favorites');
+                        pomodoroController.pomodoroFavorites
+                            .add(pomodoroController.pomodoroHistory[index]);
+                        Get.snackbar('New Favorite Timer',
+                            'Timer successfully added to favorites');
                       },
-                      title: Text('${(pomodoroController.pomodoroHistory[index].timeStudied)~/60} Study ${(pomodoroController.pomodoroHistory[index].timeRested)~/60} Rest'),
-                      subtitle:
-                          Text('${pomodoroController.pomodoroHistory[index].cycles} Cycles\nLong press to add to favorites'),
+                      title: Text(
+                          '${(pomodoroController.pomodoroHistory[index].timeStudied) ~/ 60} Study ${(pomodoroController.pomodoroHistory[index].timeRested) ~/ 60} Rest'),
+                      subtitle: Text(
+                          '${pomodoroController.pomodoroHistory[index].cycles} Cycles\nLong press to add to favorites'),
                       isThreeLine: true,
-                      trailing: Text('${pomodoroController.pomodoroHistory[index].dateTime.month}/${pomodoroController.pomodoroHistory[index].dateTime.day}/${pomodoroController.pomodoroHistory[index].dateTime.year}'),
+                      trailing: Text(
+                          '${pomodoroController.pomodoroHistory[index].dateTime.month}/${pomodoroController.pomodoroHistory[index].dateTime.day}/${pomodoroController.pomodoroHistory[index].dateTime.year}'),
                     );
                   },
                 ),

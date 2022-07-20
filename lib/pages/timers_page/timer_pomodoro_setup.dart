@@ -34,9 +34,8 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController(), permanent: true);
 
- HistoryController pomodoroHistoryController =
-      Get.put<HistoryController>(HistoryController(),
-          permanent: true);
+  HistoryController pomodoroHistoryController =
+      Get.put<HistoryController>(HistoryController(), permanent: true);
 
   TimerController timerController = Get.find<TimerController>();
 
@@ -114,6 +113,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                       int.parse(cycleController.text);
                   timerController.isRunning.value = true;
                   pomodoroController.StartPomodoro();
+
                   /// add the new pomodoro to the database
                   final newTimer = Pomodoro(
                       dateTime: DateTime.now(),
@@ -121,9 +121,11 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                       timeRested: int.parse(restTimeController.text),
                       cycles: int.parse(cycleController.text));
                   pomodoroHistoryController.addTimerToDatabase(newTimer);
+
                   ///set the active page to the timer
-                  timerController.setActiveWidget(
-                      PomodoroTimer()); /// updates navbar screens if Pomodoro timer active
+                  timerController.setActiveWidget(PomodoroTimer());
+
+                  /// updates navbar screens if Pomodoro timer active
                   ///Routes to navbar which will display updated screens & index
                   Get.back();
                 }),
@@ -140,10 +142,10 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
               onPressed: () {},
             ),
           ),
-           Padding(
-             padding: const EdgeInsets.only(top: 340, left: 15, right: 15 ),
-             child: TimerHistory(),
-           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 340, left: 15, right: 15),
+            child: TimerHistory(),
+          ),
         ],
       ),
     );
