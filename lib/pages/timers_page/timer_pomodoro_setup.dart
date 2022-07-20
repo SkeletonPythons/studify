@@ -31,6 +31,48 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   static TextEditingController cycleController = TextEditingController();
   int numOfCycles = 1;
 
+  /// text editing validators for the number fields on the set up page
+  bool areTextFieldsEmpty() {
+    if (workTimeController.text.isEmpty ||
+        restTimeController.text.isEmpty ||
+        cycleController.text.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool valueIsNotNumber(){
+    if(int.tryParse(workTimeController.text) == null ||
+        int.tryParse(restTimeController.text) == null ||
+        int.tryParse(cycleController.text) == null) {
+      return true;
+    } else{
+        return false;
+      }
+  }
+
+  bool numberIsLessThanZero()
+  {
+    if(int.tryParse(workTimeController.text)! <= 0 ||
+        int.tryParse(restTimeController.text)! <= 0 ||
+        int.tryParse(cycleController.text)! <= 0) {
+      return true;
+    } else{
+        return false;
+      }
+  }
+
+  void callErrorSnackbar(String errorMessage) {
+    Get.snackbar('Error', errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        icon: Icon(
+          Icons.error,
+          color: Colors.white,
+        ));
+  }
+
   /// controllers
   PomodoroController pomodoroController =
       Get.put<PomodoroController>(PomodoroController(), permanent: true);
@@ -78,7 +120,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 33,
             textController: workTimeController,
-            value: pomodoroController.workTime,
+            timerValue: pomodoroController.workTime,
           ),
           TimerNumberField(
             prompt: 'Rest time (minutes)',
@@ -86,7 +128,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 42,
             textController: restTimeController,
-            value: pomodoroController.restTime,
+            timerValue: pomodoroController.restTime,
           ),
           TimerNumberField(
             prompt: 'How many study cycles?',
@@ -94,7 +136,7 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
             positionLeft: 75,
             textFieldPadding: 10,
             textController: cycleController,
-            value: pomodoroController.totalCycles,
+            timerValue: pomodoroController.totalCycles,
           ),
           Positioned(
             top: 250,
@@ -106,29 +148,41 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
                   'assets/images/start_button.svg',
                 ),
                 onPressed: () {
-                  pomodoroController.workTime.value =
-                      int.parse(workTimeController.text) * 60;
-                  pomodoroController.restTime.value =
-                      int.parse(restTimeController.text) * 60;
-                  pomodoroController.totalCycles.value =
-                      int.parse(cycleController.text);
-                  timerController.isRunning.value = true;
-                  pomodoroController.StartPomodoro();
+                  if(areTextFieldsEmpty()) {
+                    callErrorSnackbar('Please fill in all fields');
+                  }
+                  else if(valueIsNotNumber()) {
+                    callErrorSnackbar('Please enter only valid non zero numbers');
+                  }
+                  else if(numberIsLessThanZero()) {
+                    callErrorSnackbar('Please enter only non zero numbers');
+                    }
+                  else {
+                    pomodoroController.workTime.value =
+                        int.parse(workTimeController.text) * 60;
+                    pomodoroController.restTime.value =
+                        int.parse(restTimeController.text) * 60;
+                    pomodoroController.totalCycles.value =
+                        int.parse(cycleController.text);
+                    timerController.isRunning.value = true;
+                    pomodoroController.StartPomodoro();
 
-                  /// add the new pomodoro to the database
-                  final newTimer = Pomodoro(
-                      dateTime: DateTime.now(),
-                      workTime: int.parse(workTimeController.text),
-                      restTime: int.parse(restTimeController.text),
-                      totalCycles: int.parse(cycleController.text));
-                  pomodoroHistoryController.addTimerToDatabase(newTimer, DB.instance.timerHistory);
+                    /// add the new pomodoro to the database
+                    final newTimer = Pomodoro(
+                        dateTime: DateTime.now(),
+                        workTime: int.parse(workTimeController.text),
+                        restTime: int.parse(restTimeController.text),
+                        totalCycles: int.parse(cycleController.text));
+                    pomodoroHistoryController.addTimerToDatabase(
+                        newTimer, DB.instance.timerHistory);
 
-                  ///set the active page to the timer
-                  timerController.setActiveWidget(PomodoroTimer());
+                    ///set the active page to the timer
+                    timerController.setActiveWidget(PomodoroTimer());
 
-                  /// updates navbar screens if Pomodoro timer active
-                  ///Routes to navbar which will display updated screens & index
-                  Get.back();
+                    /// updates navbar screens if Pomodoro timer active
+                    ///Routes to navbar which will display updated screens & index
+                    Get.back();
+                  }
                 }),
           ),
           Positioned(
