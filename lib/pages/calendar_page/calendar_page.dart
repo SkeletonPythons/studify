@@ -39,7 +39,9 @@ class CalendarPageState extends State<CalendarPage>
 
   List<Event> _getEventsFromDay(DateTime date) {
     _calendarController.addNewEvenToList(_calendarController.events);
-    return _calendarController.events.
+    return _calendarController.events.indexWhere((element) => false) != -1
+        ? _calendarController.events
+        : [];
   }
 
   @override
@@ -202,7 +204,7 @@ class CalendarPageState extends State<CalendarPage>
                           prefixIcon: Icon(Icons.date_range),
                         ),
                         initialValue: DateTime.now(),
-                        ),
+                      ),
                       Divider(),
                       FormBuilderDateTimePicker(
                         name: "Date",
