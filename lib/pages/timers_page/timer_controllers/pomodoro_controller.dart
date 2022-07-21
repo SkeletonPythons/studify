@@ -8,8 +8,6 @@ import 'package:studify/pages/timers_page/timer_controllers/history_controller.d
 import 'package:studify/pages/timers_page/timer_pomodoro_setup.dart';
 
 import '../../../models/pomodoro_models/history_model.dart';
-import '../../../services/db.dart';
-import '../pomodoro.dart';
 import 'timer_controller.dart';
 
 enum PomodoroStatus {
@@ -189,17 +187,9 @@ class PomodoroController extends GetxController {
 
   void SwitchToRest() {
     if (workTime.value < 1 && currentCycle.value < totalCycles.value) {
-      print('switching to rest');
-      print('initial value: ${DecideInitialSliderTimeValue()}');
-      print('worktime.value: ${workTime.value}');
-      print('resttime.value: ${restTime.value}');
-      print('current cycle: ${currentCycle.value}');
-      print('total cycles: ${totalCycles.value}');
-      print('max time: ${DecideMaxTime()}');
       currentPomodoroStatus.value = PomodoroStatus.resting;
       if (currentCycle.value != totalCycles.value - 1) {
         ResetWorkTime();
-        print('reset worktime.value: ${workTime.value}');
       }
     }
   }
@@ -207,23 +197,14 @@ class PomodoroController extends GetxController {
   void UpdateCycles() {
     if (currentCycle.value < totalCycles.value) {
       currentCycle++;
-      print('cycle increased');
     }
   }
 
   void SwitchToWork() {
-    print('switching to work');
-    print('initial value: ${DecideInitialSliderTimeValue()}');
-    print('worktime.value: ${workTime.value}');
-    print('resttime.value: ${restTime.value}');
-    print('current cycle: ${currentCycle.value}');
-    print('total cycles: ${totalCycles.value}');
-    print('max time: ${DecideMaxTime()}');
     if (restTime.value < 1 && currentCycle.value < totalCycles.value) {
       if (currentCycle.value != totalCycles.value) {
         currentPomodoroStatus.value = PomodoroStatus.running;
         ResetRestTime();
-        print('reset resttime.value: ${restTime.value}');
       }
     }
   }

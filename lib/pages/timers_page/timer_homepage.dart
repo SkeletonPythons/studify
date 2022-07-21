@@ -54,15 +54,15 @@ class TimerHomePageState extends State<TimerHomePage>
                 routeForOnPressed: Routes.POMODOROSETUP),
             TimerCard(
                 icon: timerController.stopwatchIcon,
-                cardTitle: 'Stopwatch Timer',
+                cardTitle: 'Stopwatch Timer\n   Coming Soon',
                 routeForOnPressed: Routes.DASH),
             TimerCard(
                 icon: timerController.countdownIcon,
-                cardTitle: 'Countdown Timer',
+                cardTitle: 'Countdown Timer\n   Coming Soon',
                 routeForOnPressed: Routes.DASH),
             TimerCard(
                 icon: timerController.timerStats,
-                cardTitle: 'Timer Statistics',
+                cardTitle: 'Timer Statistics\n   Coming Soon',
                 routeForOnPressed: Routes.DASH),
           ],
         ),
