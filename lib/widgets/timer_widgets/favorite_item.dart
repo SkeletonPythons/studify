@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,8 @@ class FavoriteItem extends StatefulWidget {
   FavoriteItemState createState() => FavoriteItemState();
 }
 
-class FavoriteItemState extends State<FavoriteItem> with TickerProviderStateMixin {
+class FavoriteItemState extends State<FavoriteItem>
+    with TickerProviderStateMixin {
   PomodoroController pomodoroController = Get.find<PomodoroController>();
   HistoryController historyController = Get.find<HistoryController>();
   TimerController timerController = Get.find<TimerController>();
@@ -47,10 +47,15 @@ class FavoriteItemState extends State<FavoriteItem> with TickerProviderStateMixi
                     favoriteList.add(change.doc.data()!);
                     break;
                   case DocumentChangeType.modified:
-                    favoriteList.add(change.doc.data()!);
+                    int ind = favoriteList.indexWhere(
+                        (element) => element.id == change.doc.data()!.id);
+                    Pomodoro changed = change.doc.data()!;
+                    favoriteList.removeAt(ind);
+                    favoriteList.insert(ind, changed);
                     break;
                   case DocumentChangeType.removed:
-                    favoriteList.remove(change.doc.data());
+                    favoriteList.removeWhere(
+                        (element) => element.id == change.doc.data()!.id);
                     break;
                 }
               }
@@ -64,7 +69,7 @@ class FavoriteItemState extends State<FavoriteItem> with TickerProviderStateMixi
                   onTap: () {
                     ///Start a pomodoro from the favorites list
                     pomodoroController.workTime.value =
-                       (favoriteList[index].workTime * 60);
+                        (favoriteList[index].workTime * 60);
                     pomodoroController.restTime.value =
                         (favoriteList[index].restTime * 60);
                     pomodoroController.totalCycles.value =
@@ -86,7 +91,8 @@ class FavoriteItemState extends State<FavoriteItem> with TickerProviderStateMixi
                         workTime: favoriteList[index].workTime,
                         restTime: favoriteList[index].restTime,
                         totalCycles: favoriteList[index].totalCycles);
-                    historyController.addTimerToDatabase(newTimer, DB.instance.timerHistory);
+                    historyController.addTimerToDatabase(
+                        newTimer, DB.instance.timerHistory);
 
                     ///set the active page to the timer
                     timerController.setActiveWidget(PomodoroTimer());
@@ -96,8 +102,12 @@ class FavoriteItemState extends State<FavoriteItem> with TickerProviderStateMixi
                     Get.back();
                   },
                   onLongPress: () {
-                    DB.instance.timerFavorites.doc(favoriteList[index].id).delete();
-                    Get.snackbar('Timer Removed', 'timer will no longer show up in your favorites');
+                    DB.instance.timerFavorites
+                        .doc(favoriteList[index].id)
+                        .delete();
+                    Get.snackbar('Timer Removed',
+                        'timer will no longer show up in your favorites');
+                    setState(() {});
                   },
                   title: Text(
                       '${(favoriteList[index].workTime)} Study ${(favoriteList[index].restTime)} Rest'),

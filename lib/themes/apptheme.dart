@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -131,3 +133,79 @@ const Map<int, Color> txts = {
   6: Color(0xff9D9D9D),
   7: Color(0xffCAB8FF),
 };
+
+class AppColors {
+  static final MaterialColor TRANSPARENT = _factoryColor(0x00000000);
+
+  /// Background Colors
+
+  static final MaterialColor BACKGROUND_DARK = _factoryColor(0xff0C0F0F);
+
+  static final MaterialColor BACKGROUND_MEDDARK = _factoryColor(0xff181818);
+
+  static final MaterialColor BACKGROUND_MED = _factoryColor(0xff202020);
+
+  static final MaterialColor BACKGROUND_ACCENT = _factoryColor(0xff333333);
+
+  static final MaterialColor BACKGROUND_LIGHTISH = _factoryColor(0xff33383B);
+
+  /// Accent Colors
+
+  static final MaterialColor ACCENT_PINK = _factoryColor(0xffF76D6D);
+
+  static final MaterialColor ACCENT_ORANGE = _factoryColor(0xffF0B557);
+
+  static final MaterialColor ACCENT_TEAL = _factoryColor(0xff6EDCFA);
+
+  static final MaterialColor ACCENT_BLUE = _factoryColor(0xff57B2FF);
+
+  static final MaterialColor ACCENT_GREEN = _factoryColor(0xff3DDC84);
+
+  static final MaterialColor ACCENT_MAUVE = _factoryColor(0xff705880);
+
+  /// Text Colors
+
+  static final MaterialColor TEXT_WHITE = _factoryColor(0xffffffff);
+
+  static final MaterialColor TEXT_BLACK = _factoryColor(0xff000000);
+
+  static MaterialColor hex(String hex) =>
+      AppColors._factoryColor(AppColors._getColorHexFromStr(hex));
+
+  static MaterialColor _factoryColor(int color) {
+    return MaterialColor(color, <int, Color>{
+      50: Color(color),
+      100: Color(color),
+      200: Color(color),
+      300: Color(color),
+      400: Color(color),
+      500: Color(color),
+      600: Color(color),
+      700: Color(color),
+      800: Color(color),
+      900: Color(color),
+    });
+  }
+
+  static int _getColorHexFromStr(String colorStr) {
+    colorStr = "FF$colorStr";
+    colorStr = colorStr.replaceAll("#", "");
+    int val = 0;
+    int len = colorStr.length;
+    for (int i = 0; i < len; i++) {
+      int hexDigit = colorStr.codeUnitAt(i);
+      if (hexDigit >= 48 && hexDigit <= 57) {
+        val += (hexDigit - 48) * (1 << (4 * (len - 1 - i)));
+      } else if (hexDigit >= 65 && hexDigit <= 70) {
+        // A..F
+        val += (hexDigit - 55) * (1 << (4 * (len - 1 - i)));
+      } else if (hexDigit >= 97 && hexDigit <= 102) {
+        // a..f
+        val += (hexDigit - 87) * (1 << (4 * (len - 1 - i)));
+      } else {
+        val = 0xFFFFFFFF;
+      }
+    }
+    return val;
+  }
+}

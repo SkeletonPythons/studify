@@ -1,9 +1,3 @@
-// ---
-// App: Studify
-// Team: Skeleton Pythons
-// Author: Justin.Morton
-// Date Created: 05/15/2022
-// ---
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +14,7 @@ import './db.dart';
 class Auth extends GetxController {
   /// This is the Firebase Auth controller.
   /// It is used to handle the login and registration.
-  /// It also contains the `user` object.
+  /// It also contains the [User] object.
   /// Access this object by calling `Auth.instance.USER to get the user object.
 
   static Auth get instance => Get.find();

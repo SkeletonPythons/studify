@@ -10,6 +10,7 @@ import '../home_page/home_controller.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
+
   @override
   DashboardState createState() => DashboardState();
 }
@@ -50,12 +51,21 @@ class DashboardState extends State<Dashboard> {
               ),
             ),
             Positioned(
-              left: Get.width * 0.2,
+              left: Get.width * 0.17,
               top: 0,
               child: Container(
                 height: Get.height * 0.5,
-                width: Get.width * .02,
-                color: kAccent,
+                width: Get.width * .03,
+                decoration: BoxDecoration(
+                  color: kAccent,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black45,
+                      blurRadius: 10,
+                      offset: Offset(10, 10),
+                    ),
+                  ],
+                ),
               ),
             ),
             Positioned(
@@ -149,6 +159,7 @@ class DashboardState extends State<Dashboard> {
               bottom: Get.height * 0.17,
               child: OutlinedButton(
                 style: ButtonStyle(
+                  shadowColor: MaterialStateProperty.all(Colors.black87),
                   fixedSize: MaterialStateProperty.all(
                       Size(Get.width * .32, Get.height * .32)),
                   elevation: MaterialStateProperty.all(8.0),

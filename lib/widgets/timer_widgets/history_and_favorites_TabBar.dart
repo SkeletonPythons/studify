@@ -63,8 +63,13 @@ class _TimerHistoryState extends State<TimerHistory>
                 ),
               ),
               child: Center(
-                child:
-                    FavoriteItem(),
+                child: GetBuilder<PomodoroController>(
+                  init: PomodoroController(),
+                  initState: (_) {},
+                  builder: (_) {
+                    return FavoriteItem();
+                  },
+                ),
               ),
             ),
             Container(

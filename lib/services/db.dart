@@ -106,12 +106,18 @@ class DB extends GetxService {
   void initDB() async {
     /// This function is used to initialize the database.
     /// It will create one if it doesn't exist.
-    if (await getUser() != null) {
-      isNewUser.value = false;
-    } else {
-      isNewUser.value = true;
-      await updateUser(Auth.instance.USER);
-    }
+    await user.get().then((value) async {
+      if (value.exists) {
+        Auth.instance.USER = value.data()!;
+        debugPrint('DB/getUser: user exists');
+        return value.data();
+      } else {
+        debugPrint('DB/getUser: user does not exist');
+        return null;
+      }
+    }).catchError((e) {
+      debugPrint('error getting user: $e');
+    });
   }
 
 // USER COLLECTION //
@@ -119,6 +125,7 @@ class DB extends GetxService {
   Future<AppUser?> getUser() async {
     return await user.get().then((value) {
       if (value.exists) {
+        Auth.instance.USER = value.data()!;
         debugPrint('DB/getUser: user exists');
         return value.data();
       } else {
