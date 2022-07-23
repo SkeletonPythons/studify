@@ -95,7 +95,7 @@ class FavoriteItemState extends State<FavoriteItem>
                         newTimer, DB.instance.timerHistory);
 
                     ///set the active page to the timer
-                    timerController.setActiveWidget(PomodoroTimer());
+                    timerController.setActiveWidget(const PomodoroTimer());
 
                     /// updates navbar screens if Pomodoro timer active
                     ///Routes to navbar which will display updated screens & index

@@ -8,6 +8,8 @@ import '../../../services/db.dart';
 
 part 'test_controller.dart';
 
+/// It's a StatefulWidget that has a State that has a Controller that has a Model
+/// that has a List of Models.
 class Tester extends StatefulWidget {
   Tester({Key? key}) : super(key: key);
 
