@@ -27,6 +27,7 @@ class FavoriteTimerState extends State<FavoriteTimer>
   PomodoroController pomodoroController = Get.find<PomodoroController>();
   HistoryController historyController = Get.find<HistoryController>();
   TimerController timerController = Get.find<TimerController>();
+  NavBarController navBarController = Get.find<NavBarController>();
   List<Pomodoro> favoriteList = [];
 
   @override
@@ -97,15 +98,9 @@ class FavoriteTimerState extends State<FavoriteTimer>
               ///set the active page to the timer
               timerController.setActiveWidget(PomodoroTimer());
 
-              /// This is temporary until i can figure out the routing issue
-              ///
-              Get.snackbar('Timer started', 'Head to the timer tab to see it!',
-                  backgroundColor: kBackgroundLight,
-                  colorText: kTextColor,
-                  snackPosition: SnackPosition.TOP,
-                  duration: Duration(seconds: 2));
               /// updates navbar screens if Pomodoro timer active
               ///Routes to navbar which will display updated screens & index
+              navBarController.tabController.animateTo(2);
             },
             child: Text(
               'Start Your Latest Favorite Study Timer',
