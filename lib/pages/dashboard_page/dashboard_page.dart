@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,18 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/pages/timers_page/timer_controllers/history_controller.dart';
 import 'package:studify/pages/timers_page/timer_controllers/pomodoro_controller.dart';
 import 'package:studify/pages/timers_page/timer_controllers/timer_controller.dart';
-import 'package:studify/widgets/timer_widgets/favorite_item.dart';
 import 'package:studify/widgets/timer_widgets/lastFavoriteTimer.dart';
 
-
-import '../../models/pomodoro_models/history_model.dart';
-import '../../services/db.dart';
 import '../../themes/apptheme.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../../services/auth.dart';
 import '../home_page/home_controller.dart';
-import '../timers_page/pomodoro.dart';
-import '../timers_page/timer_pomodoro_setup.dart';
+
 
 
 class Dashboard extends StatefulWidget {
@@ -67,7 +62,6 @@ class DashboardState extends State<Dashboard> {
                 color: kAccent,
               ),
             ),
-
             ///line from welcome circle to flashcard text
             Positioned(
               left: Get.width * 0.20,

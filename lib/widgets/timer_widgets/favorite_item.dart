@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:googleapis/shared.dart';
 import 'package:studify/pages/timers_page/timer_controllers/timer_controller.dart';
 import 'package:studify/pages/timers_page/timer_pomodoro_setup.dart';
 
@@ -26,6 +24,7 @@ class FavoriteItemState extends State<FavoriteItem>
   TimerController timerController = Get.find<TimerController>();
   List<Pomodoro> favoriteList = [];
 
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Pomodoro>>(
@@ -41,12 +40,14 @@ class FavoriteItemState extends State<FavoriteItem>
 
               for (var change in changes) {
                 DocumentChangeType type = change.type;
-
+                debugPrint('type: $type');
                 switch (type) {
                   case DocumentChangeType.added:
+                    debugPrint('added: ${change.doc.data}');
                     favoriteList.add(change.doc.data()!);
                     break;
                   case DocumentChangeType.modified:
+                    debugPrint('modified: ${change.doc.data}');
                     int ind = favoriteList.indexWhere(
                         (element) => element.id == change.doc.data()!.id);
                     Pomodoro changed = change.doc.data()!;
@@ -54,6 +55,7 @@ class FavoriteItemState extends State<FavoriteItem>
                     favoriteList.insert(ind, changed);
                     break;
                   case DocumentChangeType.removed:
+                    debugPrint('removed: ${change.doc.data}');
                     favoriteList.removeWhere(
                         (element) => element.id == change.doc.data()!.id);
                     break;
@@ -106,9 +108,9 @@ class FavoriteItemState extends State<FavoriteItem>
                     DB.instance.timerFavorites
                         .doc(favoriteList[index].id)
                         .delete();
+
                     Get.snackbar('Timer Removed',
                         'timer will no longer show up in your favorites');
-                    setState(() {});
                   },
                   title: Text(
                       '${(favoriteList[index].workTime)} Study ${(favoriteList[index].restTime)} Rest'),
