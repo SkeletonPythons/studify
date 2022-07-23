@@ -9,6 +9,7 @@ import '../pages/dashboard_page/dashboard_page.dart';
 import '../pages/flashcard_page/flashcard_test_page/flashcard_test_page.dart';
 import '../pages/flashcard_page/flashcard_widgets/open_controller.dart';
 import '../pages/login_page/login_page.dart';
+import '../pages/profile_page/profile_page.dart';
 import '../pages/splash_page/splash_page.dart';
 import '../pages/timers_page/pomodoro.dart';
 import '../pages/timers_page/timer_controllers/timer_controller.dart';
@@ -19,6 +20,7 @@ import '../pages/flashcard_page/note_page.dart';
 abstract class Routes {
   static const String LOGIN = '/login';
   static const String DASH = '/dashboard';
+  static const String PROFILE = '/profile';
   static const String SPLASH = '/splash';
   static const String TIMER = '/timer';
   static const String NAVBAR = '/navbar';
@@ -43,6 +45,10 @@ class AppPages {
     GetPage(
       name: Routes.LOGIN,
       page: () => LoginPage(),
+    ),
+    GetPage(
+      name: Routes.PROFILE,
+      page: () => ProfilePage(),
     ),
     GetPage(
       name: Routes.NAVBAR,

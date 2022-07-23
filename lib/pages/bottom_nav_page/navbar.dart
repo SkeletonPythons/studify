@@ -122,8 +122,9 @@ class AppBarDrawer extends StatelessWidget {
               Icons.developer_mode_sharp,
             ),
             title: Text('Profile'),
-            onTap: () => Get.snackbar(
-                'Error!', 'This on tap function does nothing yet!'),
+            onTap: () {
+              Get.toNamed(Routes.PROFILE);
+            },
           ),
           ListTile(
             leading: Icon(
