@@ -46,7 +46,7 @@ class PomodoroController extends GetxController {
   };
 
   /// Get a list of timerFavorites from the database
-  RxList<Pomodoro> get pomodoros => <Pomodoro>[].obs;
+  RxList<Pomodoro> get timerFavorites => <Pomodoro>[].obs;
 
   /// Get a list of timerFavorites from the database
   RxList<Pomodoro> get history {
@@ -58,7 +58,7 @@ class PomodoroController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    pomodoroFavorites = pomodoros;
+    pomodoroFavorites = timerFavorites;
     pomodoroHistory = history;
   }
 

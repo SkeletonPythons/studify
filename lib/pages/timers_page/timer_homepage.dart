@@ -17,7 +17,7 @@ class TimerHomePage extends StatefulWidget {
 
 class TimerHomePageState extends State<TimerHomePage>
     with SingleTickerProviderStateMixin {
-  TimerController timerController = Get.put<TimerController>(TimerController());
+  TimerController timerController = Get.find<TimerController>();
 
   @override
   Widget build(BuildContext context) {
