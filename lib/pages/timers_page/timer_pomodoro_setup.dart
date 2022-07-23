@@ -74,12 +74,8 @@ class PomodoroSetUpState extends State<PomodoroSetUp>
   }
 
   /// controllers
-  PomodoroController pomodoroController =
-      Get.put<PomodoroController>(PomodoroController(), permanent: true);
-
-  HistoryController pomodoroHistoryController =
-      Get.put<HistoryController>(HistoryController(), permanent: true);
-
+  PomodoroController pomodoroController = Get.find<PomodoroController>();
+  HistoryController pomodoroHistoryController = Get.find<HistoryController>();
   TimerController timerController = Get.find<TimerController>();
 
   @override

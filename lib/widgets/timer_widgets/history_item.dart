@@ -26,6 +26,7 @@ class HistoryItem extends StatefulWidget {
     PomodoroController pomodoroController = Get.find<PomodoroController>();
     HistoryController historyController = Get.find<HistoryController>();
     TimerController timerController = Get.find<TimerController>();
+    List<Pomodoro> historyList = [];
 
     @override
     Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class HistoryItem extends StatefulWidget {
           stream: DB.instance.timerHistory.snapshots(),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot<Pomodoro>> snapshot) {
-            List<Pomodoro> historyList = [];
+
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {

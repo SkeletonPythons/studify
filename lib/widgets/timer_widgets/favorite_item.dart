@@ -24,6 +24,7 @@ class FavoriteItemState extends State<FavoriteItem>
   PomodoroController pomodoroController = Get.find<PomodoroController>();
   HistoryController historyController = Get.find<HistoryController>();
   TimerController timerController = Get.find<TimerController>();
+  List<Pomodoro> favoriteList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,6 @@ class FavoriteItemState extends State<FavoriteItem>
         stream: DB.instance.timerFavorites.snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Pomodoro>> snapshot) {
-          List<Pomodoro> favoriteList = [];
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
@@ -91,6 +91,7 @@ class FavoriteItemState extends State<FavoriteItem>
                         workTime: favoriteList[index].workTime,
                         restTime: favoriteList[index].restTime,
                         totalCycles: favoriteList[index].totalCycles);
+
                     historyController.addTimerToDatabase(
                         newTimer, DB.instance.timerHistory);
 
