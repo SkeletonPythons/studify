@@ -10,6 +10,12 @@
             "type": "dart"
         },
         {
+            "name": "studify (debug mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+        {
             "name": "studify (profile mode)",
             "request": "launch",
             "type": "dart",
@@ -21,5 +27,7 @@
             "type": "dart",
             "flutterMode": "release"
         }
+    
     ]
+    
 }

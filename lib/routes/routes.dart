@@ -1,22 +1,26 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
-import 'package:studify/controllers/flashcard_controller.dart';
-import 'package:studify/views/pages/dashboard_page/dashboard_page.dart';
-import 'package:studify/views/pages/timers_page/pomodoro.dart';
 
-import '../views/pages/splash_page/splash_page.dart';
-import '../views/pages/login_page/login_page.dart';
-import '../views/pages/timers_page/timer_homepage.dart';
-import '../views/pages/bottom_nav_page/bottom_nav_bar.dart';
-import '../views/pages/timers_page/timer_pomodoro_setup.dart';
-import '../views/pages/alternate_reality/alt_home.dart';
-import '../views/pages/calendar_page/add_event.dart';
-import '../views/pages/calendar_page/calendar_page.dart';
+import '../pages/bottom_nav_page/navbar.dart';
+import '../pages/bottom_nav_page/navbar_controller.dart';
+import '../pages/calendar_page/calendar_page.dart';
+import '../pages/dashboard_page/dashboard_page.dart';
+import '../pages/flashcard_page/flashcard_test_page/flashcard_test_page.dart';
+import '../pages/flashcard_page/flashcard_widgets/open_controller.dart';
+import '../pages/login_page/login_page.dart';
+import '../pages/profile_page/profile_page.dart';
+import '../pages/splash_page/splash_page.dart';
+import '../pages/timers_page/pomodoro.dart';
+import '../pages/timers_page/timer_controllers/timer_controller.dart';
+import '../pages/timers_page/timer_homepage.dart';
+import '../pages/timers_page/timer_pomodoro_setup.dart';
+import '../pages/flashcard_page/note_page.dart';
 
 abstract class Routes {
   static const String LOGIN = '/login';
   static const String DASH = '/dashboard';
+  static const String PROFILE = '/profile';
   static const String SPLASH = '/splash';
   static const String TIMER = '/timer';
   static const String NAVBAR = '/navbar';
@@ -24,7 +28,8 @@ abstract class Routes {
   static const String ADDEVENT = '/add_event';
   static const String POMODOROSETUP = '/pomodoro_setup';
   static const String POMODORO = '/pomodoro';
-  static const String ALT_HOME = '/alt_home';
+  static const String ALT_NOTES = '/alt_notes';
+  static const String TEST = '/test';
 }
 
 class AppPages {
@@ -42,14 +47,20 @@ class AppPages {
       page: () => LoginPage(),
     ),
     GetPage(
+      name: Routes.PROFILE,
+      page: () => ProfilePage(),
+    ),
+    GetPage(
       name: Routes.NAVBAR,
-      page: () => BottomNavBar(),
-      binding: FlashcardBinding(),
+      page: () => NavBar(),
+      bindings: [
+        NavbarBinding(),
+        FlashcardBinding(),
+      ],
     ),
     GetPage(
       name: Routes.DASH,
       page: () => Dashboard(),
-      binding: FlashcardBinding(),
     ),
     GetPage(
       name: Routes.TIMER,
@@ -60,10 +71,6 @@ class AppPages {
       page: () => CalendarPage(),
     ),
     GetPage(
-      name: Routes.ADDEVENT,
-      page: () => AddEvent(),
-    ),
-    GetPage(
       name: Routes.POMODOROSETUP,
       page: () => PomodoroSetUp(),
     ),
@@ -72,9 +79,27 @@ class AppPages {
       page: () => PomodoroTimer(),
     ),
     GetPage(
-      name: Routes.ALT_HOME,
-      page: () => AltHome(),
-      binding: FlashcardBinding(),
+      name: Routes.ALT_NOTES,
+      page: () => NotePage(),
     ),
+    // GetPage(
+    //   name: Routes.TEST,
+    //   page: () => TestPage(),
+    // ),
   ];
+}
+
+class NavbarBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.put(NavBarController(), permanent: true);
+    Get.put(TimerController(), permanent: true);
+  }
+}
+
+class FlashcardBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.create<OC>(() => OC());
+  }
 }

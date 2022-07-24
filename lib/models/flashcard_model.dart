@@ -1,53 +1,94 @@
-import 'dart:convert';
-
+import 'dart:math';
+import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+import '../services/db.dart';
 
 class Note {
-  String back;
-  String front;
+  String? back;
+  String? front;
   String id;
   String? content;
+  // String? subject;
+  List<String>? tags;
   String? subject;
-  List<dynamic> tags;
-  String? title;
-  bool isFav;
-  bool isPinned;
-  bool isLearned;
+  RxBool isFav;
+  RxBool isPinned;
+  RxBool isLearned;
 
   Note({
-    required this.front,
-    required this.back,
-    this.subject,
-    this.title = '',
-    this.isFav = false,
+    this.front = '',
+    this.back = '',
+    this.subject = 'none',
+    bool fav = false,
     this.content = '',
-    this.tags = const [],
-    this.isPinned = false,
-    this.isLearned = false,
-  }) : id = DateTime.now().millisecondsSinceEpoch.toString();
+    List<String>? tags,
+    bool pinned = false,
+    bool learned = false,
+    String? id,
+  })  : id =
+            id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString(),
+        tags = tags ?? [],
+        isFav = RxBool(fav),
+        isPinned = RxBool(pinned),
+        isLearned = RxBool(learned);
 
-  Note.fromJson(Map<String, dynamic> json, this.id)
-      : front = json['front'] ?? '',
-        isFav = json['isFav'] ?? false,
+  Note.newLocal({
+    this.front = 'This is the front of your new flashcard',
+    this.back = 'This is the back of your new flashcard!',
+    this.subject = 'none',
+    bool fav = false,
+    this.content = '',
+    List<String>? tags = const ['new'],
+    bool pinned = false,
+    bool learned = false,
+    String? id,
+  })  : id =
+            id ?? (DateTime.now().millisecondsSinceEpoch + pepper()).toString(),
+        tags = tags ?? [],
+        isFav = RxBool(fav),
+        isPinned = RxBool(pinned),
+        isLearned = RxBool(learned);
+
+  Note.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  )   : id = snapshot.id,
+        front = snapshot.data()!['front'] ?? '',
+        back = snapshot.data()!['back'] ?? '',
+        subject = snapshot.data()!['subject'] ?? '',
+        content = snapshot.data()!['content'] ?? '',
+        tags = List<String>.from(snapshot.data()!['tags']),
+        isFav = RxBool(snapshot.data()!['isFav'] ?? false),
+        isPinned = RxBool(snapshot.data()!['isPinned'] ?? false),
+        isLearned = RxBool(snapshot.data()!['isLearned'] ?? false);
+
+  Note.fromJson(Map<String, dynamic> json)
+      : id = json['id'] ??
+            (DateTime.now().millisecondsSinceEpoch + pepper()).toString(),
+        front = json['front'] ?? '',
         back = json['back'] ?? '',
         subject = json['subject'] ?? '',
+        isFav = RxBool(json['isFav'] ?? false),
         content = json['content'] ?? '',
-        title = json['title'] ?? '',
-        tags = json['tags'] ?? [],
-        isPinned = json['isPinned'] ?? false,
-        isLearned = json['isLearned'] ?? false;
+        tags = List<String>.from(json['tags']),
+        isPinned = RxBool(json['isPinned'] ?? false),
+        isLearned = RxBool(json['isLearned'] ?? false);
 
-  Note.fromDoc({required DocumentSnapshot snapshot})
-      : id = snapshot.id,
-        front = snapshot['front'],
-        isFav = snapshot['isFav'],
-        back = snapshot['back'],
-        subject = snapshot['subject'],
-        content = snapshot['content'],
-        title = snapshot['title'],
-        isPinned = snapshot['isPinned'],
-        isLearned = snapshot['isLearned'],
-        tags = snapshot['tags'];
+  static int pepper() => Random().nextInt(50);
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      if (front != null) 'front': front,
+      if (back != null) 'back': back,
+      if (subject != null) 'subject': subject,
+      'isFav': isFav.value,
+      if (content != null) 'content': content,
+      if (tags != null) 'tags': tags,
+      'isPinned': isPinned.value,
+      'isLearned': isLearned.value,
+    };
+  }
 
   Map<String, dynamic> toJson() => {
         'front': front,
@@ -56,9 +97,21 @@ class Note {
         'subject': subject,
         'content': content,
         'tags': tags,
-        'title': title,
-        'isFav': isFav,
-        'isPinned': isPinned,
-        'isLearned': isLearned,
+        'isFav': isFav.value,
+        'isPinned': isPinned.value,
+        'isLearned': isLearned.value,
       };
+
+  @override
+  String toString() {
+    return '\n>-------<>-------<\nID:\t\t$id\nSUBJECT:\t$subject\nFRONT:\t$front\nBACK:\t$back\nCONTENT:\t$content\nTAGS:\t${tags.toString()}\nFAV?:\t$isFav\nPINNED?:\t$isPinned\nLEARNED?:\t$isLearned\n>-------<>-------<\n';
+  }
+
+  /// Updates [this] in the database.
+  void update() async {
+    await DB.instance.notes
+        .doc(id)
+        .set(this, SetOptions(merge: true))
+        .catchError((e) => debugPrint('Error updating note: $e'));
+  }
 }

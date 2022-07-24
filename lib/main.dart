@@ -3,17 +3,16 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
-import 'consts/app_settings.dart';
 import './routes/routes.dart';
-import './services/auth.dart';
-import 'views/themes/apptheme.dart';
+import 'pages/bottom_nav_page/navbar.dart';
+import 'themes/apptheme.dart';
+import 'utils/consts/app_settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Get.put<Auth>(Auth());
   runApp(const MyApp());
 }
 
