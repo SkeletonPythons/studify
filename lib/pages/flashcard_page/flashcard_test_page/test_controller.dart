@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 part of './tester.dart';
 
 enum TestState {
@@ -21,14 +23,17 @@ enum TestState {
 }
 
 class TestController extends GetxController {
+  /// Random number generator
+  final Random _random = Random(DateTime.now().millisecondsSinceEpoch);
+
   /// The Chosen Subject.
   RxString subject = ''.obs;
 
   /// The list of questions and answers to be displayed.
   RxMap<String, String> questions = <String, String>{}.obs;
 
-  /// The state of the test.
-  Rx<TestState> state = TestState.init.obs;
+  /// List of answers of questions that have been answered for use as wrong answers.
+  List<String> answeredAlready = <String>[];
 
   /// Number of questions in the test.
   RxInt numQuestions = 0.obs;
@@ -46,43 +51,149 @@ class TestController extends GetxController {
   RxDouble timeLimit = RxDouble(-1);
 
   /// StreamSubscription that listens for when the state changes.
-  GetStream<TestState> stateMachine = GetStream();
+  GetStream<TestState> stateMachine = GetStream<TestState>();
+
+  /// The current [Widget] to be displayed.
+  Rx<Widget> screen = Container().obs;
+
+  /// Matrix4 for the question.
+  Rx<Matrix4> questionMatrix = Matrix4.identity().obs;
+
+  /// Matrix4 for A.
+  Rx<Matrix4> aMatrix = Matrix4.identity().obs;
+
+  /// Matrix4 for  B.
+  Rx<Matrix4> bMatrix = Matrix4.identity().obs;
+
+  /// Matrix4 for  C.
+  Rx<Matrix4> cMatrix = Matrix4.identity().obs;
+
+  /// Matrix4 for  D.
+  Rx<Matrix4> dMatrix = Matrix4.identity().obs;
+
+  /// Shortcut for Identity Matrix.
+  Matrix4 get idMatrix => Matrix4.identity();
+
+  /// Shortcut for 0x scale Matrix.
+  Matrix4 get scale0x => Matrix4.diagonal3Values(0, 0, 0);
+
+  /// Shortcut for 1.5x scale Matrix.
+  Matrix4 get scale1p5x => Matrix4.diagonal3Values(1.5, 1.5, 1);
+
+  /// Shortcut for 2x scale Matrix.
+  Matrix4 get scale2x => Matrix4.diagonal3Values(2, 2, 1);
+
+  /// Fade Transition Widget A.
+  Rx<Widget> a = Container().obs;
+
+  /// Fade Transition Widget B.
+  Rx<Widget> b = Container().obs;
+
+  /// Method to change the [state] of the test.
+  void stateChange(TestState to) {
+    stateMachine.add(to);
+    update();
+  }
+
+  /// Method to generate the questions and answers.
+  Map<String, dynamic> generateQuestions(String currentQuestion) {
+    Map<String, dynamic> results = <String, dynamic>{};
+    results['question'] = currentQuestion;
+    results['correctAnswer'] = questions['currentQuestion'];
+    results['answers'] = <String>[questions['currentQuestion']!];
+    while (results['answers'].length < 4) {
+      List<String> pool = <String>[...answeredAlready, ...questions.values];
+
+      int randomNumber = _random.nextInt(pool.length);
+
+      String randomAnswer = pool[randomNumber];
+      if (results['answers'].contains(randomAnswer)) {
+        continue;
+      }
+      results['answers'].add(randomAnswer);
+    }
+    results['answers'].shuffle();
+    answeredAlready.add(results['correctAnswer']);
+    questions.remove(currentQuestion);
+    return results;
+  }
 
   /// onInit()
   @override
   void onInit() {
     super.onInit();
+
     debugPrint('TestController/init');
     stateMachine.listen(
-      (st) {
+      (st) async {
         switch (st) {
           case TestState.init:
             debugPrint('TestController/init');
-            state.value = TestState.prepped;
+            screen.value = Container(child: CircularProgressIndicator());
+            while (true) {
+              subjectPicker();
+              if (subject.value != '') {
+                break;
+              }
+            }
+            populateQuestions();
+            stateChange(TestState.prepped);
+            update();
             break;
           case TestState.prepped:
             debugPrint('TestController/prepped');
-            state.value = TestState.question;
+            if (isPrepped) {
+              stateChange(TestState.question);
+            } else {
+              stateChange(TestState.init);
+            }
             break;
           case TestState.question:
             debugPrint('TestController/question');
-            state.value = TestState.answer;
+            int _rng = rng.nextInt(questions.length);
+            screen.value = Question(
+                questions: generateQuestions(questions.keys.toList()[_rng]));
+            update();
             break;
           case TestState.answer:
             debugPrint('TestController/answer');
-            state.value = TestState.question;
+            if (questions.isNotEmpty) {
+              stateChange(TestState.question);
+            } else {
+              stateChange(TestState.end);
+            }
+            update();
             break;
           case TestState.paused:
             debugPrint('TestController/paused');
-            state.value = TestState.paused;
+            update();
             break;
           case TestState.end:
             debugPrint('TestController/end');
-            state.value = TestState.end;
+            double _score = (numCorrect.value / numQuestions.value) * 100;
+            Get.defaultDialog(
+              title: 'Test Complete',
+              content: Text('You scored $_score%'),
+              actions: [
+                OutlinedButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Get.back();
+                    reset();
+                  },
+                ),
+              ],
+            );
+            update();
             break;
         }
       },
+      onError: (e) {
+        debugPrint('TestController/error');
+        debugPrint(e.toString());
+      },
     );
+    stateMachine.add(TestState.init);
   }
 
   /// onReady()
@@ -99,6 +210,17 @@ class TestController extends GetxController {
     debugPrint('TestController/dispose');
   }
 
+  /// Checker for prepped state.
+  bool get isPrepped {
+    if (subject.value == '') {
+      return false;
+    } else if (questions.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   /// Gettter for the list of [Notes].
   Future<List<Note>> get getNotes async {
     List<Note> notes = [];
@@ -112,6 +234,7 @@ class TestController extends GetxController {
     }).catchError((e) {
       debugPrint('error getting data: $e');
     });
+    notes.shuffle();
     return notes;
   }
 
@@ -180,27 +303,6 @@ class TestController extends GetxController {
     timeRemaining.value = 0;
     timeLimit.value = -1;
     subject.value = '';
-    state.value = TestState.init;
-  }
-
-  /// Method that controls the test flow.
-  void loop() {
-    switch (state.value) {
-      case TestState.init:
-        reset();
-        break;
-      case TestState.question:
-        break;
-      case TestState.answer:
-        break;
-      case TestState.paused:
-        break;
-      case TestState.end:
-        break;
-      case TestState.prepped:
-        break;
-      default:
-        break;
-    }
+    stateMachine.add(TestState.end);
   }
 }

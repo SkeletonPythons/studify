@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/pages/flashcard_page/flashcard_test_page/flashcard_test_page.dart';
 
 import 'package:studify/pages/timers_page/timer_controllers/history_controller.dart';
 import 'package:studify/pages/timers_page/timer_controllers/pomodoro_controller.dart';
@@ -12,9 +13,8 @@ import 'package:studify/widgets/timer_widgets/lastFavoriteTimer.dart';
 import '../../themes/apptheme.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../../services/auth.dart';
+import '../flashcard_page/flashcard_test_page/flashcard_test_controller.dart';
 import '../home_page/home_controller.dart';
-
-
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -25,10 +25,11 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   HomeController homeController = Get.put<HomeController>(HomeController());
-  PomodoroController pomodoroController = Get.put<PomodoroController>(PomodoroController(), permanent: true);
+  PomodoroController pomodoroController =
+      Get.put<PomodoroController>(PomodoroController(), permanent: true);
   TimerController timerController = Get.put<TimerController>(TimerController());
-  HistoryController historyController =  Get.put<HistoryController>(HistoryController(), permanent: true);
-
+  HistoryController historyController =
+      Get.put<HistoryController>(HistoryController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,7 @@ class DashboardState extends State<Dashboard> {
                 color: kAccent,
               ),
             ),
+
             ///line from welcome circle to flashcard text
             Positioned(
               left: Get.width * 0.20,
@@ -81,6 +83,7 @@ class DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
+
             /// Line from flashcard text to timer quick start
             Positioned(
               left: Get.width * 0.20,
@@ -100,6 +103,7 @@ class DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
+
             /// Welcome circle
             Positioned(
               top: -Get.width * 0.2,
@@ -120,12 +124,14 @@ class DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
+
             /// Circle with timer quick start
             Positioned(
               bottom: -Get.width * 0.15,
               right: Get.width * .58,
               child: FavoriteTimer(),
             ),
+
             ///Events box
             Positioned(
               top: Get.width * 0.6,
@@ -181,6 +187,7 @@ class DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
+
             /// flashcard test circle
             Positioned(
               left: Get.width * 0.06,
@@ -197,7 +204,11 @@ class DashboardState extends State<Dashboard> {
                     CircleBorder(),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => TP(), binding: BindingsBuilder(() {
+                    Get.put(TPC());
+                  }));
+                },
                 child: Center(
                   child: Text(
                     'Take a\nFlashcard\nTest',

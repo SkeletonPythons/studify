@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_final_fields, unused_field, prefer_const_constructors
+// ignore_for_file: prefer_final_fields, unused_field, prefer_const_constructors, non_constant_identifier_names, avoid_function_literals_in_foreach_calls
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -12,14 +13,36 @@ import '../../../models/flashcard_model.dart';
 import '../../../services/db.dart';
 
 class TestController extends GetxController with GetTickerProviderStateMixin {
+  /// Random number generator
+  final Random rng = Random(DateTime.now().millisecondsSinceEpoch);
+
   /// The list of questions to be displayed.
-  List<String?> questions = [];
+  RxList<String?> questions = <String>[].obs;
 
   /// The list of answers to be displayed.
-  List<String?> answers = [];
+  RxList<String?> answers = <String>[].obs;
 
-  /// The list of flashcards to be displayed.
-  List<Note> listOfNotes = [];
+  /// The List of all notes.
+  RxList<Note> allNotes = <Note>[].obs;
+
+  /// List of subjects
+  List<String> subjects = [];
+
+  /// Map of questions and answers.
+  Map<String, String> QA = {};
+
+  void setQA(String subject) async {
+    for (Note note in allNotes) {
+      if (note.subject == subject && note.front != '' && note.back != '') {
+        QA[note.front!] = note.back!;
+      }
+    }
+    questions = QA.keys.toList().obs;
+    answers = QA.values.toList().obs;
+  }
+
+  /// The current question and its answer.
+  Map<String, String> currentQA = {};
 
   /// The chosen subject.
   String subj = '';
@@ -36,16 +59,11 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
   /// The number of questions answered correctly.
   RxInt numCorrect = 0.obs;
 
-  // RxList<bool> answersList = <bool>[].obs;
-
   /// Determines if the subject has been set.
   RxBool subjectSet = false.obs;
 
   /// Determines if the timer has started.
   RxBool pauseTimer = true.obs;
-
-  /// Map of all notes used to set questions and answers.
-  Map<String, List<Note>> notes = {};
 
   /// Controls the value of the timer indicator.
   void tick() async {
@@ -79,20 +97,19 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
   }
 
   /// Called when the user clicks an answer.
-  void submitAnswer(String answer) {
-    if (listOfNotes[currentIndex.value].back == answer) {
+  void submitAnswer({required String question, required String answer}) {
+    if (currentQA.containsValue(answer)) {
       numCorrect.value += 1;
       addDot(true);
     } else {
       addDot(false);
     }
     currentIndex.value += 1;
-    if (currentIndex.value == listOfNotes.length) {
-      int avg = ((numCorrect.value / listOfNotes.length) * 100).round();
+    if (QA.isEmpty) {
+      int avg = ((numCorrect.value / answers.length) * 100).round();
       resetTimers();
       currentIndex.value = 0;
       numCorrect.value = 0;
-      Get.back();
       Get.dialog(AlertDialog(
         title: Text('Test Complete'),
         content: Text('You got a score of $avg%! '),
@@ -108,7 +125,8 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
         ],
       ));
     }
-    answerBlock.value = setAnswers();
+    answerBlock.value = setAnswers;
+
     update();
   }
 
@@ -123,87 +141,121 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
   Rx<Widget> answerBlock = Rx<Widget>(
     Container(),
   );
+  Rx<Widget> questionBlock = Rx<Widget>(
+    Container(),
+  );
 
-  Widget setAnswers() {
-    List<String> answers = [];
-    answers.add(listOfNotes[currentIndex.value].back!);
+  Widget get setAnswers {
+    String nextQuestion = QA.keys.toList()[rng.nextInt(QA.length)];
+    currentQA = {nextQuestion: QA[nextQuestion]!};
+    questionBlock.value = Text(
+      nextQuestion,
+      style: GoogleFonts.roboto(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: Colors.black,
+      ),
+    );
+    QA.remove(nextQuestion);
+    List<String> answers = [currentQA[nextQuestion]!];
     while (answers.length < 4) {
-      int randomIndex = Random().nextInt(listOfNotes.length);
-      if (answers.contains(listOfNotes[randomIndex].back!)) {
+      String potential = answers[rng.nextInt(answers.length)];
+      if (answers.contains(potential)) {
         continue;
       }
-      answers.add(listOfNotes[randomIndex].back!);
+      answers.add(potential);
     }
     answers.shuffle();
     return Container(
-        height: Get.height * .25,
-        width: Get.width,
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Question(
-                  answer: answers[0],
-                  color: neutralColor,
-                  onPressed: () => submitAnswer(answers[0]),
-                ),
-                SizedBox(width: Get.width * .2),
-                Question(
-                  answer: answers[1],
-                  color: neutralColor,
-                  onPressed: () => submitAnswer(answers[1]),
-                ),
-              ],
-            ),
-            SizedBox(height: Get.height * .05),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Question(
-                  answer: answers[2],
-                  color: neutralColor,
-                  onPressed: () => submitAnswer(answers[2]),
-                ),
-                SizedBox(width: Get.width * .2),
-                Question(
-                  answer: answers[3],
-                  color: neutralColor,
-                  onPressed: () => submitAnswer(answers[3]),
-                ),
-              ],
-            ),
-          ],
-        ));
-  }
-
-  void setNotes(
-    Map<String, List<Note>> notes,
-  ) {
-    this.notes = notes;
+      height: Get.height * .25,
+      width: Get.width,
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Question(
+                answer: answers[0],
+                color: neutralColor,
+                onPressed: () =>
+                    submitAnswer(question: nextQuestion, answer: answers[0]),
+              ),
+              SizedBox(width: Get.width * .2),
+              Question(
+                answer: answers[1],
+                color: neutralColor,
+                onPressed: () =>
+                    submitAnswer(question: nextQuestion, answer: answers[1]),
+              ),
+            ],
+          ),
+          SizedBox(height: Get.height * .05),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Question(
+                answer: answers[2],
+                color: neutralColor,
+                onPressed: () =>
+                    submitAnswer(question: nextQuestion, answer: answers[2]),
+              ),
+              SizedBox(width: Get.width * .2),
+              Question(
+                answer: answers[3],
+                color: neutralColor,
+                onPressed: () =>
+                    submitAnswer(question: nextQuestion, answer: answers[3]),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   void setSubject(String subject) {
     subj = subject;
+    setQA(subject);
+    answerBlock.value = setAnswers;
+
     subjectSet.value = true;
-    questions = notes[subject]?.map((note) => note.front).toList() ?? []
-      ..shuffle();
-    answers = notes[subject]?.map((note) => note.back).toList() ?? [];
+    update();
   }
 
-  void intro() {
-    List<Widget> childs = [];
-    for (String key in notes.keys) {
-      childs.add(
+  Future<void> setNotes() async {
+    await DB.instance.notes.get().then((s) {
+      for (var note in s.docs.toList()) {
+        allNotes.add(note.data());
+      }
+    });
+    for (String subject in allNotes.map((note) => note.subject!).toList()) {
+      if (!subjects.contains(subject)) {
+        subjects.add(subject);
+      }
+    }
+    debugPrint(allNotes.length.toString());
+    debugPrint(subjects.length.toString());
+  }
+
+  @override
+  void onInit() async {
+    debugPrint('TestController/init');
+    await setNotes();
+
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    debugPrint('TestController/ready');
+    List<Widget> subjectButtons = [];
+    for (String subject in subjects) {
+      subjectButtons.add(
         SimpleDialogOption(
-          padding: const EdgeInsets.all(8),
-          child: Text(key, style: GoogleFonts.roboto()),
+          child: Text(subject),
           onPressed: () {
-            setSubject(key);
-            listOfNotes = notes[key]!;
-            answerBlock.value = setAnswers();
-            update();
+            setSubject(subject);
             Get.back();
           },
         ),
@@ -211,31 +263,11 @@ class TestController extends GetxController with GetTickerProviderStateMixin {
     }
     Get.dialog(
       SimpleDialog(
-        title: Text('Select a topic', style: GoogleFonts.roboto()),
-        children: childs,
+        title: Text('Select a subject'),
+        children: subjectButtons,
       ),
     );
-  }
-
-  void startTest() {
-    numCorrect.value = 0;
-    for (Note note in notes[subj]!) {
-      questions.add(note.front);
-    }
-    Get.back();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    debugPrint('TestController/init');
-  }
-
-  @override
-  void onReady() {
     super.onReady();
-    debugPrint('TestController/ready');
-    intro();
   }
 
   RxList<Widget> dots = <Widget>[].obs;
@@ -285,5 +317,193 @@ class Question extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class TPC extends GetxController {
+  Random rng = Random(DateTime.now().millisecondsSinceEpoch);
+
+  String title = 'Test';
+
+  RxString subject = ''.obs;
+
+  RxList<String> answerPool = <String>[].obs;
+
+  RxList<Map<String, String>> questions = <RxMap<String, String>>[].obs;
+
+  RxInt index = (-1).obs;
+  RxInt numCorrect = 0.obs;
+  RxBool firstQuestion = true.obs;
+
+  List<Note> notes = [];
+
+  RxBool testPrepared = false.obs;
+
+  RxMap<String, String> currentQA = <String, String>{}.obs;
+
+  RxString currentQ = ''.obs;
+  RxString currentA = ''.obs;
+  RxString currentB = ''.obs;
+  RxString currentC = ''.obs;
+  RxString currentD = ''.obs;
+
+  void next() {
+    index.value++;
+    if (index.value == questions.length - 1) {
+      testComplete();
+      return;
+    }
+
+    currentQA.value = questions[index.value];
+    currentQ.value = currentQA['question']!;
+    List<String> tempA = [currentQA['answer']!];
+    while (tempA.length < 4) {
+      String potential = answerPool[rng.nextInt(answerPool.length)];
+      if (tempA.contains(potential)) {
+        continue;
+      }
+      tempA.add(potential);
+      tempA.shuffle();
+    }
+    currentA.value = tempA[0];
+    currentB.value = tempA[1];
+    currentC.value = tempA[2];
+    currentD.value = tempA[3];
+    update();
+  }
+
+  void first() {
+    firstQuestion.value = false;
+    currentQA.value = questions[0];
+    List<String> tempA = [currentQA['answer']!];
+    while (tempA.length < 4) {
+      String potential = answerPool[rng.nextInt(answerPool.length)];
+      if (tempA.contains(potential)) {
+        continue;
+      }
+      tempA.add(potential);
+      tempA.shuffle();
+    }
+    currentQ.value = currentQA['question']!;
+    currentA.value = tempA[0];
+    currentB.value = tempA[1];
+    currentC.value = tempA[2];
+    currentD.value = tempA[3];
+  }
+
+  void testComplete() {
+    double score = ((numCorrect.value / questions.length.toDouble()) * 100)
+        .roundToDouble();
+    Get.dialog(
+      AlertDialog(
+        title: Text('Test Complete'),
+        content: Text('You scored $score%'),
+        actions: [
+          ElevatedButton(
+            child: Text('OK'),
+            onPressed: () {
+              Get.back();
+              Get.back();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void submit(String answer) {
+    if (answer == currentQA['answer']) {
+      addDot(true);
+      numCorrect.value++;
+    } else {
+      addDot(false);
+    }
+    next();
+  }
+
+  RxList<Widget> dots = <Widget>[].obs;
+
+  void addDot(bool isCorrect) {
+    dots.add(
+      Container(
+        height: Get.height * .03,
+        width: Get.width * .03,
+        decoration: BoxDecoration(
+          color: isCorrect ? Colors.greenAccent : Colors.redAccent,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
+  Future<void> prepareTest() async {
+    debugPrint('preparing test 1');
+    index.value = 0;
+    numCorrect.value = 0;
+    List<String> subjects = [];
+    await DB.instance.notes.get().then((s) {
+      for (var note in s.docs.toList()) {
+        notes.add(note.data());
+      }
+    });
+    for (Note note in notes) {
+      if (note.subject == '') {
+        continue;
+      }
+
+      if (!subjects.contains(note.subject)) {
+        subjects.add(note.subject!);
+      }
+    }
+    Get.dialog(SimpleDialog(
+      title: Text('Select a subject', style: GoogleFonts.roboto(fontSize: 20)),
+      children: subjects
+          .map((subject) => SimpleDialogOption(
+                child: Text(
+                  subject,
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  if (setSubjectAndQuestions(subject)) {
+                    Get.back();
+
+                    testPrepared.value = true;
+                    next();
+                  }
+                },
+              ))
+          .toList(),
+    ));
+    debugPrint('preparing test 2');
+  }
+
+  bool setSubjectAndQuestions(String subject) {
+    this.subject.value = subject;
+    questions.clear();
+    answerPool.value = [];
+    for (Note note in notes) {
+      if (note.subject == subject) {
+        questions.add({'question': note.front!, 'answer': note.back!}.obs);
+        answerPool.add(note.back!);
+      }
+      questions.shuffle();
+    }
+    return questions.isNotEmpty;
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    prepareTest();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    debugPrint('ready');
   }
 }

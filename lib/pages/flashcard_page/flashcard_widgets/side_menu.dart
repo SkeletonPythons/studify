@@ -80,13 +80,6 @@ class FCMenu extends StatelessWidget {
                                         icon: Icon(Icons.add, size: 30),
                                       ),
                                       IconButton(
-                                          icon: FaIcon(
-                                              FontAwesomeIcons.checkDouble,
-                                              size: 30),
-                                          onPressed: () {
-                                            Get.snackbar("title", "message");
-                                          }),
-                                      IconButton(
                                         icon: FaIcon(
                                             FontAwesomeIcons.schoolFlag,
                                             size: 30),
