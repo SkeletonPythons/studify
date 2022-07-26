@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+import '../../global_controller.dart';
 import '../../services/auth.dart';
 import '../../utils/consts/app_colors.dart';
 import 'login_controller.dart';
@@ -61,13 +62,13 @@ class LoginScreen extends StatelessWidget {
                     'Register Now!',
                     style: GoogleFonts.ubuntuCondensed().copyWith(
                       fontSize: 18,
-                      color: kAccent,
+                      color: GC.accent.value,
                     ),
                   ),
                 ),
               ],
             ),
-            const Divider(color: kAccent, thickness: 2),
+            Divider(color: GC.accent.value, thickness: 2),
             TextField(
               controller: controller.emailController,
               decoration: InputDecoration(
@@ -94,16 +95,16 @@ class LoginScreen extends StatelessWidget {
                       icon: controller.obscurePass.value
                           ? const FaIcon(FontAwesomeIcons.solidEyeSlash,
                               color: Colors.white54, size: 20)
-                          : const FaIcon(FontAwesomeIcons.solidEye,
-                              color: kAccent, size: 20),
+                          : FaIcon(FontAwesomeIcons.solidEye,
+                              color: GC.accent.value, size: 20),
                     ),
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            const Divider(
-              color: kAccent,
+            Divider(
+              color: GC.accent.value,
               thickness: 2,
             ),
             SizedBox(
@@ -185,8 +186,8 @@ class RegisterScreenUI extends StatelessWidget {
                   ],
                 ),
               ),
-              const Divider(
-                color: kAccent,
+              Divider(
+                color: GC.accent.value,
                 thickness: 2,
               ),
               SizedBox(
@@ -201,8 +202,8 @@ class RegisterScreenUI extends StatelessWidget {
                         onChanged: (value) => controller.name.value = value,
                         controller: controller.nameController,
                         decoration: InputDecoration(
-                            prefixIcon: const FaIcon(FontAwesomeIcons.user,
-                                color: kAccent, size: 20),
+                            prefixIcon: FaIcon(FontAwesomeIcons.user,
+                                color: GC.accent.value, size: 20),
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.blue[200]!),
                             ),
@@ -218,10 +219,8 @@ class RegisterScreenUI extends StatelessWidget {
                           onChanged: (value) => controller.email.value = value,
                           controller: controller.emailController,
                           decoration: InputDecoration(
-                              prefixIcon: const FaIcon(
-                                  FontAwesomeIcons.envelope,
-                                  color: kAccent,
-                                  size: 20),
+                              prefixIcon: FaIcon(FontAwesomeIcons.envelope,
+                                  color: GC.accent.value, size: 20),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.blue[200]!),
@@ -246,8 +245,8 @@ class RegisterScreenUI extends StatelessWidget {
                             controller: controller.passwordController,
                             obscureText: controller.obscurePass.value,
                             decoration: InputDecoration(
-                              prefixIcon: const FaIcon(FontAwesomeIcons.lock,
-                                  color: kAccent, size: 20),
+                              prefixIcon: FaIcon(FontAwesomeIcons.lock,
+                                  color: GC.accent.value, size: 20),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.blue[200]!),
@@ -263,8 +262,8 @@ class RegisterScreenUI extends StatelessWidget {
                                           color: Colors.white54,
                                           size: 20,
                                         )
-                                      : const FaIcon(FontAwesomeIcons.solidEye,
-                                          color: kAccent, size: 20),
+                                      : FaIcon(FontAwesomeIcons.solidEye,
+                                          color: GC.accent.value, size: 20),
                                 ),
                               ),
                             ),
@@ -284,8 +283,8 @@ class RegisterScreenUI extends StatelessWidget {
                             controller: controller.confirmPasswordController,
                             obscureText: controller.obscureConfirm.value,
                             decoration: InputDecoration(
-                              prefixIcon: const FaIcon(FontAwesomeIcons.lock,
-                                  color: kAccent, size: 20),
+                              prefixIcon: FaIcon(FontAwesomeIcons.lock,
+                                  color: GC.accent.value, size: 20),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.blue[200]!,
@@ -303,8 +302,8 @@ class RegisterScreenUI extends StatelessWidget {
                                           color: Colors.white54,
                                           size: 20,
                                         )
-                                      : const FaIcon(FontAwesomeIcons.solidEye,
-                                          color: kAccent, size: 20),
+                                      : FaIcon(FontAwesomeIcons.solidEye,
+                                          color: GC.accent.value, size: 20),
                                 ),
                               ),
                             ),
@@ -391,8 +390,8 @@ class RegisterScreenUI extends StatelessWidget {
                   ),
                 ),
               ),
-              const Divider(
-                color: kAccent,
+              Divider(
+                color: GC.accent.value,
                 thickness: 3,
               ),
               const SizedBox(height: 20),

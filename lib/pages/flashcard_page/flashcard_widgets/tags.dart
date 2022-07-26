@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../global_controller.dart';
 import '../../../models/flashcard_model.dart';
 import '../../../themes/apptheme.dart';
 import '../../../utils/consts/app_colors.dart';
@@ -88,7 +89,6 @@ class _NoteTagsState extends State<NoteTags>
     Colors.yellowAccent[100],
     Colors.orangeAccent[100],
     Colors.purpleAccent[100],
-    Colors.pinkAccent[100],
     Colors.grey[100],
     Colors.cyanAccent[100],
     Colors.indigoAccent[100],
@@ -106,13 +106,18 @@ class _NoteTagsState extends State<NoteTags>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Obx(
-          () => Wrap(
-            spacing: 4,
-            alignment: WrapAlignment.start,
-            runAlignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.start,
-            children: tList,
+        Container(
+          color: kBackgroundDark,
+          height: Get.height * .05,
+          width: Get.width * .9,
+          child: Obx(
+            () => Wrap(
+              spacing: 4,
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.start,
+              children: tList,
+            ),
           ),
         ),
         Container(
@@ -183,7 +188,7 @@ class _NoteTagsState extends State<NoteTags>
                   ),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: kAccent, width: 1)),
+                      borderSide: BorderSide(color: GC.accent.value, width: 1)),
                 ),
               ),
             )),

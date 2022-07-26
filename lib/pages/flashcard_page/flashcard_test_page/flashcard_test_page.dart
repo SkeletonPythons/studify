@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../global_controller.dart';
 import '../../../widgets/timer_widgets/timer_cards.dart';
 import '../../../models/flashcard_model.dart';
 import '../../../utils/consts/app_colors.dart';
@@ -94,7 +95,8 @@ class _TestPageState extends State<TestPage> {
                                                   () =>
                                                       CircularProgressIndicator(
                                                     value: _.timer.value,
-                                                    backgroundColor: kAccent,
+                                                    backgroundColor:
+                                                        GC.accent.value,
                                                     valueColor:
                                                         AlwaysStoppedAnimation<
                                                             Color>(

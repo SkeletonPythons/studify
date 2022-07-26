@@ -24,7 +24,7 @@ enum TestState {
 
 class TestController extends GetxController {
   /// Random number generator
-  final Random _random = Random(DateTime.now().millisecondsSinceEpoch);
+  final Random rng = Random(DateTime.now().millisecondsSinceEpoch);
 
   /// The Chosen Subject.
   RxString subject = ''.obs;
@@ -104,7 +104,7 @@ class TestController extends GetxController {
     while (results['answers'].length < 4) {
       List<String> pool = <String>[...answeredAlready, ...questions.values];
 
-      int randomNumber = _random.nextInt(pool.length);
+      int randomNumber = rng.nextInt(pool.length);
 
       String randomAnswer = pool[randomNumber];
       if (results['answers'].contains(randomAnswer)) {

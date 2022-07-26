@@ -4,31 +4,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../global_controller.dart';
 import '../utils/consts/app_colors.dart';
 
 Rx<ThemeData> currentTheme = themeOne.obs;
 
 Rx<TextStyle> currentStyle = textStyleOne.obs;
 
-Rx<Color> accentColor = Rx<Color>(kAccent);
+Rx<Color> accentColor = Rx<Color>(GC.accent.value);
 
 final ThemeData themeOne = ThemeData.dark().copyWith(
   primaryColor: kPrimary,
   backgroundColor: kBackground,
-  primaryColorDark: kAccent,
+  primaryColorDark: GC.accent.value,
   brightness: Brightness.dark,
   tabBarTheme: ThemeData.dark().tabBarTheme.copyWith(
-        labelColor: kAccent,
+        labelColor: GC.accent.value,
         unselectedLabelColor: Colors.white,
         labelStyle: GoogleFonts.ubuntu(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: kAccent,
+          color: GC.accent.value,
         ),
       ),
   colorScheme: const ColorScheme.dark().copyWith(
     primary: kPrimary,
-    secondary: kAccent,
+    secondary: GC.accent.value,
     surface: kBackground,
     background: kBackground,
     onPrimary: kBackground,
@@ -45,7 +46,7 @@ final ThemeData themeOne = ThemeData.dark().copyWith(
         const EdgeInsets.all(24),
       ),
       backgroundColor: MaterialStateProperty.all<Color>(kBackgroundLight2),
-      foregroundColor: MaterialStateProperty.all<Color>(kAccent),
+      foregroundColor: MaterialStateProperty.all<Color>(GC.accent.value),
     ),
   ),
 );

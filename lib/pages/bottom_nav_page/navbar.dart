@@ -7,6 +7,7 @@ import 'package:studify/routes/routes.dart';
 
 import '../../../services/auth.dart';
 
+import '../../global_controller.dart';
 import '../../models/flashcard_model.dart';
 import '../../services/db.dart';
 import '../../themes/apptheme.dart';
@@ -14,7 +15,6 @@ import '../../utils/consts/app_colors.dart';
 import '../../widgets/app_bar.dart';
 import '../calendar_page/calendar_page.dart';
 import '../dashboard_page/dashboard_page.dart';
-import '../OLD/flashcard_page.dart';
 import '../flashcard_page/note_page.dart';
 import '../timers_page/timer_controllers/timer_controller.dart';
 
@@ -51,18 +51,18 @@ class NavBar extends StatelessWidget {
             unselectedLabelStyle: GoogleFonts.ubuntu(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: kAccent,
+              color: GC.accent.value,
             ),
             automaticIndicatorColorAdjustment: false,
             enableFeedback: true,
             labelStyle: GoogleFonts.ubuntu(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: kAccent,
+              color: GC.accent.value,
             ),
             controller: _.tabController,
             tabs: _.tabs,
-            indicatorColor: kAccent,
+            indicatorColor: GC.accent.value,
             labelColor: kBackgroundLight2,
             unselectedLabelColor: kBackgroundLight,
           ),
@@ -88,7 +88,7 @@ class AltAppBar extends StatelessWidget {
       leading: IconButton(
         icon: Icon(
           Icons.menu,
-          color: kAccent,
+          color: GC.accent.value,
         ),
         onPressed: onSideMenuTap,
       ),
@@ -136,7 +136,7 @@ class AppBarDrawer extends StatelessWidget {
           AboutWidget(),
           Divider(
             thickness: 2,
-            color: kAccent,
+            color: GC.accent.value,
           ),
           ListTile(
             leading: Icon(
@@ -179,11 +179,11 @@ class AboutWidget extends StatelessWidget {
       applicationVersion: '0.0.0',
       applicationIcon: Icon(
         Icons.flash_on,
-        color: kAccent,
+        color: GC.accent.value,
       ),
       icon: Icon(
         Icons.info,
-        color: kAccent,
+        color: GC.accent.value,
       ),
       aboutBoxChildren: [
         Text(

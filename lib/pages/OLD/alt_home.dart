@@ -39,21 +39,21 @@
 //                 unselectedLabelStyle: GoogleFonts.ubuntu(
 //                   fontSize: 12,
 //                   fontWeight: FontWeight.w600,
-//                   color: kAccent,
+//                   color: GC.accent.value,
 //                 ),
 //                 automaticIndicatorColorAdjustment: false,
 //                 enableFeedback: true,
 //                 labelStyle: GoogleFonts.ubuntu(
 //                   fontSize: 12,
 //                   fontWeight: FontWeight.w600,
-//                   color: kAccent,
+//                   color: GC.accent.value,
 //                 ),
 //                 onTap: (newIndex) {
 //                   _.currentIndex.value = newIndex;
 //                 },
 //                 controller: _.tabController,
 //                 tabs: _.tabs,
-//                 indicatorColor: kAccent,
+//                 indicatorColor: GC.accent.value,
 //                 labelColor: kBackgroundLight2,
 //                 unselectedLabelColor: kBackgroundLight,
 //               ),
@@ -81,7 +81,7 @@
 //       leading: IconButton(
 //         icon: Icon(
 //           Icons.menu,
-//           color: kAccent,
+//           color: GC.accent.value,
 //         ),
 //         onPressed: onSideMenuTap,
 //       ),
@@ -151,7 +151,7 @@
 //             style: GoogleFonts.robotoCondensed(
 //               fontSize: 22,
 //               fontWeight: FontWeight.w600,
-//               color: kAccent,
+//               color: GC.accent.value,
 //             ),
 //           ),
 //           TextSpan(

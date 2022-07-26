@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 import 'dart:math' as math;
 
+import '../../global_controller.dart';
 import '../../models/flashcard_model.dart';
 import '../../services/auth.dart';
 import '../../services/db.dart';
@@ -79,7 +80,7 @@ class NotePageController extends GetxController {
           break;
       }
     }
-    slivers.value = buildSlivers();
+    slivers.value = buildSlivers;
     update();
   }
 
@@ -181,7 +182,7 @@ class NotePageController extends GetxController {
           child: Center(
             child: Text(
               headerText,
-              style: GoogleFonts.ubuntu(fontSize: 20, color: kAccent),
+              style: GoogleFonts.ubuntu(fontSize: 20, color: GC.accent.value),
             ),
           ),
         ),
@@ -193,9 +194,8 @@ class NotePageController extends GetxController {
     return NoteCard(this, note: note);
   }
 
-  List<Widget> buildSlivers() {
+  List<Widget> get buildSlivers {
     List<Widget> slivers = <Widget>[];
-    int ind = 0;
     for (String subject in noteMap.keys) {
       slivers.add(makeHeader(subject));
       slivers.add(SliverGrid(

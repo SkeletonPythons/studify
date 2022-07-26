@@ -15,6 +15,7 @@ import '../../utils/consts/app_colors.dart';
 import '../../../services/auth.dart';
 import '../flashcard_page/flashcard_test_page/flashcard_test_controller.dart';
 import '../home_page/home_controller.dart';
+import '../../global_controller.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -60,7 +61,7 @@ class DashboardState extends State<Dashboard> {
               child: Container(
                 height: Get.height * 0.02,
                 width: Get.width,
-                color: kAccent,
+                color: GC.accent.value,
               ),
             ),
 
@@ -72,7 +73,7 @@ class DashboardState extends State<Dashboard> {
                 height: Get.height * 0.5,
                 width: Get.width * .03,
                 decoration: BoxDecoration(
-                  color: kAccent,
+                  color: GC.accent.value,
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black45,
@@ -92,7 +93,7 @@ class DashboardState extends State<Dashboard> {
                 height: Get.height * 0.2,
                 width: Get.width * .03,
                 decoration: BoxDecoration(
-                  color: kAccent,
+                  color: GC.accent.value,
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black45,
@@ -168,7 +169,7 @@ class DashboardState extends State<Dashboard> {
                           ),
                         ),
                       ),
-                      Divider(thickness: 4, color: kAccent),
+                      Divider(thickness: 4, color: GC.accent.value),
                     ]),
               ),
             ),

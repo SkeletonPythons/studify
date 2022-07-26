@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/widgets/buttons/triangle_button.dart';
 
 import '../../../../models/flashcard_model.dart';
+import '../../../global_controller.dart';
 import '../../../utils/consts/app_colors.dart';
 import 'open_controller.dart';
 import 'tags.dart';
@@ -91,7 +92,7 @@ class _OpenCardState extends State<OpenCard> {
                           child: IconButton(
                             icon: Icon(
                               Icons.close,
-                              color: kAccent,
+                              color: GC.accent.value,
                             ),
                             onPressed: () {
                               widget.callback();
@@ -190,7 +191,8 @@ class _OpenCardState extends State<OpenCard> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Obx(() => TextField(
-                          onChanged: (value) => widget.note.subject = value,
+                          onChanged: (value) =>
+                              widget.note.subject = controller.sc.text,
                           expands: false,
                           clipBehavior: Clip.none,
                           maxLines: 1,
@@ -200,7 +202,7 @@ class _OpenCardState extends State<OpenCard> {
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: kAccent,
+                                color: GC.accent.value,
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(10),
@@ -227,10 +229,10 @@ class _OpenCardState extends State<OpenCard> {
                           controller: controller.sc,
                         )),
                   ),
-                  NoteTags(
-                    note: widget.note,
-                    enabled: controller.editEnabled,
-                  ),
+                  // NoteTags(
+                  //   note: widget.note,
+                  //   enabled: controller.editEnabled,
+                  // ),
                   SizedBox(
                     height: Get.height * .015,
                   ),
@@ -269,7 +271,7 @@ class _OpenCardState extends State<OpenCard> {
                                   decoration: InputDecoration(
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: kAccent,
+                                        color: GC.accent.value,
                                         width: 1,
                                       ),
                                       borderRadius: BorderRadius.circular(10),
@@ -325,7 +327,7 @@ class _OpenCardState extends State<OpenCard> {
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: kAccent,
+                                          color: GC.accent.value,
                                           width: 1,
                                         ),
                                         borderRadius: BorderRadius.circular(10),
@@ -397,7 +399,8 @@ class _OpenCardState extends State<OpenCard> {
                         decoration: InputDecoration(
                           labelText: 'notes',
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: kAccent, width: 1),
+                            borderSide:
+                                BorderSide(color: GC.accent.value, width: 1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           border: InputBorder.none,

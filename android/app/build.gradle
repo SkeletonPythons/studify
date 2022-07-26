@@ -35,7 +35,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion flutter.compileSdkVersion
-
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -56,10 +56,13 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+    
+
     }
 
    signingConfigs {
        release {
+
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
@@ -67,11 +70,15 @@ android {
        }
    }
     buildTypes {
+
         release {
             signingConfig signingConfigs.release
+            
+            }
         }
+        
     }
-}
+
 
 flutter {
     source '../..'

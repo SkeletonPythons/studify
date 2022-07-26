@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 
+import '../../../global_controller.dart';
 import '../../../models/flashcard_model.dart';
 import '../../../services/db.dart';
 import '../note_controller.dart';
@@ -54,7 +55,7 @@ class FCMenu extends StatelessWidget {
                           FontAwesomeIcons.angleUp,
                           size: 40,
                         ),
-                        color: kAccent,
+                        color: GC.accent.value,
                         onPressed: () {
                           debugPrint('togglep');
                           controller.toggleMenu();

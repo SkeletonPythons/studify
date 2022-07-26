@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../global_controller.dart';
 import '../utils/consts/app_colors.dart';
 
 enum APPLOADINGSTATE {
@@ -19,9 +20,9 @@ class LoadIndicator {
     if (_state.value == APPLOADINGSTATE.IDLE) {
       _state.value = APPLOADINGSTATE.ACTIVE;
       Get.dialog(
-        const Center(
+         Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(kAccent),
+            valueColor: AlwaysStoppedAnimation<Color>(GC.accent.value),
             backgroundColor: Colors.grey,
           ),
         ),
