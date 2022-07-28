@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 import './routes/routes.dart';
+import 'global_controller.dart';
 import 'pages/bottom_nav_page/navbar.dart';
 import 'themes/apptheme.dart';
 import 'utils/consts/app_settings.dart';
@@ -13,11 +14,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put<GC>(GC(), permanent: true);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   // This widget is the root of your application.
   @override
