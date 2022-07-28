@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/utils/consts/app_colors.dart';
+import 'package:studify/widgets/textField.dart';
 
 import '../../routes/routes.dart';
 import '../../services/auth.dart';
@@ -19,6 +20,10 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -86,6 +91,63 @@ class ProfilePageState extends State<ProfilePage>
                 child: IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {},
+                ),
+              ),
+            ),
+            Positioned(
+              top: Get.height * 0.30,
+              child: SizedBox(
+                height: Get.height * 0.05,
+                width: Get.width * 0.5,
+                child: DefaultTextField(
+                  hintText: 'Name',
+                  controller: _nameController
+                    ..text = '${Auth.instance.USER.name}',
+                ),
+              ),
+            ),
+            Positioned(
+              top: Get.height * 0.40,
+              child: SizedBox(
+                height: Get.height * 0.05,
+                width: Get.width * 0.5,
+                child: DefaultTextField(
+                  hintText: 'Change Email',
+                  controller: _emailController,
+                ),
+              ),
+            ),
+            Positioned(
+              top: Get.height * 0.50,
+              child: SizedBox(
+                height: Get.height * 0.05,
+                width: Get.width * 0.5,
+                child: DefaultTextField(
+                  hintText: 'Change Password',
+                  controller: _passwordController,
+                ),
+              ),
+            ),
+            Positioned(
+              top: Get.height * 0.65,
+              child: SizedBox(
+                height: Get.height * 0.06,
+                width: Get.width * 0.2,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.redAccent,
+                    shadowColor: kBackgroundDark,
+                    elevation: 5,
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    'Save',
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),
