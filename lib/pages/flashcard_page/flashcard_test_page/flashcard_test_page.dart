@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../global_controller.dart';
 import '../../../widgets/timer_widgets/timer_cards.dart';
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../utils/consts/app_colors.dart';
 import 'flashcard_test_controller.dart';
 

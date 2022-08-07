@@ -6,7 +6,7 @@ import 'package:studify/utils/consts/app_colors.dart';
 import 'dart:math' as math;
 
 import '../../global_controller.dart';
-import '../../models/flashcard_model.dart';
+import '../../models/note_model.dart';
 import '../../services/auth.dart';
 import '../../services/db.dart';
 import 'flashcard_widgets/note_card.dart';
@@ -329,5 +329,23 @@ class CollapsingList extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class StackCard extends StatelessWidget {
+  const StackCard(
+      {required this.subject,
+      required this.note,
+      this.prev,
+      this.next,
+      Key? key})
+      : super(key: key);
+  final StackCard? prev;
+  final StackCard? next;
+  final Note note;
+  final String subject;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector();
   }
 }

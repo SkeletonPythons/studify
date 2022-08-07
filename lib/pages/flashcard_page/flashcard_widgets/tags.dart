@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../global_controller.dart';
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../themes/apptheme.dart';
 import '../../../utils/consts/app_colors.dart';
 

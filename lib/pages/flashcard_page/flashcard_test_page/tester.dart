@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/pages/OLD/flashcard_controller.dart';
 
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../services/db.dart';
 
 part 'test_controller.dart';

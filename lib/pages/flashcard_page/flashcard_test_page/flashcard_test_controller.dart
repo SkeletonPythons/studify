@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:googleapis/mybusinessqanda/v1.dart';
 
 import '../../../utils/consts/app_colors.dart';
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../services/db.dart';
 
 class TestController extends GetxController with GetTickerProviderStateMixin {

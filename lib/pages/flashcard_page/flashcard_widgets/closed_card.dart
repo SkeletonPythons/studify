@@ -7,7 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../utils/consts/app_colors.dart';
 
 class ClosedCard extends StatelessWidget {

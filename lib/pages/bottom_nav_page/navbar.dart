@@ -8,7 +8,7 @@ import 'package:studify/routes/routes.dart';
 import '../../../services/auth.dart';
 
 import '../../global_controller.dart';
-import '../../models/flashcard_model.dart';
+import '../../models/note_model.dart';
 import '../../services/db.dart';
 import '../../themes/apptheme.dart';
 import '../../utils/consts/app_colors.dart';
