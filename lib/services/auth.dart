@@ -23,6 +23,7 @@ class Auth extends GetxController {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
+
   late AppUser USER = AppUser(email: '', name: 'User', photoUrl: '', uid: '');
 
   RxBool newUser = false.obs;
@@ -38,12 +39,17 @@ class Auth extends GetxController {
     ever(_user, _gateKeeper);
   }
 
+
   void updateUser() {
     USER
       ..email = auth.currentUser!.email!
       ..name = auth.currentUser!.displayName
       ..photoUrl = auth.currentUser!.photoURL ?? ''
       ..uid = auth.currentUser!.uid;
+  }
+
+  void sendPasswordResetEmail(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
   }
 
   _gateKeeper(User? user) async {

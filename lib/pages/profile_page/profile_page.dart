@@ -122,9 +122,26 @@ class ProfilePageState extends State<ProfilePage>
               child: SizedBox(
                 height: Get.height * 0.05,
                 width: Get.width * 0.5,
-                child: DefaultTextField(
-                  hintText: 'Change Password',
-                  controller: _passwordController,
+                child: FloatingActionButton(
+                  shape:  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    'Change Password',
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.snackbar(
+                      'Password Reset Email Sent',
+                      'An email has been sent to you with a link to reset your password. If you do not see it in your inbox, please check your spam folder.',
+                      backgroundColor: Colors.green,
+                    );
+                    Auth.instance.sendPasswordResetEmail(Auth.instance.USER.email);
+                  },
                 ),
               ),
             ),
