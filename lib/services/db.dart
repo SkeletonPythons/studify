@@ -6,10 +6,11 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:studify/models/pomodoro_models/history_model.dart';
 
+import '../models/flashcard_model.dart';
 import '../models/user_model.dart';
 import '../utils/sample_cards.dart';
 import './auth.dart';
-import '../models/flashcard_model.dart';
+import '../models/note_model.dart';
 
 class DB extends GetxService {
   static DB get instance => Get.find();
@@ -68,6 +69,19 @@ class DB extends GetxService {
       .withConverter<Note>(
           fromFirestore: (snapshot, _) => Note.fromFirestore(snapshot),
           toFirestore: (Note note, _) => note.toFirestore());
+
+  /// Shortcut to the [flashcards/<subject>] document.
+  DocumentReference<FlashCard> getFlashcards({required String subject}) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(Auth.instance.USER.uid)
+        .collection('flashcards')
+        .doc(subject)
+        .withConverter<FlashCard>(
+            fromFirestore: (snapshot, _) =>
+                FlashCard.fromFirestore(snapshot.data()!),
+            toFirestore: (FlashCard flashcard, _) => flashcard.toFirestore());
+  }
 
   /// Shortcut to access the [user] in the database.
   /// Automatically converts to [AppUSer]

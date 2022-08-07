@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 
 import '../../../global_controller.dart';
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../services/db.dart';
 import '../note_controller.dart';
 

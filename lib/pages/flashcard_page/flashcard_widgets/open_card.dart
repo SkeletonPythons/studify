@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:studify/widgets/buttons/triangle_button.dart';
 
-import '../../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../global_controller.dart';
 import '../../../utils/consts/app_colors.dart';
 import 'open_controller.dart';

@@ -2,7 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 import '../../../utils/consts/app_colors.dart';
 import './closed_card.dart';
 import '../note_controller.dart';

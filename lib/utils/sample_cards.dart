@@ -1,4 +1,4 @@
-import '../models/flashcard_model.dart';
+import '../models/note_model.dart';
 
 List<Note> sample = [
   Note(

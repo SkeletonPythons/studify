@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import '../../../services/auth.dart';
 import '../../../services/db.dart';
 
-import '../../../models/flashcard_model.dart';
+import '../../../models/note_model.dart';
 
 enum CardState {
   FRONT,
