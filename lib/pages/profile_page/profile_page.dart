@@ -10,6 +10,7 @@ import 'package:studify/widgets/textField.dart';
 
 import '../../routes/routes.dart';
 import '../../services/auth.dart';
+import '../../services/db.dart';
 import '../../utils/consts/app_colors.dart';
 import '../../widgets/profile_header.dart';
 
@@ -22,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
-  ProfileController controller = ProfileController();
+  ProfileController controller = Get.put<ProfileController>(ProfileController());
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
@@ -65,39 +66,39 @@ class ProfilePageState extends State<ProfilePage>
                     ),
                   ),
                 ),
-                Container(
-                  height: Get.height * 0.16,
-                  width: Get.width * 0.5,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.redAccent,
-                      width: 2,
-                    ),
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    image: DecorationImage(
-                      image: Auth.instance.USER.photoUrl == ''
-                          ? AssetImage('assets/images/user.png')
-                          : NetworkImage(Auth.instance.USER.photoUrl!,
-                              scale: .25) as ImageProvider,
-                    ),
+                CircleAvatar(
+                  radius: 83,
+                  backgroundColor: Colors.redAccent,
+                  child: CircleAvatar(
+                    radius: 80.0,
+                    backgroundImage:
+                    Auth.instance.USER.photoUrl == ''
+                        ? AssetImage('assets/images/user.png')
+                        : NetworkImage(Auth.instance.USER.photoUrl!,
+                        scale: .25) as ImageProvider,
+                    backgroundColor: Colors.transparent,
                   ),
-                ),
+                )
               ],
             ),
             Positioned(
-              top: Get.height * 0.15,
+              top: Get.height * 0.21,
               left: Get.width * 0.6,
               child: CircleAvatar(
-                backgroundColor: Colors.grey,
-                child: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {},
+                radius: 23,
+                backgroundColor: Colors.redAccent,
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.grey,
+                  child: IconButton(
+                    icon: Icon(Icons.edit, color: kBackground,),
+                    onPressed: () {},
+                  ),
                 ),
               ),
             ),
             Positioned(
-              top: Get.height * 0.30,
+              top: Get.height * 0.35,
               child: SizedBox(
                 height: Get.height * 0.06,
                 width: Get.width * 0.6,
@@ -109,7 +110,7 @@ class ProfilePageState extends State<ProfilePage>
               ),
             ),
             Positioned(
-              top: Get.height * 0.40,
+              top: Get.height * 0.45,
               child: SizedBox(
                 height: Get.height * 0.06,
                 width: Get.width * 0.6,
@@ -120,7 +121,7 @@ class ProfilePageState extends State<ProfilePage>
               ),
             ),
             Positioned(
-              top: Get.height * 0.50,
+              top: Get.height * 0.55,
               child: SizedBox(
                 height: Get.height * 0.06,
                 width: Get.width * 0.6,
@@ -162,12 +163,14 @@ class ProfilePageState extends State<ProfilePage>
                     ///update name
                     if(_nameController.text != Auth.instance.USER.name) {
                       Auth.instance.USER.name = _nameController.text;
-                      FirebaseAuth.instance.currentUser?.updateDisplayName(_nameController.text);
+                      //FirebaseAuth.instance.currentUser?.updateDisplayName(_nameController.text);
+                      DB.instance.user.update({'name': _nameController.text});
                     }
                     ///update email
                     if(_emailController.text.isNotEmpty && controller.isEmailValid(_emailController.text).value) {
                       Auth.instance.USER.email = _emailController.text;
-                      FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text);
+                      //FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text);
+                      DB.instance.user.update({'email': _emailController.text});
                     }
                     debugPrint('${Auth.instance.USER.name}, ${Auth.instance.USER.email}');
 
