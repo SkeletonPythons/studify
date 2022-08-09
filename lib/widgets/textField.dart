@@ -14,16 +14,16 @@ class DefaultTextField extends StatelessWidget {
       cursorColor: Colors.white,
       textAlignVertical: TextAlignVertical.bottom,
       style: GoogleFonts.ubuntu(
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: FontWeight.w500,
         color: Colors.white,
       ),
       decoration: InputDecoration(
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 2.0),
+          borderSide: BorderSide(color: Colors.red, width: 3.0),
         ),
         enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white, width: 2.0),
+          borderSide: BorderSide(color: Colors.white, width: 3.0),
         ),
         hintText: hintText,
         hintStyle: GoogleFonts.ubuntu(

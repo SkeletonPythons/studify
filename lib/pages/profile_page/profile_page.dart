@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: non_constant_identifier_names
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:studify/pages/profile_page/profile_controller.dart';
 import 'package:studify/utils/consts/app_colors.dart';
 import 'package:studify/widgets/textField.dart';
 
@@ -20,9 +22,9 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
+  ProfileController controller = ProfileController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +99,8 @@ class ProfilePageState extends State<ProfilePage>
             Positioned(
               top: Get.height * 0.30,
               child: SizedBox(
-                height: Get.height * 0.05,
-                width: Get.width * 0.5,
+                height: Get.height * 0.06,
+                width: Get.width * 0.6,
                 child: DefaultTextField(
                   hintText: 'Name',
                   controller: _nameController
@@ -109,8 +111,8 @@ class ProfilePageState extends State<ProfilePage>
             Positioned(
               top: Get.height * 0.40,
               child: SizedBox(
-                height: Get.height * 0.05,
-                width: Get.width * 0.5,
+                height: Get.height * 0.06,
+                width: Get.width * 0.6,
                 child: DefaultTextField(
                   hintText: 'Change Email',
                   controller: _emailController,
@@ -120,8 +122,8 @@ class ProfilePageState extends State<ProfilePage>
             Positioned(
               top: Get.height * 0.50,
               child: SizedBox(
-                height: Get.height * 0.05,
-                width: Get.width * 0.5,
+                height: Get.height * 0.06,
+                width: Get.width * 0.6,
                 child: FloatingActionButton(
                   shape:  RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -156,7 +158,22 @@ class ProfilePageState extends State<ProfilePage>
                     shadowColor: kBackgroundDark,
                     elevation: 5,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    ///update name
+                    if(_nameController.text != Auth.instance.USER.name) {
+                      Auth.instance.USER.name = _nameController.text;
+                      FirebaseAuth.instance.currentUser?.updateDisplayName(_nameController.text);
+                    }
+                    ///update email
+                    if(_emailController.text.isNotEmpty && controller.isEmailValid(_emailController.text).value) {
+                      Auth.instance.USER.email = _emailController.text;
+                      FirebaseAuth.instance.currentUser?.updateEmail(_emailController.text);
+                    }
+                    debugPrint('${Auth.instance.USER.name}, ${Auth.instance.USER.email}');
+
+                    Get.snackbar('Success', 'Your information was updated successfully',
+                        backgroundColor: Colors.green);
+                  },
                   child: Text(
                     'Save',
                     style: GoogleFonts.ubuntu(
